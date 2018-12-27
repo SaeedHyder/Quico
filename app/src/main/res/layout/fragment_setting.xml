@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/x10"
+        android:layout_marginEnd="@dimen/x15"
+        android:layout_marginStart="@dimen/x15"
+        android:layout_marginTop="@dimen/x10"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/btn_profile"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x50"
+            android:gravity="center_vertical">
+
+            <com.app.quico.ui.views.AnyTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/profile"
+                android:textColor="@color/app_black_text"
+                android:drawableEnd="@drawable/rightarrow"
+                android:textSize="@dimen/x14"
+                app:typeface="@string/font_normal" />
+
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:background="@color/view_line_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x50"
+            android:gravity="center_vertical">
+
+            <com.app.quico.ui.views.AnyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language"
+                android:textColor="@color/app_black_text"
+                android:textSize="@dimen/x14"
+                app:typeface="@string/font_normal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end">
+
+                <com.app.quico.ui.views.AnyTextView
+                    android:id="@+id/btn_english"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/english"
+                    android:textColor="@color/app_gray_text"
+                    android:textSize="@dimen/x13"
+                    app:typeface="@string/font_normal" />
+
+                <View
+                    android:layout_width="@dimen/x1"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/x5"
+                    android:layout_marginStart="@dimen/x5"
+                    android:background="@color/view_line_color" />
+
+                <com.app.quico.ui.views.AnyTextView
+                    android:id="@+id/btn_arabic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/arabic"
+                    android:textColor="@color/app_gray_text"
+                    android:textSize="@dimen/x13"
+                    app:typeface="@string/font_normal" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:background="@color/view_line_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x50"
+            android:gravity="center_vertical">
+
+            <com.app.quico.ui.views.AnyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notification_"
+                android:textColor="@color/app_black_text"
+                android:textSize="@dimen/x14"
+                app:typeface="@string/font_normal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end">
+
+        <ToggleButton
+            android:id="@+id/toggleBtn"
+            android:layout_width="@dimen/x50"
+            android:layout_height="@dimen/x25"
+            android:text=""
+            android:textOff=""
+            android:textOn=""
+
+            android:background="@drawable/selector_toggle"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:background="@color/view_line_color" />
+
+        <LinearLayout
+            android:id="@+id/btn_change_password"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x50"
+            android:gravity="center_vertical">
+
+            <com.app.quico.ui.views.AnyTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/change_password"
+                android:textColor="@color/app_black_text"
+                android:drawableEnd="@drawable/rightarrow"
+                android:textSize="@dimen/x14"
+                app:typeface="@string/font_normal" />
+
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:background="@color/view_line_color" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x40"
+            android:src="@drawable/logo" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.app.quico.ui.views.AnyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/select_language"
+            android:textSize="@dimen/x15"
+            android:textColor="@color/black"
+            android:gravity="center_horizontal"
+            app:typeface="@string/font_semibold"/>
+
+        <com.app.quico.ui.views.AnyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/you_can_change_your_language_anytime"
+            android:layout_marginTop="@dimen/x7"
+            android:textSize="@dimen/x14"
+            android:textColor="@color/black"
+            android:gravity="center_horizontal"
+            app:typeface="@string/font_normal"/>
+
+        <Button
+            android:id="@+id/btn_english"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x40"
+            android:textColor="@color/white"
+            android:layout_marginStart="@dimen/x25"
+            android:layout_marginEnd="@dimen/x25"
+            android:layout_marginTop="@dimen/x25"
+            android:textSize="@dimen/x13"
+            android:background="@drawable/rounded_green_button"
+            android:text="@string/english"/>
+
+        <Button
+            android:id="@+id/btn_arabic"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x40"
+            android:textColor="@color/white"
+            android:layout_marginStart="@dimen/x25"
+            android:layout_marginEnd="@dimen/x25"
+            android:layout_marginTop="@dimen/x15"
+            android:layout_marginBottom="@dimen/x15"
+            android:background="@drawable/rounded_sky_blue_button"
+            android:textSize="@dimen/x18"
+            android:text="@string/arabic"/>
+    </LinearLayout>
+
+</LinearLayout>

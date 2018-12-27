@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/x20"
+        app:cardCornerRadius="@dimen/x8"
+        app:cardElevation="@dimen/x5">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/x15">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                >
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/logo"
+                    android:layout_width="@dimen/x50"
+                    android:layout_height="@dimen/x50"
+                    android:src="@drawable/circle2" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/x12"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <com.app.quico.ui.views.AnyTextView
+                        android:id="@+id/txt_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Blue Thunder"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/x14"
+                        app:typeface="@string/font_normal" />
+
+                    <com.app.quico.ui.views.AnyTextView
+                        android:id="@+id/txt_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/x5"
+                        android:text="Al Karama, Dubai"
+                        android:textColor="@color/app_black_text"
+                        android:textSize="@dimen/x12"
+                        app:typeface="@string/font_normal" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x1"
+                android:layout_marginTop="@dimen/x10"
+                android:background="@color/view_line_color" />
+
+
+
+            <com.app.quico.ui.views.AnyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rate_your_experience"
+                android:layout_marginTop="@dimen/x10"
+                android:textColor="@color/app_black_text"
+                android:textSize="@dimen/x11"
+                app:typeface="@string/font_normal" />
+
+            <com.app.quico.ui.views.CustomRatingBar
+                android:id="@+id/rbParlourRating"
+                android:layout_width="@dimen/x140"
+
+                android:layout_height="@dimen/x30"
+
+                app:starPadding="@dimen/x5"
+                app:stars="4" />
+
+            <com.app.quico.ui.views.AnyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_writing_your_review"
+                android:layout_marginTop="@dimen/x10"
+                android:textColor="@color/app_black_text"
+                android:textSize="@dimen/x11"
+                app:typeface="@string/font_normal" />
+
+
+            <com.app.quico.ui.views.AnyEditTextView
+                android:id="@+id/edt_contactUs"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x150"
+                android:imeOptions="actionDone"
+                android:gravity="top"
+                android:inputType="textPersonName"
+                android:layout_marginTop="@dimen/x10"
+                android:padding="@dimen/x15"
+                android:textColor="@color/app_black_text"
+                android:textSize="@dimen/x14"
+                android:hint="@string/type_your_message_here"
+                android:background="@drawable/contact_us_box"
+                app:typeface="@string/font_normal"/>
+
+
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x40"
+                android:layout_marginBottom="@dimen/x10"
+                android:layout_marginTop="@dimen/x20"
+                android:background="@drawable/rounded_green_button"
+                android:text="@string/submit"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x14" />
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

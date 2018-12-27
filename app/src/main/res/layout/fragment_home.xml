@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x55"
+        android:layout_marginTop="@dimen/x3"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/btnMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x10"
+            android:padding="@dimen/x13"
+            android:scaleType="fitXY"
+            android:src="@drawable/nav"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/txt_subHead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:padding="@dimen/x5"
+            android:src="@drawable/logo" />
+
+        <ImageView
+            android:id="@+id/btnNotification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x10"
+            android:paddingBottom="@dimen/x10"
+            android:paddingEnd="@dimen/x5"
+            android:paddingStart="@dimen/x5"
+            android:paddingTop="@dimen/x10"
+            android:src="@drawable/notification"
+            android:visibility="visible" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/btnNotification"
+            android:layout_alignEnd="@+id/btnNotification"
+            android:layout_alignStart="@+id/btnNotification"
+            android:layout_alignTop="@+id/btnNotification">
+
+            <com.app.quico.ui.views.AnyTextView
+                android:id="@+id/txtBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/badge_drawable"
+                android:gravity="center"
+                android:maxLength="2"
+                android:paddingBottom="@dimen/x3"
+                android:paddingLeft="@dimen/x4"
+                android:paddingRight="@dimen/x4"
+                android:paddingTop="@dimen/x3"
+                android:text="22"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x7"
+                app:typeface="@string/font_bold" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/x15"
+        android:layout_marginStart="@dimen/x15"
+        android:layout_marginTop="@dimen/x10"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.app.quico.ui.views.AnyTextView
+                android:id="@+id/txtAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:background="@drawable/bg_rounded_white"
+                android:drawableEnd="@drawable/downarrow"
+                android:gravity="center_vertical"
+                android:hint="@string/address"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:padding="@dimen/x10"
+                android:paddingEnd="@dimen/x15"
+                android:paddingStart="@dimen/x15"
+                app:typeface="@string/font_normal" />
+
+            <ImageView
+                android:id="@+id/btn_current_location"
+                android:layout_width="@dimen/x40"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x10"
+                android:background="@drawable/bg_rounded_white"
+                android:padding="@dimen/x10"
+                android:src="@drawable/target" />
+
+        </LinearLayout>
+
+        <com.app.quico.ui.views.AnyTextView
+            android:id="@+id/txtServices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x10"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:background="@drawable/bg_rounded_white"
+            android:drawableEnd="@drawable/downarrow"
+            android:gravity="center_vertical"
+            android:hint="@string/services"
+            android:paddingEnd="@dimen/x15"
+            android:paddingStart="@dimen/x15"
+            android:padding="@dimen/x10"
+            app:typeface="@string/font_normal" />
+
+        <Button
+            android:id="@+id/btn_find_quico"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x40"
+            android:layout_marginBottom="@dimen/x5"
+            android:layout_marginTop="@dimen/x10"
+            android:background="@drawable/rounded_green_button"
+            android:text="@string/find_quico"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x14" />
+
+        <com.app.quico.ui.views.CustomRecyclerView
+            android:id="@+id/rv_services"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+</LinearLayout>

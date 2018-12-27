@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.app.quico.ui.views.AnyTextView
+        android:id="@+id/txt_no_data"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.9"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/no_review_found"
+        android:textColor="@color/dark_grey"
+        android:textSize="@dimen/x15"
+        android:visibility="gone"
+        app:typeface="@string/font_normal"
+        />
+
+        <com.app.quico.ui.views.CustomRecyclerView
+            android:id="@+id/rv_reviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"/>
+
+        <Button
+            android:id="@+id/btn_writeReview"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x40"
+            android:layout_margin="@dimen/x15"
+            android:background="@drawable/rounded_green_button"
+            android:text="@string/write_a_review"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x14" />
+
+    </LinearLayout>

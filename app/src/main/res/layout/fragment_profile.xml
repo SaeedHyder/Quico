@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="@dimen/x100"
+            android:layout_height="@dimen/x100"
+            android:src="@drawable/images1" />
+
+        <com.app.quico.ui.views.AnyTextView
+            android:id="@+id/txt_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x8"
+            android:gravity="center"
+            android:text="John Deo"
+            android:textColor="@color/black"
+            android:textSize="@dimen/x14"
+            app:typeface="@string/font_normal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:orientation="vertical">
+
+
+        <com.app.quico.ui.views.AnyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_gray"
+            android:gravity="center_vertical"
+            android:padding="@dimen/x8"
+            android:text="@string/email_address"
+            android:textColor="@color/profile_text"
+            android:textSize="@dimen/x14"
+            app:typeface="@string/font_normal" />
+
+        <com.app.quico.ui.views.AnyTextView
+            android:id="@+id/txtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x60"
+            android:drawablePadding="@dimen/x10"
+            android:drawableStart="@drawable/email"
+            android:gravity="center_vertical"
+            android:padding="@dimen/x8"
+            android:paddingStart="@dimen/x20"
+            android:text="Johndeo@gmail.com"
+            android:textColor="@color/app_black_text"
+            android:textSize="@dimen/x14"
+            app:typeface="@string/font_normal" />
+
+        <com.app.quico.ui.views.AnyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_gray"
+            android:gravity="center_vertical"
+            android:padding="@dimen/x8"
+            android:text="@string/phone_number"
+            android:textColor="@color/profile_text"
+            android:textSize="@dimen/x14"
+            app:typeface="@string/font_normal" />
+
+        <com.app.quico.ui.views.AnyTextView
+            android:id="@+id/txPhonel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x60"
+            android:drawablePadding="@dimen/x10"
+            android:drawableStart="@drawable/phone"
+            android:gravity="center_vertical"
+            android:padding="@dimen/x8"
+            android:paddingStart="@dimen/x20"
+            android:text="+971-123-456-7890"
+            android:textColor="@color/app_black_text"
+            android:textSize="@dimen/x14"
+            app:typeface="@string/font_normal" />
+
+        <com.app.quico.ui.views.AnyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_gray"
+            android:gravity="center_vertical"
+            android:padding="@dimen/x8"
+            android:text="@string/address"
+            android:textColor="@color/profile_text"
+            android:textSize="@dimen/x14"
+            app:typeface="@string/font_normal" />
+
+        <com.app.quico.ui.views.AnyTextView
+            android:id="@+id/txtAddress"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x60"
+            android:drawablePadding="@dimen/x10"
+            android:drawableStart="@drawable/location"
+            android:gravity="center_vertical"
+            android:padding="@dimen/x8"
+            android:paddingStart="@dimen/x20"
+            android:text="@string/dummy_address"
+            android:textColor="@color/app_black_text"
+            android:textSize="@dimen/x14"
+            app:typeface="@string/font_normal" />
+
+    </LinearLayout>
+
+</LinearLayout>

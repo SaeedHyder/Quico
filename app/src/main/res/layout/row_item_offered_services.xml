@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.app.quico.ui.views.AnyTextView
+        android:id="@+id/txt_servie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x7"
+        android:layout_marginEnd="@dimen/x7"
+        android:paddingStart="@dimen/x10"
+        android:paddingEnd="@dimen/x10"
+        android:paddingTop="@dimen/x5"
+        android:paddingBottom="@dimen/x5"
+        android:background="@drawable/rounded_black"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x10"
+        android:text="Installation"
+        app:typeface="@string/font_normal"/>
+
+</LinearLayout>

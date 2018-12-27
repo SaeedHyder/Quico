@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/x10"
+        android:layout_marginStart="@dimen/x10"
+        android:layout_marginTop="@dimen/x10"
+        android:background="@drawable/chat_shape"
+        android:layout_marginBottom="@dimen/x5">
+
+        <com.app.quico.ui.views.AnyTextView
+            android:id="@+id/txt_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x8"
+            android:layout_marginEnd="@dimen/x5"
+            android:padding="@dimen/x15"
+            android:text="@string/lorem_small_2"
+            app:typeface="@string/font_normal"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/txt_left"
+            android:src="@drawable/shape"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/x10"
+        android:layout_marginStart="@dimen/x10"
+        android:layout_marginTop="@dimen/x10"
+        android:layout_marginBottom="@dimen/x5"
+        android:background="@drawable/chatshape2"
+       >
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/txt_right"
+            android:layout_alignBottom="@+id/txt_right"
+            android:scaleType="fitXY"
+            android:layout_marginEnd="@dimen/x1_"
+            android:src="@drawable/chatshape2"
+            android:visibility="gone"/>
+
+
+        <com.app.quico.ui.views.AnyTextView
+            android:id="@+id/txt_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x3"
+            android:layout_marginEnd="@dimen/x5"
+            android:padding="@dimen/x15"
+            android:text="@string/lorem_small_2"
+            app:typeface="@string/font_normal"/>
+
+
+
+
+    </RelativeLayout>
+
+</LinearLayout>
