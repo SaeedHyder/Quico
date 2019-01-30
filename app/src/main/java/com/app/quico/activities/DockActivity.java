@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.app.quico.BaseApplication;
 import com.app.quico.R;
 import com.app.quico.fragments.HomeFragment;
+import com.app.quico.fragments.ServiceDetailFragment;
 import com.app.quico.fragments.SideMenuFragment;
 import com.app.quico.fragments.abstracts.BaseFragment;
 import com.app.quico.helpers.BasePreferenceHelper;
@@ -82,7 +83,7 @@ public abstract class DockActivity extends AppCompatActivity implements
         transaction
                 .addToBackStack(
                         getSupportFragmentManager().getBackStackEntryCount() == 0 ? KEY_FRAG_FIRST
-                                : null).commit();
+                                : null).commitAllowingStateLoss();
 
 
     }
@@ -90,14 +91,14 @@ public abstract class DockActivity extends AppCompatActivity implements
     public void replaceDockableFragment(BaseFragment frag, String Tag) {
 
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.fragment_enter, R.anim.fragment_exit);
+        //transaction.setCustomAnimations(R.anim.fragment_enter, R.anim.fragment_exit);
         transaction.replace(getDockFrameLayoutId(), frag);
         transaction.addToBackStack(getSupportFragmentManager().getBackStackEntryCount() == 0 ? KEY_FRAG_FIRST : null).commitAllowingStateLoss();
 
 
     }
 
-    public void replaceDockableFragment(BaseFragment frag, String Tag,boolean animation) {
+    public void replaceDockableFragment(BaseFragment frag, String Tag, boolean animation) {
 
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction();
@@ -110,7 +111,6 @@ public abstract class DockActivity extends AppCompatActivity implements
 
 
     }
-
 
 
     public void replaceDockableFragment(BaseFragment frag, boolean isAnimate) {
@@ -131,6 +131,7 @@ public abstract class DockActivity extends AppCompatActivity implements
                         getSupportFragmentManager().getBackStackEntryCount() == 0 ? KEY_FRAG_FIRST
                                 : null).commit();
     }
+
     public void addDockableFragment(BaseFragment frag, String Tag) {
 
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
@@ -144,7 +145,8 @@ public abstract class DockActivity extends AppCompatActivity implements
 
 
     }
-    public DrawerLayout getDrawerLayout(){
+
+    public DrawerLayout getDrawerLayout() {
         return drawerLayout;
     }
 
@@ -189,9 +191,9 @@ public abstract class DockActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 1)
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             super.onBackPressed();
-        else
+        } else
             DialogFactory.createQuitDialog(this,
                     new DialogInterface.OnClickListener() {
 
@@ -231,8 +233,13 @@ public abstract class DockActivity extends AppCompatActivity implements
         BackStackEntry entry = getSupportFragmentManager().getBackStackEntryAt(
                 entryIndex);
         if (entry != null) {
-            getSupportFragmentManager().popBackStack(entry.getId(),
-                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            try {
+                getSupportFragmentManager().popBackStack(entry.getId(),
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            } catch (IllegalStateException ignored) {
+                // There's no way to avoid getting this if saveInstanceState has already been called.
+            }
+
         }
     }
 
@@ -240,6 +247,22 @@ public abstract class DockActivity extends AppCompatActivity implements
         if (getSupportFragmentManager() == null)
             return;
         getSupportFragmentManager().popBackStack();
+    }
+
+
+    public void UpdateCompantData() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            super.onBackPressed();
+        }
+        FragmentManager manager = getDockActivity().getSupportFragmentManager();
+        if (manager != null) {
+            Fragment currFrag = manager.findFragmentById(getDockActivity().getDockFrameLayoutId());
+            if (currFrag != null) {
+                if (currFrag instanceof ServiceDetailFragment) {
+                    ((ServiceDetailFragment) currFrag).updateReviews();
+                }
+            }
+        }
     }
 
     public abstract void onMenuItemActionCalled(int actionId, String data);
@@ -254,7 +277,7 @@ public abstract class DockActivity extends AppCompatActivity implements
         return (BaseApplication) getApplication();
     }
 
-    public ResideMenu.OnMenuListener getMenuListener(){
+    public ResideMenu.OnMenuListener getMenuListener() {
         return menuListener;
     }
 

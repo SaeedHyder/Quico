@@ -1,23 +1,23 @@
 package com.app.quico.fragments;
 
-import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
-import android.text.InputType;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 
 import com.app.quico.R;
+import com.app.quico.entities.UserEnt;
 import com.app.quico.fragments.abstracts.BaseFragment;
+import com.app.quico.global.AppConstants;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.TitleBar;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
@@ -27,6 +27,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.app.quico.global.WebServiceConstants.Signup;
 
 public class SignupFragment extends BaseFragment {
     @BindView(R.id.edt_username)
@@ -95,46 +97,45 @@ public class SignupFragment extends BaseFragment {
         titleBar.setSubHeading(getResString(R.string.create_account));
     }
 
-
     private boolean isvalidated() {
-        if (edtUsername.getText().toString().isEmpty() || edtUsername.getText().toString().length() < 3) {
+        if (edtUsername.getText().toString().trim().isEmpty() || edtUsername.getText().toString().trim().length() < 3) {
             edtUsername.setError(getString(R.string.enter_fullname));
             if (edtUsername.requestFocus()) {
                 setEditTextFocus(edtUsername);
             }
             return false;
-        } else if (edtEmail.getText() == null || edtEmail.getText().toString().isEmpty() ||
+        } else if (edtEmail.getText() == null || edtEmail.getText().toString().trim().isEmpty() ||
                 !Patterns.EMAIL_ADDRESS.matcher(edtEmail.getText().toString()).matches()) {
             edtEmail.setError(getString(R.string.enter_valid_email));
             if (edtEmail.requestFocus()) {
                 setEditTextFocus(edtEmail);
             }
             return false;
-        } else if (edtPassword.getText().toString().isEmpty()) {
+        } else if (edtPassword.getText().toString().trim().isEmpty()) {
             edtPassword.setError(getString(R.string.enter_password));
             if (edtPassword.requestFocus()) {
                 setEditTextFocus(edtPassword);
             }
             return false;
-        } else if (edtPassword.getText().toString().length() < 6) {
+        } else if (edtPassword.getText().toString().trim().length() < 6) {
             edtPassword.setError(getString(R.string.passwordLength));
             if (edtPassword.requestFocus()) {
                 setEditTextFocus(edtPassword);
             }
             return false;
-        } else if (edtConfirpassword.getText().toString().isEmpty()) {
+        } else if (edtConfirpassword.getText().toString().trim().isEmpty()) {
             edtConfirpassword.setError(getString(R.string.enter_password));
             if (edtConfirpassword.requestFocus()) {
                 setEditTextFocus(edtConfirpassword);
             }
             return false;
-        } else if (!edtConfirpassword.getText().toString().equals(edtPassword.getText().toString())) {
+        } else if (!edtConfirpassword.getText().toString().trim().equals(edtPassword.getText().toString().trim())) {
             edtConfirpassword.setError(getString(R.string.confirm_password_error));
             if (edtConfirpassword.requestFocus()) {
                 setEditTextFocus(edtConfirpassword);
             }
             return false;
-        } else  if (edtPhone.getText().toString().isEmpty() || edtPhone.getText().toString().length() < 3) {
+        } else  if (edtPhone.getText().toString().trim().isEmpty() || edtPhone.getText().toString().trim().length() < 3) {
             edtPhone.setError(getString(R.string.enter_phonenumber));
             if (edtPhone.requestFocus()) {
                 setEditTextFocus(edtPhone);
@@ -152,6 +153,16 @@ public class SignupFragment extends BaseFragment {
         } else
             return true;
 
+    }
+
+    private void removeErrorsFromEditText(){
+        edtUsername.setError(null);
+        edtEmail.setError(null);
+        edtPassword.setError(null);
+        edtConfirpassword.setError(null);
+        edtPhone.setError(null);
+        edtEmail.setError(null);
+        edtEmail.setError(null);
     }
 
     private boolean isPhoneNumberValid() {
@@ -177,16 +188,30 @@ public class SignupFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.termsCondition:
+                removeErrorsFromEditText();
                 getDockActivity().addDockableFragment(CmsFragment.newInstance(getResString(R.string.TermsCondition)), "CmsFragment");
                 break;
             case R.id.btn_create_account:
                 if (isvalidated()) {
-                    getDockActivity().replaceDockableFragment(PhoneVerificationFragment.newInstance(), "PhoneVerificationFragment");
+                    serviceHelper.enqueueCall(webService.registerUser(edtUsername.getText().toString(),Countrypicker.getSelectedCountryCodeWithPlus().toString(),
+                            edtPhone.getText().toString(),edtEmail.getText().toString(),edtPassword.getText().toString(),edtConfirpassword.getText().toString(),
+                            AppConstants.User, AppConstants.PushNotification,AppConstants.Device_Type, FirebaseInstanceId.getInstance().getToken()), Signup);
                 }
                 break;
         }
     }
 
 
-
+    @Override
+    public void ResponseSuccess(Object result, String Tag, String message) {
+        super.ResponseSuccess(result, Tag, message);
+        switch (Tag){
+            case Signup:
+                UserEnt userEnt=(UserEnt)result;
+                prefHelper.putUser(userEnt);
+                prefHelper.set_TOKEN(userEnt.getUser().getAccessToken());
+                getDockActivity().replaceDockableFragment(PhoneVerificationFragment.newInstance(), "PhoneVerificationFragment");
+                break;
+        }
+    }
 }

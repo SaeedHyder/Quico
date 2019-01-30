@@ -17,7 +17,7 @@
             android:id="@+id/profile_image"
             android:layout_width="@dimen/x100"
             android:layout_height="@dimen/x100"
-            android:src="@drawable/images1" />
+            android:src="@drawable/placeholder" />
 
         <com.app.quico.ui.views.AnyTextView
             android:id="@+id/txt_name"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/x8"
             android:gravity="center"
-            android:text="John Deo"
+            android:hint="@string/name"
             android:textColor="@color/black"
             android:textSize="@dimen/x14"
             app:typeface="@string/font_normal" />
@@ -56,10 +56,11 @@
             android:layout_height="@dimen/x60"
             android:drawablePadding="@dimen/x10"
             android:drawableStart="@drawable/email"
+
             android:gravity="center_vertical"
             android:padding="@dimen/x8"
+            android:hint="@string/email_address"
             android:paddingStart="@dimen/x20"
-            android:text="Johndeo@gmail.com"
             android:textColor="@color/app_black_text"
             android:textSize="@dimen/x14"
             app:typeface="@string/font_normal" />
@@ -81,10 +82,11 @@
             android:layout_height="@dimen/x60"
             android:drawablePadding="@dimen/x10"
             android:drawableStart="@drawable/phone"
+
             android:gravity="center_vertical"
             android:padding="@dimen/x8"
             android:paddingStart="@dimen/x20"
-            android:text="+971-123-456-7890"
+            android:hint="@string/phone_number"
             android:textColor="@color/app_black_text"
             android:textSize="@dimen/x14"
             app:typeface="@string/font_normal" />
@@ -106,10 +108,11 @@
             android:layout_height="@dimen/x60"
             android:drawablePadding="@dimen/x10"
             android:drawableStart="@drawable/location"
+
             android:gravity="center_vertical"
             android:padding="@dimen/x8"
             android:paddingStart="@dimen/x20"
-            android:text="@string/dummy_address"
+            android:hint="@string/address"
             android:textColor="@color/app_black_text"
             android:textSize="@dimen/x14"
             app:typeface="@string/font_normal" />

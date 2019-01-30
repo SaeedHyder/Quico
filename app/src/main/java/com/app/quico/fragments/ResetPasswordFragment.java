@@ -17,6 +17,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.app.quico.global.WebServiceConstants.ResetPassword;
+
 public class ResetPasswordFragment extends BaseFragment {
     @BindView(R.id.edt_password)
     TextInputEditText edtPassword;
@@ -26,9 +28,11 @@ public class ResetPasswordFragment extends BaseFragment {
     Button btnSubmit;
     Unbinder unbinder;
 
-    public static ResetPasswordFragment newInstance() {
-        Bundle args = new Bundle();
+    private static String pinCode;
 
+    public static ResetPasswordFragment newInstance(String code) {
+        Bundle args = new Bundle();
+        pinCode=code;
         ResetPasswordFragment fragment = new ResetPasswordFragment();
         fragment.setArguments(args);
         return fragment;
@@ -61,7 +65,19 @@ public class ResetPasswordFragment extends BaseFragment {
     @OnClick(R.id.btn_submit)
     public void onViewClicked() {
         if (isvalidate()) {
-            UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.will_be_implemented));
+            serviceHelper.enqueueCall(webService.resetPassword(prefHelper.getUser().getUser().getCountryCode(),prefHelper.getUser().getUser().getPhone(),pinCode,edtPassword.getText().toString(),edtConfirpassword.getText().toString()), ResetPassword);
+        }
+    }
+
+    @Override
+    public void ResponseSuccess(Object result, String Tag, String message) {
+        super.ResponseSuccess(result, Tag, message);
+        switch (Tag){
+            case ResetPassword:
+                UIHelper.showShortToastInCenter(getDockActivity(),"Password updated successfully");
+                getDockActivity().popBackStackTillEntry(0);
+                getDockActivity().replaceDockableFragment(LoginFragment.newInstance(),"LoginFragment");
+                break;
         }
     }
 
@@ -74,32 +90,32 @@ public class ResetPasswordFragment extends BaseFragment {
     }
 
     private boolean isvalidate() {
-        if (edtPassword.getText() == null || (edtPassword.getText().toString().isEmpty())) {
-            edtPassword.setError(getString(R.string.enter_password));
+        if (edtPassword.getText() == null || (edtPassword.getText().toString().trim().isEmpty())) {
+            edtPassword.setError(getResString(R.string.enter_password));
             if (edtPassword.requestFocus()) {
                 setEditTextFocus(edtPassword);
             }
             return false;
-        } else if (edtPassword.getText().toString().length() < 6) {
-            edtPassword.setError(getString(R.string.passwordLength));
+        } else if (edtPassword.getText().toString().trim().length() < 6) {
+            edtPassword.setError(getResString(R.string.passwordLength));
             if (edtPassword.requestFocus()) {
                 setEditTextFocus(edtPassword);
             }
             return false;
-        } else if (edtConfirpassword.getText() == null || (edtConfirpassword.getText().toString().isEmpty())) {
-            edtConfirpassword.setError(getString(R.string.enter_confirm_password));
+        } else if (edtConfirpassword.getText() == null || (edtConfirpassword.getText().toString().trim().isEmpty())) {
+            edtConfirpassword.setError(getResString(R.string.enter_confirm_password));
             if (edtConfirpassword.requestFocus()) {
                 setEditTextFocus(edtConfirpassword);
             }
             return false;
-        } else if (edtConfirpassword.getText().toString().length() < 6) {
-            edtConfirpassword.setError(getString(R.string.confirmpasswordLength));
+        } else if (edtConfirpassword.getText().toString().trim().length() < 6) {
+            edtConfirpassword.setError(getResString(R.string.confirmpasswordLength));
             if (edtConfirpassword.requestFocus()) {
                 setEditTextFocus(edtConfirpassword);
             }
             return false;
-        } else if (!edtConfirpassword.getText().toString().equals(edtPassword.getText().toString())) {
-            edtConfirpassword.setError(getString(R.string.conform_password_error));
+        } else if (!edtConfirpassword.getText().toString().trim().equals(edtPassword.getText().toString().trim())) {
+            edtConfirpassword.setError(getResString(R.string.conform_password_error));
             if (edtConfirpassword.requestFocus()) {
                 setEditTextFocus(edtConfirpassword);
             }

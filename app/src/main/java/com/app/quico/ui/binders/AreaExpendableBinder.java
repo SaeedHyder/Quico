@@ -9,7 +9,10 @@ import android.widget.ImageView;
 import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
 import com.app.quico.activities.MainActivity;
+import com.app.quico.entities.CitiesEnt;
+import com.app.quico.entities.LocationEnt;
 import com.app.quico.helpers.BasePreferenceHelper;
+import com.app.quico.interfaces.AreaInterface;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.ExpandableListViewBinder;
 import com.app.quico.ui.views.AnyTextView;
@@ -21,15 +24,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class AreaExpendableBinder extends ExpandableListViewBinder<String, ArrayList<String>> implements RecyclerClickListner {
+public class AreaExpendableBinder extends ExpandableListViewBinder<CitiesEnt, ArrayList<LocationEnt>> implements AreaInterface {
 
     DockActivity context;
     private BasePreferenceHelper preferenceHelper;
     private MainActivity mainActivity;
-    private RecyclerClickListner clickListner;
+    private AreaInterface clickListner;
 
 
-    public AreaExpendableBinder(DockActivity context, BasePreferenceHelper prefHelper, MainActivity mainActivity, RecyclerClickListner clickListner) {
+    public AreaExpendableBinder(DockActivity context, BasePreferenceHelper prefHelper, MainActivity mainActivity, AreaInterface clickListner) {
 
         super(R.layout.row_item_area_parent, R.layout.row_item_area_child);
         this.context = context;
@@ -51,11 +54,11 @@ public class AreaExpendableBinder extends ExpandableListViewBinder<String, Array
 
 
     @Override
-    public void bindGroupView(String entity, int position, int grpPosition, View view, Activity activity,boolean isExpended) {
+    public void bindGroupView(CitiesEnt entity, int position, int grpPosition, View view, Activity activity,boolean isExpended) {
 
         parentViewHolder parentViewHolder = (parentViewHolder) view.getTag();
 
-        parentViewHolder.txtTitle.setText(entity);
+        parentViewHolder.txtTitle.setText(entity.getLocation());
 
         if (isExpended) {
              parentViewHolder.downArrow.setRotation(180);
@@ -63,12 +66,11 @@ public class AreaExpendableBinder extends ExpandableListViewBinder<String, Array
              parentViewHolder.downArrow.setRotation(360);
         }
 
-
     }
 
 
     @Override
-    public void bindChildView(ArrayList<String> entity, int position, int grpPosition, View view, Activity activity) {
+    public void bindChildView(ArrayList<LocationEnt> entity, int position, int grpPosition, View view, Activity activity) {
 
         childViewHolder childViewHolder = (childViewHolder) view.getTag();
 
@@ -79,10 +81,17 @@ public class AreaExpendableBinder extends ExpandableListViewBinder<String, Array
 
     }
 
+
     @Override
-    public void onClick(Object entity, int position) {
-        clickListner.onClick(entity, position);
+    public void selectArea(Object entity, int position) {
+        clickListner.selectArea(entity, position);
     }
+
+    @Override
+    public void selectService(String selectedIds, String names) {
+
+    }
+
 
 
     static class parentViewHolder extends BaseGroupViewHolder {

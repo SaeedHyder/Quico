@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.app.quico.interfaces.LoadMoreListener;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 
 import java.util.List;
@@ -16,7 +17,11 @@ public class RecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerViewBin
     private List<T> collections;
     private RecyclerViewBinder<T> viewBinder;
     private Context mContext;
-    
+    private LoadMoreListener onLoadMoreListener;
+
+    public void setOnLoadMoreListener(LoadMoreListener onLoadMoreListener) {
+        this.onLoadMoreListener = onLoadMoreListener;
+    }
 
     public RecyclerViewAdapter(List<T> collections, RecyclerViewBinder<T> viewBinder, Context context) {
         this.collections = collections;
@@ -35,6 +40,11 @@ public class RecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerViewBin
     public void onBindViewHolder(RecyclerViewBinder.BaseViewHolder holder, int position) {
         T entity = (T)this.collections.get(position);
         this.viewBinder.bindView(entity,position,holder,this.mContext);
+        if (position == collections.size() - 1) {
+            if (onLoadMoreListener != null) {
+                onLoadMoreListener.onLoadMoreItem(position);
+            }
+        }
     }
 
     @Override

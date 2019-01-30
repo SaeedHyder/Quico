@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.app.quico.R;
 import com.app.quico.fragments.abstracts.BaseFragment;
+import com.app.quico.global.WebServiceConstants;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.ui.views.TitleBar;
 
@@ -16,6 +17,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.app.quico.global.WebServiceConstants.ChangePassword;
 
 public class ChangePasswordFragment extends BaseFragment {
     @BindView(R.id.edt_old_password)
@@ -69,13 +72,13 @@ public class ChangePasswordFragment extends BaseFragment {
     }
 
     private boolean isvalidate() {
-        if (edtOldPassword.getText() == null || (edtOldPassword.getText().toString().isEmpty())) {
+        if (edtOldPassword.getText() == null || (edtOldPassword.getText().toString().trim().isEmpty())) {
             edtOldPassword.setError(getString(R.string.enter_password));
             if (edtOldPassword.requestFocus()) {
                 setEditTextFocus(edtOldPassword);
             }
             return false;
-        } else if (edtNewPassword.getText() == null || (edtNewPassword.getText().toString().isEmpty())) {
+        } else if (edtNewPassword.getText() == null || (edtNewPassword.getText().toString().trim().isEmpty())) {
             edtNewPassword.setError(getString(R.string.enter_password));
             if (edtNewPassword.requestFocus()) {
                 setEditTextFocus(edtNewPassword);
@@ -87,25 +90,25 @@ public class ChangePasswordFragment extends BaseFragment {
                 setEditTextFocus(edtNewPassword);
             }
             return false;
-        } else if (edtNewPassword.getText().toString().length() < 6) {
+        } else if (edtNewPassword.getText().toString().trim().length() < 6) {
             edtNewPassword.setError(getString(R.string.passwordLength));
             if (edtNewPassword.requestFocus()) {
                 setEditTextFocus(edtNewPassword);
             }
             return false;
-        } else if (edtConfirpassword.getText() == null || (edtConfirpassword.getText().toString().isEmpty())) {
+        } else if (edtConfirpassword.getText() == null || (edtConfirpassword.getText().toString().trim().isEmpty())) {
             edtConfirpassword.setError(getString(R.string.enter_confirm_password));
             if (edtConfirpassword.requestFocus()) {
                 setEditTextFocus(edtConfirpassword);
             }
             return false;
-        } else if (edtConfirpassword.getText().toString().length() < 6) {
+        } else if (edtConfirpassword.getText().toString().trim().length() < 6) {
             edtConfirpassword.setError(getString(R.string.confirmpasswordLength));
             if (edtConfirpassword.requestFocus()) {
                 setEditTextFocus(edtConfirpassword);
             }
             return false;
-        } else if (!edtConfirpassword.getText().toString().equals(edtNewPassword.getText().toString())) {
+        } else if (!edtConfirpassword.getText().toString().trim().equals(edtNewPassword.getText().toString().trim())) {
             edtConfirpassword.setError(getString(R.string.conform_password_error));
             if (edtConfirpassword.requestFocus()) {
                 setEditTextFocus(edtConfirpassword);
@@ -120,8 +123,19 @@ public class ChangePasswordFragment extends BaseFragment {
     @OnClick(R.id.btn_submit)
     public void onViewClicked() {
         if (isvalidate()) {
-            getDockActivity().popBackStackTillEntry(0);
-           getDockActivity().replaceDockableFragment(HomeFragment.newInstance(),"HomeFragment");
+            serviceHelper.enqueueCall(headerWebService.changePassword(edtOldPassword.getText().toString(),edtNewPassword.getText().toString(),edtConfirpassword.getText().toString()), ChangePassword);
+        }
+    }
+
+    @Override
+    public void ResponseSuccess(Object result, String Tag, String message) {
+        super.ResponseSuccess(result, Tag, message);
+        switch (Tag){
+            case ChangePassword:
+                UIHelper.showShortToastInCenter(getDockActivity(),getResString(R.string.password_changed));
+                getDockActivity().popBackStackTillEntry(0);
+                getDockActivity().replaceDockableFragment(HomeFragment.newInstance(),"HomeFragment");
+                break;
         }
     }
 }

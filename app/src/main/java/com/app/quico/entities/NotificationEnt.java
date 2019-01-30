@@ -16,43 +16,30 @@ public class NotificationEnt {
     @SerializedName("sender_id")
     @Expose
     private Integer senderId;
-    @SerializedName("reciever_id")
+    @SerializedName("url")
     @Expose
-    private Integer recieverId;
-    @SerializedName("message")
-    @Expose
-    private String message;
-    @SerializedName("ma_message")
-    @Expose
-    private String Mamessage;
-    @SerializedName("in_message")
-    @Expose
-    private String Inmessage;
+    private String url;
     @SerializedName("action_type")
     @Expose
     private String actionType;
-    @SerializedName("action_id")
+    @SerializedName("ref_id")
     @Expose
-    private Integer actionId;
+    private Integer refId;
+    @SerializedName("message")
+    @Expose
+    private String message;
+    @SerializedName("status")
+    @Expose
+    private Boolean status;
     @SerializedName("created_at")
     @Expose
     private String createdAt;
-
-    public String getMamessage() {
-        return Mamessage;
-    }
-
-    public void setMamessage(String mamessage) {
-        Mamessage = mamessage;
-    }
-
-    public String getInmessage() {
-        return Inmessage;
-    }
-
-    public void setInmessage(String inmessage) {
-        Inmessage = inmessage;
-    }
+    @SerializedName("updated_at")
+    @Expose
+    private String updatedAt;
+    @SerializedName("deleted_at")
+    @Expose
+    private String deletedAt;
 
     public Integer getId() {
         return id;
@@ -70,20 +57,12 @@ public class NotificationEnt {
         this.senderId = senderId;
     }
 
-    public Integer getRecieverId() {
-        return recieverId;
+    public String getUrl() {
+        return url;
     }
 
-    public void setRecieverId(Integer recieverId) {
-        this.recieverId = recieverId;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getActionType() {
@@ -94,19 +73,51 @@ public class NotificationEnt {
         this.actionType = actionType;
     }
 
-    public Integer getActionId() {
-        return actionId;
+    public Integer getRefId() {
+        return refId;
     }
 
-    public void setActionId(Integer actionId) {
-        this.actionId = actionId;
+    public void setRefId(Integer refId) {
+        this.refId = refId;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     public String getCreatedAt() {
-        return DateHelper.getLocalTimeDate(createdAt);
+        return createdAt;
     }
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(String deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }

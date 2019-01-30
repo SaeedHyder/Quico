@@ -38,16 +38,57 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "Data Payload: " + remoteMessage.getData().toString());
-            buildNotification(remoteMessage);
 
+            if (remoteMessage.getData().get("action_type")!=null &&( remoteMessage.getData().get("action_type").equals("USER_DELETED") || remoteMessage.getData().get("action_type").equals("USER_STATUS"))) {
+                preferenceHelper.setLoginStatus(false);
 
+                String title = remoteMessage.getData().get("title");
+                String message = remoteMessage.getData().get("body");
+                String actionType = remoteMessage.getData().get("action_type");
+                String redId = remoteMessage.getData().get("ref_id");
+                Log.e(TAG, "message: " + message);
+
+                Intent pushNotification = new Intent(AppConstants.PUSH_NOTIFICATION);
+                pushNotification.putExtra("message", message);
+                pushNotification.putExtra("actionType", actionType);
+                pushNotification.putExtra("redId", redId);
+
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(pushNotification);
+
+            } else {
+
+                String title = remoteMessage.getData().get("title");
+                String message = remoteMessage.getData().get("body");
+                String actionType = remoteMessage.getData().get("action_type");
+                String redId = remoteMessage.getData().get("ref_id");
+                Log.e(TAG, "message: " + message);
+                Intent resultIntent = new Intent(MyFirebaseMessagingService.this, MainActivity.class);
+                resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                resultIntent.putExtra("title", title);
+                resultIntent.putExtra("message", message);
+                resultIntent.putExtra("actionType", actionType);
+                resultIntent.putExtra("redId", redId);
+                resultIntent.putExtra("tapped", true);
+
+                Intent pushNotification = new Intent(AppConstants.PUSH_NOTIFICATION);
+                pushNotification.putExtra("message", message);
+                pushNotification.putExtra("actionType", actionType);
+                pushNotification.putExtra("redId", redId);
+
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(pushNotification);
+                showNotificationMessage(MyFirebaseMessagingService.this, title, message, "", resultIntent);
+
+            }
+
+        } else if (remoteMessage.getNotification() != null) {
+
+            getNotification(remoteMessage);
         }
     }
 
-    private void buildNotification(RemoteMessage messageBody) {
-        //getNotificaitonCount();
-        String title = getString(R.string.app_name);
-        String message = messageBody.getData().get("message");
+    private void getNotification(RemoteMessage remoteMessage) {
+        String title = remoteMessage.getNotification().getTitle().toString();
+        String message = remoteMessage.getNotification().getBody().toString();
         Log.e(TAG, "message: " + message);
         Intent resultIntent = new Intent(MyFirebaseMessagingService.this, MainActivity.class);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -60,6 +101,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(pushNotification);
         showNotificationMessage(MyFirebaseMessagingService.this, title, message, "", resultIntent);
     }
+
+
 
     /*private void getNotificaitonCount() {
         webservice = WebServiceFactory.getWebServiceInstanceWithCustomInterceptor(this, WebServiceConstants.Local_SERVICE_URL);
@@ -87,7 +130,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     private void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent) {
         NotificationHelper.getInstance().showNotification(context,
-                R.drawable.ic_launcher,
+                R.drawable.app_icon,
                 title,
                 message,
                 timeStamp,

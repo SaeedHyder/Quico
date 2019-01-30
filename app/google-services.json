@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "428616761570",
-    "firebase_url": "https://thirdeye-c0ecd.firebaseio.com",
-    "project_id": "thirdeye-c0ecd",
-    "storage_bucket": "thirdeye-c0ecd.appspot.com"
+    "project_number": "574862893654",
+    "firebase_url": "https://quico-b3c88.firebaseio.com",
+    "project_id": "quico-b3c88",
+    "storage_bucket": "quico-b3c88.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:428616761570:android:43b5608f6a574472",
+        "mobilesdk_app_id": "1:574862893654:android:65d133c38345d1e7",
         "android_client_info": {
-          "package_name": "com.app.thirdeye"
+          "package_name": "com.app.quico"
         }
       },
       "oauth_client": [
         {
-          "client_id": "428616761570-445srleh0ag530hd2s1n5g29hr2fote8.apps.googleusercontent.com",
+          "client_id": "574862893654-lk2kkp0si2sn21dfpcnkek81258020lc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.quico",
+            "certificate_hash": "d3b45d4958b305c928fc34c7f1facd13048c5c25"
+          }
+        },
+        {
+          "client_id": "574862893654-nvht8lcsue76o75dmssnuau7oqdjarjh.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD2svVcQ7E4PbvYti8ebwdY3EzgBr8JvQU"
+          "current_key": "AIzaSyCrvSXe-CohDtVEKicHRJUAk-ubqKaBPEY"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "574862893654-nvht8lcsue76o75dmssnuau7oqdjarjh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

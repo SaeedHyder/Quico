@@ -17,5 +17,7 @@
     <com.app.quico.ui.views.CustomRecyclerView
         android:id="@+id/SideMenu"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/x5"
+        />
 </LinearLayout>

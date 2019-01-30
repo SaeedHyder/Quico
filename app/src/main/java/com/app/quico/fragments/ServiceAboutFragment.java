@@ -14,15 +14,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.app.quico.R;
+import com.app.quico.entities.CompanyDetail;
+import com.app.quico.entities.SocialDetail;
 import com.app.quico.fragments.abstracts.BaseFragment;
+import com.app.quico.global.AppConstants;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.binders.OfferedServiceBinder;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.CustomRecyclerView;
 import com.app.quico.ui.views.TitleBar;
-
-import java.util.ArrayList;
+import com.google.gson.Gson;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +51,8 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
     AnyTextView txtEmail;
     @BindView(R.id.website)
     AnyTextView website;
+    @BindView(R.id.txt_services_offered)
+    AnyTextView txtServicesOffered;
     @BindView(R.id.txt_website)
     AnyTextView txtWebsite;
     @BindView(R.id.btn_fb)
@@ -72,11 +76,14 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
     @BindView(R.id.btnWebsite)
     RelativeLayout btnWebsite;
 
-    private ArrayList<String> collection;
 
-    public static ServiceAboutFragment newInstance() {
+    private CompanyDetail companyDetail;
+    private static String companyDetailKey = "companyDetailKey";
+    private String facebookUrl, instagramUrl, googlePlusUrl, twitterUrl, linkedinUrl;
+
+    public static ServiceAboutFragment newInstance(CompanyDetail data) {
         Bundle args = new Bundle();
-
+        args.putString(companyDetailKey, new Gson().toJson(data));
         ServiceAboutFragment fragment = new ServiceAboutFragment();
         fragment.setArguments(args);
         return fragment;
@@ -86,6 +93,11 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            String json = getArguments().getString(companyDetailKey);
+
+            if (json != null) {
+                companyDetail = new Gson().fromJson(json, CompanyDetail.class);
+            }
         }
 
     }
@@ -107,18 +119,51 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
 
     private void setData() {
 
-        collection = new ArrayList<>();
-        collection.add("Installation");
-        collection.add("Faucet Fixing");
-        collection.add("Leackage");
-        collection.add("Installation");
-        collection.add("Faucet Fixing");
-        collection.add("Leackage");
+        if (companyDetail != null) {
+
+            if(companyDetail.isBackBtn()){
+                btnChatWithUs.setVisibility(View.GONE);
+            }
+
+            txtAbout.setText(companyDetail.getAbout());
+            txtAddress.setText(companyDetail.getLocation());
+
+            if (companyDetail.getCountryCode() != null && !companyDetail.getCountryCode().equals("") && !companyDetail.getCountryCode().equals("null")) {
+                txtPhoneNo.setText(companyDetail.getCountryCode() + companyDetail.getPhone());
+            } else {
+                txtPhoneNo.setText(companyDetail.getPhone());
+            }
+            txtEmail.setText(companyDetail.getEmail());
+            txtWebsite.setText(companyDetail.getWebsite());
+
+            if (companyDetail.getServicesDetails() != null && companyDetail.getServicesDetails().size() > 0) {
+                txtServicesOffered.setVisibility(View.VISIBLE);
+                rvServices.setVisibility(View.VISIBLE);
+
+                rvServices.BindRecyclerView(new OfferedServiceBinder(getDockActivity(), prefHelper, this), companyDetail.getServicesDetails(),
+                        new LinearLayoutManager(getDockActivity(), LinearLayoutManager.HORIZONTAL, false)
+                        , new DefaultItemAnimator());
+            } else {
+                txtServicesOffered.setVisibility(View.GONE);
+                rvServices.setVisibility(View.GONE);
+            }
+
+            for (SocialDetail item : companyDetail.getSocialDetails()) {
+                if (item.getType().equals(AppConstants.Facebook)) {
+                    facebookUrl = item.getLink();
+                } else if (item.getType().equals(AppConstants.Instagram)) {
+                    instagramUrl = item.getLink();
+                } else if (item.getType().contains(AppConstants.GooglePlus)) {
+                    googlePlusUrl = item.getLink();
+                } else if (item.getType().equals(AppConstants.Twitter)) {
+                    twitterUrl = item.getLink();
+                } else if (item.getType().equals(AppConstants.Linkedin)) {
+                    linkedinUrl = item.getLink();
+                }
+            }
 
 
-        rvServices.BindRecyclerView(new OfferedServiceBinder(getDockActivity(), prefHelper, this), collection,
-                new LinearLayoutManager(getDockActivity(), LinearLayoutManager.HORIZONTAL, false)
-                , new DefaultItemAnimator());
+        }
     }
 
 
@@ -139,46 +184,84 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_fb:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com")));
+                if (facebookUrl != null && !facebookUrl.equals("")) {
+                    openWebPage(facebookUrl);
+                }
                 break;
             case R.id.btn_insta:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com")));
+                if (instagramUrl != null && !instagramUrl.equals("")) {
+                    openWebPage(instagramUrl);
+                }
                 break;
             case R.id.btn_google:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.plus.google.com")));
+                if (googlePlusUrl != null && !googlePlusUrl.equals("")) {
+                    openWebPage(googlePlusUrl);
+                }
                 break;
             case R.id.btn_linkedin:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com")));
+                if (linkedinUrl != null && !linkedinUrl.equals("")) {
+                    openWebPage(linkedinUrl);
+                }
                 break;
             case R.id.btn_twitter:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.twitter.com")));
+                if (twitterUrl != null && !twitterUrl.equals("")) {
+                    openWebPage(twitterUrl);
+                }
                 break;
             case R.id.btn_chat_with_us:
                 getDockActivity().replaceDockableFragment(ChatFragment.newInstance(), "ChatFragment");
                 break;
             case R.id.btnAddress:
-                String geoUri = "http://maps.google.com/maps?q=loc:" + 25.2048 + "," + 55.2708;
-                Intent intentAddress = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                startActivity(intentAddress);
+                if (companyDetail != null && companyDetail.getLatitude() != null && companyDetail.getLongitude() != null && !companyDetail.getLatitude().equals("")) {
+                    String geoUri = "http://maps.google.com/maps?q=loc:" + companyDetail.getLatitude() + "," + companyDetail.getLongitude();
+                    Intent intentAddress = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                    startActivity(intentAddress);
+                } else {
+
+                }
+                //   UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.will_be_implemented));
                 break;
             case R.id.btnPhoneNumber:
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:0123456789"));
-                startActivity(intent);
+                if (companyDetail.getPhone() != null && !companyDetail.getPhone().isEmpty()) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    if (companyDetail.getCountryCode() != null && !companyDetail.getCountryCode().equals("")) {
+                        intent.setData(Uri.parse("tel:" + companyDetail.getCountryCode() + companyDetail.getPhone()));
+                    }else{
+                        intent.setData(Uri.parse("tel:" + companyDetail.getPhone()));
+                    }
+                    startActivity(intent);
+                }
+                //  UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.will_be_implemented));
                 break;
             case R.id.btnEmail:
-                try{
-                    Intent intentEmail = new Intent (Intent.ACTION_VIEW , Uri.parse("mailto:" + "your_email"));
-                    intentEmail.putExtra(Intent.EXTRA_SUBJECT, "your_subject");
-                    intentEmail.putExtra(Intent.EXTRA_TEXT, "your_text");
-                    startActivity(intentEmail);
-                }catch(ActivityNotFoundException e){
+                try {
+                    if (companyDetail.getEmail() != null && !companyDetail.getEmail().isEmpty()) {
+                        Intent intentEmail = new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + companyDetail.getEmail()));
+                        startActivity(intentEmail);
+                    }
+                } catch (ActivityNotFoundException e) {
                     //TODO smth
                 }
+                // UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.will_be_implemented));
                 break;
             case R.id.btnWebsite:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com")));
+                if (companyDetail.getWebsite() != null && !companyDetail.getWebsite().isEmpty()) {
+                    openWebPage(companyDetail.getWebsite());
+                }
                 break;
+        }
+    }
+
+    public void openWebPage(String url) {
+        try {
+            Uri webpage = Uri.parse(url);
+
+            if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                webpage = Uri.parse("http://" + url);
+            }
+            startActivity(new Intent(Intent.ACTION_VIEW, webpage));
+        } catch (ActivityNotFoundException e) {
+            //TODO smth
         }
     }
 

@@ -2,31 +2,32 @@ package com.app.quico.entities;
 
 public class ResponseWrapper<T> {
 
-    private String Message;
-    private String Response;
-    private T Result;
+    private String message;
+    private boolean success;
+    private T data;
+
 
     public String getMessage() {
-        return Message;
+        return message;
     }
 
     public void setMessage(String message) {
-        Message = message;
+        this.message = message;
     }
 
-    public String getResponse() {
-        return Response;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setResponse(String response) {
-        Response = response;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
-    public T getResult() {
-        return Result;
+    public T getData() {
+        return data;
     }
 
-    public void setResult(T result) {
-        Result = result;
+    public void setData(T data) {
+        this.data = data;
     }
 }

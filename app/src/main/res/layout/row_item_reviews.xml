@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
@@ -14,9 +14,10 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userImage"
             android:layout_width="@dimen/x40"
             android:layout_height="@dimen/x40"
-            android:src="@drawable/images1" />
+            android:src="@drawable/placeholder" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,9 +33,13 @@
 
                 <com.app.quico.ui.views.AnyTextView
                     android:id="@+id/txt_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Lisa"
+                    android:layout_weight="1"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:text="@string/lorem_small_2"
                     android:textColor="@color/black"
                     android:textSize="@dimen/x14"
                     app:typeface="@string/font_normal" />
@@ -43,19 +48,20 @@
                     android:id="@+id/txt_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/x10"
+                    android:layout_marginStart="@dimen/x5"
+                    android:layout_marginEnd="@dimen/x5"
                     android:text="Aug 07,2019"
                     android:textColor="@color/profile_text"
                     android:textSize="@dimen/x12"
                     app:typeface="@string/font_normal" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="end">
 
                     <com.app.quico.ui.views.CustomRatingBar
-                        android:id="@+id/rbParlourRating"
+                        android:id="@+id/rbRating"
                         android:layout_width="@dimen/x70"
                         android:layout_height="wrap_content"
                         app:onlyForDisplay="true"
@@ -70,6 +76,7 @@
                 android:id="@+id/txt_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/x5"
                 android:text="@string/lorem_small"
                 android:textColor="@color/app_black_text"
                 android:textSize="@dimen/x14"

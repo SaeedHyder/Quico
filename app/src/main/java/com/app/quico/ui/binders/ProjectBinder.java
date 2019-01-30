@@ -6,17 +6,19 @@ import android.widget.ImageView;
 
 import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
+import com.app.quico.entities.ProjectDetail;
 import com.app.quico.helpers.BasePreferenceHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class ProjectBinder extends RecyclerViewBinder<String> {
+public class ProjectBinder extends RecyclerViewBinder<ProjectDetail> {
 
     private DockActivity dockActivity;
     private BasePreferenceHelper prefHelper;
@@ -37,18 +39,20 @@ public class ProjectBinder extends RecyclerViewBinder<String> {
     }
 
     @Override
-    public void bindView(String entity, int position, Object viewHolder, Context context) {
+    public void bindView(ProjectDetail entity, int position, Object viewHolder, Context context) {
 
         final ViewHolder holder = (ViewHolder) viewHolder;
-        imageLoader.displayImage(entity, holder.image);
+        if (entity.getIconUrl() != null && !entity.getIconUrl().equals("") && !entity.getIconUrl().isEmpty()) {
+            //imageLoader.displayImage(entity.getIconUrl(), holder.image);
+            Picasso.with(dockActivity).load(entity.getIconUrl()).placeholder(R.drawable.placeholder).into(holder.image);
+        }
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clickListner.onClick(entity,position);
+                clickListner.onClick(entity, position);
             }
         });
-
 
 
     }

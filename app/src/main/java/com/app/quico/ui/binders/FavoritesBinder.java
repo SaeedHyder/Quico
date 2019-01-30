@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
+import com.app.quico.entities.CompanyEnt;
 import com.app.quico.helpers.BasePreferenceHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
@@ -18,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class FavoritesBinder extends RecyclerViewBinder<String> {
+public class FavoritesBinder extends RecyclerViewBinder<CompanyEnt> {
 
     private DockActivity dockActivity;
     private BasePreferenceHelper prefHelper;
@@ -39,19 +40,29 @@ public class FavoritesBinder extends RecyclerViewBinder<String> {
     }
 
     @Override
-    public void bindView(String entity, int position, Object viewHolder, Context context) {
+    public void bindView(CompanyEnt entity, int position, Object viewHolder, Context context) {
 
         final ViewHolder holder = (ViewHolder) viewHolder;
 
+        if (entity != null) {
+           /* if (entity.getIsFeature() == 1) {
+                holder.featured.setVisibility(View.VISIBLE);
+            } else {
+                holder.featured.setVisibility(View.GONE);
+            }*/
+            holder.txtName.setText(entity.getName() + "");
+            holder.txtRating.setText(entity.getReviewCount() + " " + dockActivity.getResources().getString(R.string.reviews));
+            holder.rbParlourRating.setScore(entity.getAvgRate());
 
-        holder.mainFrame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickListner.onClick(entity, position);
-            }
-        });
+            holder.mainFrame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    clickListner.onClick(entity, position);
+                }
+            });
 
-        imageLoader.displayImage(entity, holder.logo);
+            imageLoader.displayImage(entity.getIconUrl(), holder.logo);
+        }
 
     }
 

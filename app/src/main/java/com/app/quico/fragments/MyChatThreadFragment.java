@@ -1,11 +1,14 @@
 package com.app.quico.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
 import com.app.quico.R;
 import com.app.quico.fragments.abstracts.BaseFragment;
@@ -58,6 +61,10 @@ public class MyChatThreadFragment extends BaseFragment implements RecyclerClickL
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation(getDockActivity(), R.anim.layout_animation_from_right);
+            rvMychat.setLayoutAnimation(anim);
+        }
         setData();
     }
 

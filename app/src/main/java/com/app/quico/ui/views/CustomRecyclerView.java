@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
+import com.app.quico.interfaces.LoadMoreListener;
 import com.app.quico.ui.adapters.RecyclerViewAdapter;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 
@@ -19,6 +20,7 @@ public class CustomRecyclerView<T> extends RecyclerView {
     private RecyclerViewAdapter<T> mRecyclerViewAdapter;
     private ArrayList<T> userCollection;
     private RecyclerViewBinder<T> viewBinder;
+
 
     public CustomRecyclerView(Context context) {
         super(context);

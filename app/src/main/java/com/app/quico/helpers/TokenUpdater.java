@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.app.quico.entities.ResponseWrapper;
+import com.app.quico.global.AppConstants;
 import com.app.quico.global.WebServiceConstants;
 import com.app.quico.retrofit.WebService;
 import com.app.quico.retrofit.WebServiceFactory;
@@ -27,26 +28,26 @@ public class TokenUpdater {
         return tokenUpdater;
     }
 
-    public void UpdateToken(Context context, final String userid, String DeviceType, String Token) {
+    public void UpdateToken(Context context, String Token) {
         if (Token.isEmpty()) {
             Log.e("Token Updater", "Token is Empty");
         }
-        webservice = WebServiceFactory.getWebServiceInstanceWithCustomInterceptor(context,
+        webservice = WebServiceFactory.getWebServiceInstanceWithCustomInterceptorandheader(context,
                 WebServiceConstants.Local_SERVICE_URL);
 
-       /* Call<ResponseWrapper> call = webservice.updateToken(userid,Token, DeviceType );
+        Call<ResponseWrapper> call = webservice.updateToken(AppConstants.Device_Type,Token);
         call.enqueue(new Callback<ResponseWrapper>() {
             @Override
             public void onResponse(Call<ResponseWrapper> call, Response<ResponseWrapper> response) {
                 if (response.body()!=null)
-                Log.i("UPDATETOKEN", response.body().getResponse() + "" + userid);
+                Log.i("UPDATETOKEN", response.body().getMessage());
             }
 
             @Override
             public void onFailure(Call<ResponseWrapper> call, Throwable t) {
                 Log.e("UPDATETOKEN", t.toString());
             }
-        });*/
+        });
     }
 
 }

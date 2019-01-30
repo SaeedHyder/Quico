@@ -23,9 +23,8 @@
         android:id="@+id/rv_mychat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layoutAnimation="@anim/layout_animation_from_right"
         android:layout_marginEnd="@dimen/x15"
         android:layout_marginStart="@dimen/x15"
-        android:layout_marginTop="@dimen/x10" />
+         />
 
 </LinearLayout>

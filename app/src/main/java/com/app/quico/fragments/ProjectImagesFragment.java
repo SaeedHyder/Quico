@@ -7,10 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.quico.R;
+import com.app.quico.entities.ProjectDetail;
 import com.app.quico.fragments.abstracts.BaseFragment;
 import com.app.quico.ui.adapters.CustomPageAdapter;
 import com.app.quico.ui.views.TitleBar;
-import com.daimajia.slider.library.Indicators.PagerIndicator;
+import com.google.gson.Gson;
+
 
 import java.util.ArrayList;
 
@@ -27,10 +29,12 @@ public class ProjectImagesFragment extends BaseFragment {
     Unbinder unbinder;
 
     private CustomPageAdapter customPageAdapter;
+    private ProjectDetail projectDetail;
+    private static String projectKey = "projectKey";
 
-    public static ProjectImagesFragment newInstance() {
+    public static ProjectImagesFragment newInstance(ProjectDetail data) {
         Bundle args = new Bundle();
-
+        args.putString(projectKey, new Gson().toJson(data));
         ProjectImagesFragment fragment = new ProjectImagesFragment();
         fragment.setArguments(args);
         return fragment;
@@ -40,6 +44,10 @@ public class ProjectImagesFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            String json = getArguments().getString(projectKey);
+            if (json != null) {
+                projectDetail = new Gson().fromJson(json, ProjectDetail.class);
+            }
         }
 
     }
@@ -60,26 +68,14 @@ public class ProjectImagesFragment extends BaseFragment {
 
     private void setViewPager() {
 
-        ArrayList<String> imagesCollection = new ArrayList<>();
-        imagesCollection.add("drawable://" + R.drawable.image3);
-        imagesCollection.add("drawable://" + R.drawable.image4);
-        imagesCollection.add("drawable://" + R.drawable.image2);
-        imagesCollection.add("drawable://" + R.drawable.image4);
-        imagesCollection.add("drawable://" + R.drawable.image5);
-        imagesCollection.add("drawable://" + R.drawable.image2);
-        imagesCollection.add("drawable://" + R.drawable.image3);
-        imagesCollection.add("drawable://" + R.drawable.image2);
+       if(projectDetail!=null  && projectDetail.getMedia()!=null && projectDetail.getMedia().size()>0) {
 
-        customPageAdapter = new CustomPageAdapter(getMainActivity(), imagesCollection);
-        viewPager.setAdapter(customPageAdapter);
-        indicator.setViewPager(viewPager);
+           customPageAdapter = new CustomPageAdapter(getMainActivity(), projectDetail.getMedia());
+           viewPager.setAdapter(customPageAdapter);
+           indicator.setViewPager(viewPager);
+       }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 
     @Override
     public void setTitleBar(TitleBar titleBar) {

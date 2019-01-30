@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.app.quico.R;
 import com.app.quico.fragments.abstracts.BaseFragment;
+import com.app.quico.global.WebServiceConstants;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.ui.views.AnyEditTextView;
 import com.app.quico.ui.views.TitleBar;
@@ -24,6 +26,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.app.quico.global.WebServiceConstants.ContactUs;
 
 public class ContactUsFragment extends BaseFragment {
     @BindView(R.id.edt_username)
@@ -53,6 +57,7 @@ public class ContactUsFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getDockActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         if (getArguments() != null) {
         }
 
@@ -70,10 +75,25 @@ public class ContactUsFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if (edtContactUs.requestFocus()) {
+            setEditTextFocus(edtContactUs);
+        }
         phoneUtil = PhoneNumberUtil.getInstance();
         edtPhone.setTransformationMethod(new NumericKeyBoardTransformationMethod());
        // Countrypicker.registerCarrierNumberEditText(edtPhone);
         listner();
+        setData();
+    }
+
+    private void setData() {
+        edtUsername.setText(prefHelper.getUser().getUser().getName()+"");
+        edtEmail.setText(prefHelper.getUser().getUser().getEmail()+"");
+
+        if (prefHelper.getUser().getUser().getCountryCode() != null && !prefHelper.getUser().getUser().getCountryCode().equals("") &&
+                prefHelper.getUser().getUser().getPhone() != null && !prefHelper.getUser().getUser().getPhone().equals("")) {
+            Countrypicker.setCountryForPhoneCode(Integer.parseInt(prefHelper.getUser().getUser().getCountryCode()));
+            edtPhone.setText(prefHelper.getUser().getUser().getPhone() + "");
+        }
     }
 
     private void listner() {
@@ -105,26 +125,38 @@ public class ContactUsFragment extends BaseFragment {
     @OnClick(R.id.btn_submit)
     public void onViewClicked() {
         if (isvalidated()) {
-            getDockActivity().popBackStackTillEntry(0);
-            getDockActivity().replaceDockableFragment(HomeFragment.newInstance(), "HomeFragment");
+            serviceHelper.enqueueCall(headerWebService.contactUs(edtUsername.getText().toString(),edtEmail.getText().toString(),Countrypicker.getSelectedCountryCodeWithPlus().toString()+edtPhone.getText().toString(),edtContactUs.getText().toString()), ContactUs);
+
+        }
+    }
+
+    @Override
+    public void ResponseSuccess(Object result, String Tag, String message) {
+        super.ResponseSuccess(result, Tag, message);
+        switch (Tag){
+            case ContactUs:
+                UIHelper.showShortToastInCenter(getDockActivity(),getResString(R.string.submitted_successfully));
+                getDockActivity().popBackStackTillEntry(0);
+                getDockActivity().replaceDockableFragment(HomeFragment.newInstance(), "HomeFragment");
+                break;
         }
     }
 
     private boolean isvalidated() {
-        if (edtUsername.getText().toString().isEmpty() || edtUsername.getText().toString().length() < 3) {
+        if (edtUsername.getText().toString().trim().isEmpty() || edtUsername.getText().toString().trim().length() < 3) {
             edtUsername.setError(getString(R.string.enter_name));
             if (edtUsername.requestFocus()) {
                 setEditTextFocus(edtUsername);
             }
             return false;
-        } else if (edtEmail.getText() == null || edtEmail.getText().toString().isEmpty() ||
+        } else if (edtEmail.getText() == null || edtEmail.getText().toString().trim().isEmpty() ||
                 !Patterns.EMAIL_ADDRESS.matcher(edtEmail.getText().toString()).matches()) {
             edtEmail.setError(getString(R.string.enter_valid_email));
             if (edtEmail.requestFocus()) {
                 setEditTextFocus(edtEmail);
             }
             return false;
-        } else if (edtPhone.getText().toString().isEmpty() || edtPhone.getText().toString().length() < 3) {
+        } else if (edtPhone.getText().toString().trim().isEmpty() || edtPhone.getText().toString().length() < 3) {
             edtPhone.setError(getString(R.string.enter_phonenumber));
             if (edtPhone.requestFocus()) {
                 setEditTextFocus(edtPhone);
@@ -136,7 +168,7 @@ public class ContactUsFragment extends BaseFragment {
                 setEditTextFocus(edtPhone);
             }
             return false;
-        } else if (edtContactUs.getText().toString().isEmpty() || edtContactUs.getText().toString().length() < 3) {
+        } else if (edtContactUs.getText().toString().trim().isEmpty() || edtContactUs.getText().toString().length() < 3) {
             edtContactUs.setError(getString(R.string.enter_your_message));
             if (edtContactUs.requestFocus()) {
                 setEditTextFocus(edtContactUs);
@@ -163,5 +195,11 @@ public class ContactUsFragment extends BaseFragment {
             return false;
 
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getDockActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 }

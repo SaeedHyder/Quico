@@ -2,9 +2,12 @@ package com.app.quico.ui.binders;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
+import com.app.quico.entities.AllServicesEnt;
+import com.app.quico.entities.ServicesEnt;
 import com.app.quico.helpers.BasePreferenceHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
@@ -15,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class SelectServicesBinder extends RecyclerViewBinder<String> {
+public class SelectServicesBinder extends RecyclerViewBinder<AllServicesEnt> {
 
     private DockActivity dockActivity;
     private BasePreferenceHelper prefHelper;
@@ -36,11 +39,17 @@ public class SelectServicesBinder extends RecyclerViewBinder<String> {
     }
 
     @Override
-    public void bindView(String entity, int position, Object viewHolder, Context context) {
+    public void bindView(AllServicesEnt entity, int position, Object viewHolder, Context context) {
 
         final ViewHolder holder = (ViewHolder) viewHolder;
 
-        holder.txtTitle.setText(entity);
+        if(entity.isSelected()){
+            holder.ivSelected.setVisibility(View.VISIBLE);
+        }else{
+            holder.ivSelected.setVisibility(View.GONE);
+        }
+
+        holder.txtTitle.setText(entity.getName());
 
         holder.txtTitle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,9 +61,11 @@ public class SelectServicesBinder extends RecyclerViewBinder<String> {
 
     }
 
-    static class ViewHolder extends BaseViewHolder{
+    static class ViewHolder extends BaseViewHolder {
         @BindView(R.id.txt_title)
         AnyTextView txtTitle;
+        @BindView(R.id.iv_selected)
+        ImageView ivSelected;
 
         ViewHolder(View view) {
             super(view);

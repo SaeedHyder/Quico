@@ -3,15 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/mainFrameLayout"
     android:orientation="vertical">
 
     <com.app.quico.ui.views.AnyTextView
         android:id="@+id/txt_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x50"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:paddingEnd="@dimen/x15"
         android:paddingStart="@dimen/x15"
+        android:paddingTop="@dimen/x15"
+        android:layout_toStartOf="@+id/downArrow"
+        android:paddingBottom="@dimen/x15"
         android:text="black"
         android:textColor="@color/app_black_text"
         android:textSize="@dimen/x14"

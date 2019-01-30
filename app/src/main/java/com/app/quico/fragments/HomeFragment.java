@@ -1,13 +1,18 @@
 package com.app.quico.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +21,24 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.app.quico.R;
+import com.app.quico.entities.BatchCount;
+import com.app.quico.entities.LocationEnt;
 import com.app.quico.entities.LocationModel;
+import com.app.quico.entities.ServicesEnt;
 import com.app.quico.fragments.abstracts.BaseFragment;
+import com.app.quico.helpers.InternetHelper;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.interfaces.AreaInterface;
+import com.app.quico.interfaces.OnSettingActivateListener;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.binders.ServiesBinder;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.CustomRecyclerView;
 import com.app.quico.ui.views.TitleBar;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -41,8 +55,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.app.quico.global.WebServiceConstants.BatchCountService;
+import static com.app.quico.global.WebServiceConstants.Services;
 
-public class HomeFragment extends BaseFragment implements RecyclerClickListner, AreaInterface {
+
+public class HomeFragment extends BaseFragment implements RecyclerClickListner, AreaInterface, OnSettingActivateListener {
 
 
     @BindView(R.id.btnMenu)
@@ -64,10 +81,17 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
     AnyTextView txtAddress;
     @BindView(R.id.txtServices)
     AnyTextView txtServices;
+    @BindView(R.id.txt_no_data)
+    AnyTextView txtNoData;
+    @BindView(R.id.pullToRefresh)
+    SwipeRefreshLayout pullToRefresh;
 
     private ArrayList<String> collection;
     private Double locationLat = 0.0;
     private Double locationLng = 0.0;
+    private String cityId;
+    private String areaId;
+    private String serviceId;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -90,8 +114,30 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getMainActivity().setOnSettingActivateListener(this);
 
-        setData();
+        HomeServiceCall();
+        pullRefreshListner();
+    }
+
+    private void pullRefreshListner() {
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                HomeServiceCall();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
+    }
+
+    private void HomeServiceCall() {
+        if (InternetHelper.CheckInternetConectivityand(getDockActivity())) {
+            txtNoData.setVisibility(View.GONE);
+            serviceHelper.enqueueCall(headerWebService.getServices(), Services);
+            serviceHelper.enqueueCall(headerWebService.bacthCount(), BatchCountService, false);
+        } else {
+            txtNoData.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -100,21 +146,8 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
         titleBar.hideTitleBar();
     }
 
-    private void setData() {
 
-        collection = new ArrayList<>();
-        collection.add("drawable://" + R.drawable.plubmer);
-        collection.add("drawable://" + R.drawable.electricina);
-        collection.add("drawable://" + R.drawable.interiordesign);
-        collection.add("drawable://" + R.drawable.automobile);
-
-
-        rvServices.BindRecyclerView(new ServiesBinder(getDockActivity(), prefHelper, this), collection,
-                new LinearLayoutManager(getDockActivity(), LinearLayoutManager.VERTICAL, false)
-                , new DefaultItemAnimator());
-    }
-
-    @OnClick({R.id.btnMenu, R.id.btnNotification, R.id.btn_current_location, R.id.btn_find_quico, R.id.txtAddress,R.id.txtServices})
+    @OnClick({R.id.btnMenu, R.id.btnNotification, R.id.btn_current_location, R.id.btn_find_quico, R.id.txtAddress, R.id.txtServices})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnMenu:
@@ -127,7 +160,9 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
                 requestLocationPermission();
                 break;
             case R.id.btn_find_quico:
-                UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.will_be_implemented));
+                if (isValidate()) {
+                    getDockActivity().addDockableFragment(ServiceListingFragment.newInstance(getResString(R.string.companies), serviceId, cityId, areaId, locationLat + "", locationLng + ""), "ServiceListingFragment");
+                }
                 break;
             case R.id.txtAddress:
                 SelectAreaFragment selectAreaFragment = new SelectAreaFragment();
@@ -137,15 +172,12 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
             case R.id.txtServices:
                 SelectServicesFragment selectServicesFragment = new SelectServicesFragment();
                 selectServicesFragment.setAreaListner(this);
+                selectServicesFragment.setSelectedServices(serviceId);
                 getDockActivity().addDockableFragment(selectServicesFragment, "SelectAreaFragment");
                 break;
         }
     }
 
-    @Override
-    public void onClick(Object entity, int position) {
-        getDockActivity().replaceDockableFragment(ServiceListingFragment.newInstance(), "ServiceListingFragment", false);
-    }
 
     private void requestLocationPermission() {
         Dexter.withActivity(getDockActivity())
@@ -157,7 +189,7 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
 
                         if (report.areAllPermissionsGranted()) {
-                            getLocation();
+                            getLastLocationNewMethod();
                         }
 
                         // check for permanent denial of any permission
@@ -177,7 +209,7 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
                 withErrorListener(new PermissionRequestErrorListener() {
                     @Override
                     public void onError(DexterError error) {
-                        UIHelper.showShortToastInCenter(getDockActivity(), "Grant Location Permission to processed");
+                        UIHelper.showShortToastInCenter(getDockActivity(), "Grant LocationEnt Permission to processed");
                         openSettings();
                     }
                 })
@@ -200,33 +232,125 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
         startActivity(intent);
     }
 
-    private void getLocation() {
-        if (getMainActivity() != null && getMainActivity().statusCheck()) {
-            LocationModel locationModel = getMainActivity().getMyCurrentLocation();
-            if (locationModel != null) {
-                txtAddress.setText(locationModel.getAddress());
 
-                locationLat = locationModel.getLat();
-                locationLng = locationModel.getLng();
+    @Override
+    public void ResponseSuccess(Object result, String Tag, String message) {
+        super.ResponseSuccess(result, Tag, message);
+        switch (Tag) {
+            case BatchCountService:
+                BatchCount data = (BatchCount) result;
+                if (data.getCount() > 0) {
+                    txtBadge.setVisibility(View.VISIBLE);
+                    txtBadge.setText(data.getCount() + "");
+                } else {
+                    txtBadge.setVisibility(View.GONE);
+                }
+                break;
 
+            case Services:
+                ArrayList<ServicesEnt> entity = (ArrayList<ServicesEnt>) result;
 
-            } else {
-                getLocation();
-            }
+                rvServices.BindRecyclerView(new ServiesBinder(getDockActivity(), prefHelper, this), entity,
+                        new LinearLayoutManager(getDockActivity(), LinearLayoutManager.VERTICAL, false)
+                        , new DefaultItemAnimator());
+
+                break;
+
         }
     }
 
-
+    @Override
+    public void onClick(Object entity, int position) {
+        ServicesEnt data = (ServicesEnt) entity;
+        getDockActivity().replaceDockableFragment(ServiceListingFragment.newInstance(data.getId() + "", data.getName()), "ServiceListingFragment", false);
+    }
 
 
     @Override
-    public void selectArea(String name) {
-        txtAddress.setText(name);
+    public void onLocationActivateListener() {
+        requestLocationPermission();
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getLastLocationNewMethod() {
+
+        if (getMainActivity() != null && getMainActivity().statusCheck()) {
+            FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getDockActivity());
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                txtAddress.setText(getMainActivity().getCurrentAddress(location.getLatitude(), location.getLongitude()));
+                                locationLat = location.getLatitude();
+                                locationLng = location.getLongitude();
+                                cityId = "";
+                                areaId = "";
+
+
+                            } else {
+                                UIHelper.showShortToastInDialoge(getDockActivity(), "Gps is not working, try again...");
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("MapDemoActivity", "Error trying to get last GPS location");
+                            UIHelper.showShortToastInDialoge(getDockActivity(), "Error trying to get last GPS location");
+                            e.printStackTrace();
+                        }
+                    });
+
+
+        }
+    }
+
+    private void getLocation() {
+        if (getMainActivity() != null && getMainActivity().statusCheck()) {
+            LocationModel locationModel = getMainActivity().getMyCurrentLocation();
+            if (locationModel != null && locationModel.getAddress() != null) {
+                txtAddress.setText(locationModel.getAddress());
+                locationLat = locationModel.getLat();
+                locationLng = locationModel.getLng();
+
+            } else {
+                getDockActivity().onLoadingFinished();
+                getLastLocationNewMethod();
+
+            }
+        }
+
     }
 
     @Override
-    public void selectService(String name) {
-        txtServices.setText(name);
+    public void selectArea(Object entity, int position) {
+        LocationEnt data = (LocationEnt) entity;
+        cityId = data.getParentId() + "";
+        areaId = data.getId() + "";
+        locationLat = Double.parseDouble(data.getLatitude());
+        locationLng = Double.parseDouble(data.getLongitude());
+        txtAddress.setText(data.getLocation());
+
     }
+
+    @Override
+    public void selectService(String selectedIds, String names) {
+        serviceId = selectedIds;
+        txtServices.setText(names);
+    }
+
+    private boolean isValidate() {
+        if (txtAddress.getText() == null || txtAddress.getText().toString().trim().isEmpty()) {
+            UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.select_city_to_proceed));
+            return false;
+        } else if (txtServices.getText() == null || txtServices.getText().toString().trim().isEmpty()) {
+            UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.select_service_to_proceed));
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }
 

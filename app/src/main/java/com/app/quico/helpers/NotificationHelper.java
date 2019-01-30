@@ -31,7 +31,7 @@ import java.util.List;
  */
 
 public class NotificationHelper {
-    private static final String CHANNEL = "com.app.fandirect";
+    private static final String CHANNEL = "com.app.quico";
     private static String TAG = NotificationHelper.class.getSimpleName();
     private Context mContext;
 

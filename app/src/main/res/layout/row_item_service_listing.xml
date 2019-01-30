@@ -12,7 +12,7 @@
         android:layout_marginBottom="@dimen/x5"
         android:layout_marginEnd="@dimen/x5"
         android:layout_marginStart="@dimen/x5"
-        android:layout_marginTop="@dimen/x10"
+        android:layout_marginTop="@dimen/x12"
         app:cardCornerRadius="@dimen/x5"
         app:cardElevation="@dimen/x5">
 
@@ -21,17 +21,17 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/x15">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/logo"
                 android:layout_width="@dimen/x60"
                 android:layout_height="@dimen/x60"
+                android:layout_centerVertical="true"
                 android:src="@drawable/circle1" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/logo"
-                android:layout_alignTop="@+id/logo"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/x12"
                 android:layout_toEndOf="@+id/logo"
                 android:gravity="center_vertical"
@@ -41,7 +41,7 @@
                     android:id="@+id/txt_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Electrical Company"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/x14"
                     app:typeface="@string/font_normal" />
@@ -57,17 +57,17 @@
                         android:id="@+id/rbParlourRating"
                         android:layout_width="@dimen/x85"
                         android:layout_height="wrap_content"
-                        app:starPadding="@dimen/x1"
                         app:onlyForDisplay="true"
+                        app:starPadding="@dimen/x1"
                         app:stars="1" />
 
                     <com.app.quico.ui.views.AnyTextView
                         android:id="@+id/txt_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/x5"
                         android:text="78 Reviews"
                         android:textColor="@color/app_black_text"
-                        android:layout_marginStart="@dimen/x5"
                         android:textSize="@dimen/x12"
                         app:typeface="@string/font_normal" />
 
@@ -81,14 +81,14 @@
             android:id="@+id/featured"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@color/app_green"
+            android:padding="@dimen/x3"
             android:text="@string/featured"
             android:textColor="@color/white"
             android:textSize="@dimen/x12"
-            android:background="@color/app_green"
-            android:padding="@dimen/x3"
-            android:layout_gravity="right"
-            app:typeface="@string/font_normal"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:typeface="@string/font_normal" />
 
     </android.support.v7.widget.CardView>
 

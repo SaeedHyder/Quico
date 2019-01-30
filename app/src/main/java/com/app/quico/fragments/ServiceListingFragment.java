@@ -1,20 +1,30 @@
 package com.app.quico.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.quico.R;
+import com.app.quico.entities.CompanyEnt;
+import com.app.quico.entities.ServicesEnt;
 import com.app.quico.fragments.abstracts.BaseFragment;
+import com.app.quico.global.AppConstants;
 import com.app.quico.helpers.BottomSheetDialogHelper;
 import com.app.quico.helpers.UIHelper;
+import com.app.quico.interfaces.BottomSheetClickListner;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.binders.ServiceListingBinder;
 import com.app.quico.ui.views.AnyEditTextView;
@@ -23,13 +33,16 @@ import com.app.quico.ui.views.CustomRecyclerView;
 import com.app.quico.ui.views.TitleBar;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class ServiceListingFragment extends BaseFragment implements RecyclerClickListner {
+import static com.app.quico.global.WebServiceConstants.GetCompanies;
+
+public class ServiceListingFragment extends BaseFragment implements RecyclerClickListner, BottomSheetClickListner {
     @BindView(R.id.rv_serviceDetail)
     CustomRecyclerView rvServiceDetail;
     Unbinder unbinder;
@@ -39,12 +52,55 @@ public class ServiceListingFragment extends BaseFragment implements RecyclerClic
     AnyTextView btnSort;
     @BindView(R.id.Main_frame)
     CoordinatorLayout MainFrame;
+    @BindView(R.id.btn_cross)
+    ImageView btnCross;
+    @BindView(R.id.txt_no_data)
+    AnyTextView txtNoData;
 
-    private ArrayList<String> collection;
+    private ArrayList<CompanyEnt> collection;
+    private static String serviceId;
+    private static String serviceName;
+    private static String cityId;
+    private static String areaId;
+    private static String latitude;
+    private static String longitude;
+
+    private String selectedSortType;
 
     public static ServiceListingFragment newInstance() {
         Bundle args = new Bundle();
+        serviceId = "";
+        serviceName = "";
+        cityId = "";
+        areaId = "";
+        latitude = "";
+        longitude = "";
+        ServiceListingFragment fragment = new ServiceListingFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
+    public static ServiceListingFragment newInstance(String Name, String serviceIdKey, String cityIdKey, String areaIdKey, String latitudeKey, String longitudeKey) {
+        Bundle args = new Bundle();
+        serviceId = serviceIdKey;
+        serviceName = Name;
+        cityId = cityIdKey;
+        areaId = areaIdKey;
+        latitude = latitudeKey;
+        longitude = longitudeKey;
+        ServiceListingFragment fragment = new ServiceListingFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static ServiceListingFragment newInstance(String id, String Name) {
+        Bundle args = new Bundle();
+        serviceId = id;
+        serviceName = Name;
+        cityId = "";
+        areaId = "";
+        latitude = "";
+        longitude = "";
         ServiceListingFragment fragment = new ServiceListingFragment();
         fragment.setArguments(args);
         return fragment;
@@ -69,10 +125,22 @@ public class ServiceListingFragment extends BaseFragment implements RecyclerClic
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setData();
+        if (serviceId != null && !serviceId.equals("") && cityId != null && !cityId.equals("")) {
+            serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 0, 0, 0), GetCompanies);
+        } else if (serviceId != null && !serviceId.equals("") && latitude != null && !latitude.equals("")) {
+            serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 0, 0, 0), GetCompanies);
+        } else if (serviceId != null && !serviceId.equals("")) {
+            serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 0, 0, 0, 0), GetCompanies);
+        }
         searchListner();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation(getDockActivity(), R.anim.layout_animation_from_right);
+            rvServiceDetail.setLayoutAnimation(anim);
+        }
+
     }
+
 
     private void searchListner() {
         edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -85,24 +153,74 @@ public class ServiceListingFragment extends BaseFragment implements RecyclerClic
                 return false;
             }
         });
+
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (edtSearch.getText().toString().length() > 0) {
+                    btnCross.setVisibility(View.VISIBLE);
+                } else {
+                    btnCross.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                setData(getSearchedArray(s.toString()));
+            }
+        });
     }
 
-    private void setData() {
+    public ArrayList<CompanyEnt> getSearchedArray(String keyword) {
+        if (collection == null) {
+            return new ArrayList<>();
+        }
+        if (collection != null && collection.isEmpty()) {
+            return new ArrayList<>();
+        }
 
-        collection = new ArrayList<>();
-        collection.add("drawable://" + R.drawable.circle1);
-        collection.add("drawable://" + R.drawable.circle2);
-        collection.add("drawable://" + R.drawable.circle3);
-        collection.add("drawable://" + R.drawable.circle4);
-        collection.add("drawable://" + R.drawable.circle1);
-        collection.add("drawable://" + R.drawable.circle2);
-        collection.add("drawable://" + R.drawable.circle3);
-        collection.add("drawable://" + R.drawable.circle4);
+        ArrayList<CompanyEnt> arrayList = new ArrayList<>();
 
+        String UserName = "";
+        for (CompanyEnt item : collection) {
+            UserName = item.getName();
+            if (Pattern.compile(Pattern.quote(keyword.trim().toLowerCase()), Pattern.CASE_INSENSITIVE).matcher(UserName.trim().toLowerCase()).find()) {
+                arrayList.add(item);
+            }
+        }
+        return arrayList;
 
-        rvServiceDetail.BindRecyclerView(new ServiceListingBinder(getDockActivity(), prefHelper, this), collection,
-                new LinearLayoutManager(getDockActivity(), LinearLayoutManager.VERTICAL, false)
-                , new DefaultItemAnimator());
+    }
+
+    @Override
+    public void ResponseSuccess(Object result, String Tag, String message) {
+        super.ResponseSuccess(result, Tag, message);
+        switch (Tag) {
+            case GetCompanies:
+                collection = (ArrayList<CompanyEnt>) result;
+                setData(collection);
+                break;
+        }
+    }
+
+    private void setData(ArrayList<CompanyEnt> entity) {
+
+        if (entity != null && entity.size() > 0) {
+            txtNoData.setVisibility(View.GONE);
+            rvServiceDetail.setVisibility(View.VISIBLE);
+
+            rvServiceDetail.BindRecyclerView(new ServiceListingBinder(getDockActivity(), prefHelper, this), entity,
+                    new LinearLayoutManager(getDockActivity(), LinearLayoutManager.VERTICAL, false)
+                    , new DefaultItemAnimator());
+        } else {
+            txtNoData.setVisibility(View.VISIBLE);
+            rvServiceDetail.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -110,20 +228,77 @@ public class ServiceListingFragment extends BaseFragment implements RecyclerClic
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
         titleBar.showBackButton();
-        titleBar.setSubHeading(getResString(R.string.Electician_Services));
+        if (serviceName != null) {
+            titleBar.setSubHeading(serviceName);
+        } else {
+            titleBar.setSubHeading(getResString(R.string.company));
+        }
+
     }
 
 
     @Override
     public void onClick(Object entity, int position) {
-      getDockActivity().replaceDockableFragment(ServiceDetailFragment.newInstance(),"ServiceDetailFragment");
+        CompanyEnt data = (CompanyEnt) entity;
+        getDockActivity().replaceDockableFragment(ServiceDetailFragment.newInstance(data.getId() + ""), "ServiceDetailFragment");
     }
 
 
-    @OnClick(R.id.btnSort)
-    public void onViewClicked() {
-        BottomSheetDialogHelper dialoge = new BottomSheetDialogHelper(getDockActivity(), MainFrame, R.layout.bottomsheet_sort);
-        dialoge.initSortingDialoge();
-        dialoge.showDialog();
+    @OnClick({R.id.btn_cross, R.id.btnSort})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_cross:
+                edtSearch.getText().clear();
+                btnCross.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.btnSort:
+                BottomSheetDialogHelper dialoge = new BottomSheetDialogHelper(getDockActivity(), MainFrame, R.layout.bottomsheet_sort, this);
+                dialoge.initSortingDialoge(selectedSortType);
+                dialoge.showDialog();
+                break;
+        }
+    }
+
+    @Override
+    public void onClick(String sortString) {
+
+        selectedSortType=sortString;
+        if (sortString.equals(AppConstants.FeaturedSort)) {
+            if (serviceId != null && !serviceId.equals("") && cityId != null && !cityId.equals("")) {
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 1, 0, 0, 0), GetCompanies);
+            } else if (serviceId != null && !serviceId.equals("") && latitude != null && !latitude.equals("")) {
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 1, 0, 0, 0), GetCompanies);
+            } else {
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 1, 0, 0, 0), GetCompanies);
+            }
+
+        } else if (sortString.equals(AppConstants.NearestSort)) {
+            if (serviceId != null && !serviceId.equals("") && cityId != null && !cityId.equals("")) {
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 0, 0, 1), GetCompanies);
+            } else if (serviceId != null && !serviceId.equals("") && latitude != null && !latitude.equals("")) {
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 0, 0, 0, 1), GetCompanies);
+            } else {
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 0, 0, 0, 1), GetCompanies);
+            }
+
+        } else if (sortString.equals(AppConstants.RatingSort)) {
+            if (serviceId != null && !serviceId.equals("") && cityId != null && !cityId.equals("")) {
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 1, 0, 0), GetCompanies);
+            } else if (serviceId != null && !serviceId.equals("") && latitude != null && !latitude.equals("")) {
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 0, 1, 0, 0), GetCompanies);
+            } else {
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 0, 1, 0, 0), GetCompanies);
+            }
+
+        } else if (sortString.equals(AppConstants.ReviewsSort)) {
+            if (serviceId != null && !serviceId.equals("") && cityId != null && !cityId.equals("")) {
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 0, 1, 0), GetCompanies);
+            } else if (serviceId != null && !serviceId.equals("") && latitude != null && !latitude.equals("")) {
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 0, 0, 1, 0), GetCompanies);
+            } else {
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 0, 0, 1, 0), GetCompanies);
+            }
+
+        }
     }
 }

@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
+import com.app.quico.entities.ServicesDetail;
 import com.app.quico.helpers.BasePreferenceHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
@@ -15,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class OfferedServiceBinder extends RecyclerViewBinder<String> {
+public class OfferedServiceBinder extends RecyclerViewBinder<ServicesDetail> {
 
     private DockActivity dockActivity;
     private BasePreferenceHelper prefHelper;
@@ -36,11 +37,11 @@ public class OfferedServiceBinder extends RecyclerViewBinder<String> {
     }
 
     @Override
-    public void bindView(String entity, int position, Object viewHolder, Context context) {
+    public void bindView(ServicesDetail entity, int position, Object viewHolder, Context context) {
 
         final ViewHolder holder = (ViewHolder) viewHolder;
 
-        holder.txtServie.setText(entity);
+        holder.txtServie.setText(entity.getServiceDetail().getName());
 
     }
 

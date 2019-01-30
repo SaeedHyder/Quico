@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 
 import com.app.quico.R;
+import com.app.quico.entities.Cms;
 import com.app.quico.fragments.abstracts.BaseFragment;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.TitleBar;
@@ -13,6 +15,7 @@ import com.app.quico.ui.views.TitleBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import static com.app.quico.global.WebServiceConstants.CmsService;
 
 public class CmsFragment extends BaseFragment {
     @BindView(R.id.txt_text)
@@ -47,6 +50,17 @@ public class CmsFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if(title.equals(getResString(R.string.TermsCondition))){
+
+            serviceHelper.enqueueCall(headerWebService.Cms("3"), CmsService);
+
+        }else if(title.equals(getResString(R.string.TermsOfService))){
+            serviceHelper.enqueueCall(headerWebService.Cms("2"), CmsService);
+
+        }else if(title.equals(getResString(R.string.AboutUs))){
+            serviceHelper.enqueueCall(headerWebService.Cms("1"), CmsService);
+        }
+
     }
 
     @Override
@@ -61,5 +75,14 @@ public class CmsFragment extends BaseFragment {
         }
     }
 
-
+    @Override
+    public void ResponseSuccess(Object result, String Tag, String message) {
+        super.ResponseSuccess(result, Tag, message);
+        switch (Tag){
+            case CmsService:
+               Cms data=(Cms)result;
+               txtText.setText(data.getContent());
+                break;
+        }
+    }
 }

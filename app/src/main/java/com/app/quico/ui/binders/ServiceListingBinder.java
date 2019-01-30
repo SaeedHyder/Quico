@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
+import com.app.quico.entities.CompanyEnt;
 import com.app.quico.helpers.BasePreferenceHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
@@ -16,9 +17,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class ServiceListingBinder extends RecyclerViewBinder<String> {
+public class ServiceListingBinder extends RecyclerViewBinder<CompanyEnt> {
 
     private DockActivity dockActivity;
     private BasePreferenceHelper prefHelper;
@@ -39,31 +41,35 @@ public class ServiceListingBinder extends RecyclerViewBinder<String> {
     }
 
     @Override
-    public void bindView(String entity, int position, Object viewHolder, Context context) {
+    public void bindView(CompanyEnt entity, int position, Object viewHolder, Context context) {
 
         final ViewHolder holder = (ViewHolder) viewHolder;
 
-
-        if(position==0){
-            holder.featured.setVisibility(View.VISIBLE);
-        }else{
-            holder.featured.setVisibility(View.GONE);
-        }
-
-        holder.mainFrame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickListner.onClick(entity, position);
+        if (entity != null) {
+            if (entity.getIsFeature() == 1) {
+                holder.featured.setVisibility(View.VISIBLE);
+            } else {
+                holder.featured.setVisibility(View.GONE);
             }
-        });
+            holder.txtName.setText(entity.getName() + "");
+            holder.txtRating.setText(entity.getReviewCount() + " " + dockActivity.getResources().getString(R.string.reviews));
+            holder.rbParlourRating.setScore(entity.getAvgRate());
 
-        imageLoader.displayImage(entity, holder.logo);
+            holder.mainFrame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    clickListner.onClick(entity, position);
+                }
+            });
+
+            imageLoader.displayImage(entity.getIconUrl(), holder.logo);
+        }
 
     }
 
     static class ViewHolder extends BaseViewHolder {
         @BindView(R.id.logo)
-        ImageView logo;
+        CircleImageView logo;
         @BindView(R.id.txt_name)
         AnyTextView txtName;
         @BindView(R.id.rbParlourRating)

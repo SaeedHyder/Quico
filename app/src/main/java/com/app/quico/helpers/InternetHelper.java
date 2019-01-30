@@ -21,8 +21,21 @@ public class InternetHelper {
             return true;
         } else {
             // text.setText("Look your not online");
+            UIHelper.showShortToastInDialoge(activity, activity.getString(R.string.connection_lost));
+            return false;
+        }
 
-            UIHelper.showLongToastInCenter(activity, activity.getString(R.string.connection_lost));
+
+    }
+    public static boolean CheckInternetConectivityand(DockActivity activity) {
+
+        ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (cm.getActiveNetworkInfo() != null) {
+            return true;
+        } else {
+            // text.setText("Look your not online");
+            //UIHelper.showShortToastInDialoge(activity, activity.getString(R.string.connection_lost));
             return false;
         }
 

@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/x40"
         android:layout_marginEnd="@dimen/x10"
-        android:layout_marginTop="@dimen/x10"
+        android:layout_marginTop="@dimen/x5"
+        android:layout_marginBottom="@dimen/x5"
         android:background="@drawable/sidemenu_box"
         android:gravity="center_vertical"
         android:orientation="horizontal">

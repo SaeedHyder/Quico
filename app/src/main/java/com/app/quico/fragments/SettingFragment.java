@@ -9,7 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 
 import com.app.quico.R;
+import com.app.quico.entities.User;
+import com.app.quico.entities.UserEnt;
 import com.app.quico.fragments.abstracts.BaseFragment;
+import com.app.quico.global.WebServiceConstants;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.TitleBar;
@@ -18,6 +21,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.app.quico.global.WebServiceConstants.ChangePush;
 
 public class SettingFragment extends BaseFragment {
     @BindView(R.id.btn_english)
@@ -28,9 +33,13 @@ public class SettingFragment extends BaseFragment {
     ToggleButton toggleBtn;
     @BindView(R.id.btn_change_password)
     LinearLayout btnChangePassword;
+    @BindView(R.id.changePassworView)
+    View changePassworView;
     Unbinder unbinder;
     @BindView(R.id.btn_profile)
     LinearLayout btnProfile;
+
+    private boolean isPushCheck;
 
     public static SettingFragment newInstance() {
         Bundle args = new Bundle();
@@ -59,16 +68,38 @@ public class SettingFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if(prefHelper.getUser().getUser()!=null && prefHelper.getUser().getUser().getPushNotification()!=null) {
+            toggleBtn.setChecked(prefHelper.getUser().getUser().getPushNotification() == 1 ? true : false);
+        }
+        if(prefHelper.isSocialLogin()){
+            btnChangePassword.setVisibility(View.GONE);
+            changePassworView.setVisibility(View.GONE);
+        }
         listner();
+
     }
 
     private void listner() {
         toggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.will_be_implemented));
+                isPushCheck = b;
+                serviceHelper.enqueueCall(headerWebService.chanePushNotification(b ? "1" : "0"), ChangePush);
             }
         });
+    }
+
+    @Override
+    public void ResponseSuccess(Object result, String Tag, String message) {
+        super.ResponseSuccess(result, Tag, message);
+        switch (Tag) {
+            case ChangePush:
+                UserEnt userEnt = prefHelper.getUser();
+                userEnt.getUser().setPushNotification(isPushCheck ? 1 : 0);
+                prefHelper.putUser(userEnt);
+
+                break;
+        }
     }
 
     @Override
@@ -80,7 +111,7 @@ public class SettingFragment extends BaseFragment {
     }
 
 
-    @OnClick({R.id.btn_arabic, R.id.btn_english, R.id.btn_change_password,R.id.btn_profile})
+    @OnClick({R.id.btn_arabic, R.id.btn_english, R.id.btn_change_password, R.id.btn_profile})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_arabic:
@@ -97,7 +128,6 @@ public class SettingFragment extends BaseFragment {
                 break;
         }
     }
-
 
 
 }

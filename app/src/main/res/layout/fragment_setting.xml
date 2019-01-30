@@ -132,25 +132,29 @@
             android:id="@+id/btn_change_password"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x50"
+            android:orientation="vertical"
             android:gravity="center_vertical">
 
             <com.app.quico.ui.views.AnyTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/change_password"
+                android:gravity="center_vertical"
                 android:textColor="@color/app_black_text"
                 android:drawableEnd="@drawable/rightarrow"
                 android:textSize="@dimen/x14"
                 app:typeface="@string/font_normal" />
 
 
-
         </LinearLayout>
 
         <View
+            android:id="@+id/changePassworView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x1"
             android:background="@color/view_line_color" />
+
+
 
 
     </LinearLayout>

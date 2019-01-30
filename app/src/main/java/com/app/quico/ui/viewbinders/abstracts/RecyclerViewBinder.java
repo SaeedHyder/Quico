@@ -36,4 +36,6 @@ public abstract class RecyclerViewBinder<T> {
 			super(itemView);
 		}
 	}
+
+
 }

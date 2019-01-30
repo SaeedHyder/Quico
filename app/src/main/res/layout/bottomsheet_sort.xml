@@ -11,6 +11,80 @@
     app:layout_behavior="com.app.fastcab.ui.views.ExpandedBottomSheetBehavior">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:background="@color/view_line_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/x10">
+
+            <com.app.quico.ui.views.AnyTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x5"
+                android:text="@string/sort_by"
+                android:textColor="@color/black"
+                android:textSize="@dimen/x16"
+                app:typeface="@string/font_normal" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/featuredBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x45"
+                    android:buttonTint="@color/app_black_text"
+                    android:text="@string/featured"
+                    android:textColor="@color/app_black_text"
+                    android:textSize="@dimen/x15" />
+
+                <RadioButton
+                    android:id="@+id/ReviewsBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x45"
+                    android:buttonTint="@color/app_black_text"
+                    android:text="@string/no_of_reviews"
+                    android:textColor="@color/app_black_text"
+                    android:textSize="@dimen/x15" />
+
+                <RadioButton
+                    android:id="@+id/ratingBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x45"
+                    android:buttonTint="@color/app_black_text"
+                    android:text="@string/rating"
+                    android:textColor="@color/app_black_text"
+                    android:textSize="@dimen/x15" />
+
+                <RadioButton
+                    android:id="@+id/nearestBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x45"
+                    android:buttonTint="@color/app_black_text"
+                    android:text="@string/nearest"
+                    android:textColor="@color/app_black_text"
+                    android:textSize="@dimen/x15" />
+
+            </RadioGroup>
+
+            <com.app.quico.ui.views.CustomRecyclerView
+                android:id="@+id/rv_sorting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,52 +94,19 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/x1"
-                android:background="@color/view_line_color"/>
+                android:background="@color/view_line_color" />
 
-            <LinearLayout
+            <com.app.quico.ui.views.AnyTextView
+                android:id="@+id/btn_done"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/x10">
-
-                <com.app.quico.ui.views.AnyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sort_by"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/x16"
-                    app:typeface="@string/font_normal" />
-
-                <com.app.quico.ui.views.CustomRecyclerView
-                    android:id="@+id/rv_sorting"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/x10"
-                    android:layout_marginTop="@dimen/x10" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/x1"
-                    android:background="@color/view_line_color" />
-
-                <com.app.quico.ui.views.AnyTextView
-                    android:id="@+id/btn_done"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/x45"
-                    android:gravity="center"
-                    android:text="@string/done"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/x16"
-                    app:typeface="@string/font_normal" />
-            </LinearLayout>
-
+                android:layout_height="@dimen/x45"
+                android:gravity="center"
+                android:text="@string/done"
+                android:textColor="@color/black"
+                android:textSize="@dimen/x16"
+                app:typeface="@string/font_normal" />
         </LinearLayout>
+
+    </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

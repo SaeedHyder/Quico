@@ -12,8 +12,8 @@
     <string name="app_name">Quico</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="facebook_app_id">674632155971845</string>
-    <string name="facebook_app_id_test">175703936145004</string>
+    <string name="facebook_app_id">359582864595251</string>
+    <string name="fb_login_protocol_scheme">fb359582864595251</string>
 
     <!-- Error Messages -->
     <string name="error_passwords_do_not_match">Passwords do not match.</string>
@@ -126,6 +126,7 @@
     <string name="enter_phone">Mobile Number Cannot be Empty</string>
     <string name="confirm_password_error">Confirm Password did not match</string>
     <string name="enter_username">Enter UserName</string>
+    <string name="enter_address">Enter Address</string>
     <string name="enter_name">Enter Name</string>
     <string name="enter_fullname">Enter Full Name</string>
     <string name="enter_phonenumber">Enter Phone Number</string>
@@ -148,7 +149,7 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="phone_number">Phone Number</string>
     <string name="i_agree_to_the_terms_and_conditions">I agree to the Terms and Conditions</string>
-    <string name="select_terms_and_conditions">Select terms and condition to proceed</string>
+    <string name="select_terms_and_conditions">Accept terms and conditions to proceed</string>
     <string name="TermsCondition">Terms and Conditions</string>
     <string name="AboutUs">About Us</string>
     <string name="ContactUs">Contact Us</string>
@@ -156,7 +157,7 @@
     <string name="forgot_password">Forgot Password</string>
     <string name="phone_verification">Phone Verification</string>
     <string name="you_can_change_your_language_anytime">You can change your language anytime</string>
-    <string name="enter_your_phone_number_in_order_to_reset_your_password">Enter your phone number in order \n to reset your password</string>
+    <string name="enter_your_phone_number_in_order_to_reset_your_password">Enter your phone number in order to reset your password</string>
     <string name="a_verification_code_has_been_sent_to_your_mobile_phone">A verification code has been sent \n to your mobile phone</string>
     <string name="haven_t_received_code_yet">Haven\'t received code yet?</string>
     <string name="verify">Verify</string>
@@ -207,6 +208,29 @@
     <string name="select_area">Select Area</string>
     <string name="select_services">Select Services</string>
     <string name="services">Services</string>
-
+    <string name="resend_code">Resend Code</string>
+    <string name="seconds">seconds</string>
+    <string name="did_not_get_code_yet_wait_for">Did not get code yet? wait for</string>
+    <string name="wait_for">wait for</string>
+    <string name="submitted_successfully">Your query has been submitted successfully</string>
+    <string name="password_changed">Password changed successfully</string>
+    <string name="logout_successfully">Logout successfully</string>
+    <string name="deleted_by_admin">Account is deleted by admin</string>
+    <string name="blocked_by_admin">Deactivated by admin</string>
+    <string name="please_wait">Please Wait...</string>
+    <string name="upload_image">Upload image to proceed</string>
+    <string name="no_response">No response from server</string>
+    <string name="no_companies_found">No companies found</string>
+    <string name="company">Companies</string>
+    <string name="no_project_found">No project found</string>
+    <string name="no_service_found">No service found</string>
+    <string name="no_area_found">No area found</string>
+    <string name="no_of_reviews">Number of Reviews</string>
+    <string name="rating">Rating</string>
+    <string name="nearest">Nearest</string>
+    <string name="select_city_to_proceed">Select address to proceed</string>
+    <string name="select_service_to_proceed">Select service to proceed</string>
+    <string name="companies">Companies</string>
+    <string name="profile_updated_successfully">Profile updated successfully</string>
 
 </resources>

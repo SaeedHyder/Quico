@@ -7,10 +7,14 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RadioButton;
 
 
 import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
+import com.app.quico.global.AppConstants;
+import com.app.quico.interfaces.BottomSheetClickListner;
+import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.binders.SortBinder;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.CustomRecyclerView;
@@ -27,9 +31,10 @@ public class BottomSheetDialogHelper {
     private NestedScrollView dialog;
     private DockActivity context;
     private CoordinatorLayout mainParent;
+    private BottomSheetClickListner bottomSheetClickListner;
 
 
-    public BottomSheetDialogHelper(DockActivity context, CoordinatorLayout mainParent, int LayoutID) {
+    public BottomSheetDialogHelper(DockActivity context, CoordinatorLayout mainParent, int LayoutID, BottomSheetClickListner bottomSheetClickListner) {
         this.context = context;
         this.mainParent = mainParent;
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -42,27 +47,42 @@ public class BottomSheetDialogHelper {
         //  bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bottomSheetBehavior.setAllowUserDragging(false);
         bottomSheetBehavior.setPeekHeight(0);
+        this.bottomSheetClickListner = bottomSheetClickListner;
     }
 
-    public void initSortingDialoge(){
+    public void initSortingDialoge(String selectedType) {
 
         AnyTextView btnDone = (AnyTextView) dialog.findViewById(R.id.btn_done);
+        RadioButton featuredBtn = (RadioButton) dialog.findViewById(R.id.featuredBtn);
+        RadioButton ReviewsBtn = (RadioButton) dialog.findViewById(R.id.ReviewsBtn);
+        RadioButton ratingBtn = (RadioButton) dialog.findViewById(R.id.ratingBtn);
+        RadioButton nearestBtn = (RadioButton) dialog.findViewById(R.id.nearestBtn);
         CustomRecyclerView rvSorting = (CustomRecyclerView) dialog.findViewById(R.id.rv_sorting);
 
-        ArrayList<String> collection = new ArrayList<>();
-        collection.add("Featured");
-        collection.add("Number of Reviews");
-        collection.add("Rating");
-        collection.add("Nearest");
-
-        rvSorting.BindRecyclerView(new SortBinder(context), collection,
-                new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                , new DefaultItemAnimator());
+        if (selectedType != null && !selectedType.equals("") && !selectedType.isEmpty()) {
+            if (selectedType.equals(AppConstants.FeaturedSort)) {
+                featuredBtn.setChecked(true);
+            } else if (selectedType.equals(AppConstants.ReviewsSort)) {
+                ReviewsBtn.setChecked(true);
+            } else if (selectedType.equals(AppConstants.RatingSort)) {
+                ratingBtn.setChecked(true);
+            } else if (selectedType.equals(AppConstants.NearestSort)) {
+                nearestBtn.setChecked(true);
+            }
+        }
 
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UIHelper.showShortToastInDialoge(context, context.getResources().getString(R.string.will_be_implemented));
+                if (featuredBtn.isChecked()) {
+                    bottomSheetClickListner.onClick(AppConstants.FeaturedSort);
+                } else if (ReviewsBtn.isChecked()) {
+                    bottomSheetClickListner.onClick(AppConstants.ReviewsSort);
+                } else if (ratingBtn.isChecked()) {
+                    bottomSheetClickListner.onClick(AppConstants.RatingSort);
+                } else if (nearestBtn.isChecked()) {
+                    bottomSheetClickListner.onClick(AppConstants.NearestSort);
+                }
                 hideDialog();
             }
         });

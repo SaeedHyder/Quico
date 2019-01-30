@@ -29,6 +29,7 @@ import com.google.android.gms.location.places.Places;
 public class AutoCompleteLocation extends android.support.v7.widget.AppCompatAutoCompleteTextView {
 
     private Drawable mCloseIcon;
+    private Drawable location;
     private GoogleApiClient mGoogleApiClient;
     private AutoCompleteAdapter mAutoCompleteAdapter;
     private AutoCompleteLocationListener mAutoCompleteLocationListener;
@@ -44,30 +45,30 @@ public class AutoCompleteLocation extends android.support.v7.widget.AppCompatAut
         Resources resources = context.getResources();
         TypedArray typedArray =
                 context.obtainStyledAttributes(attrs, R.styleable.AutoCompleteLocation, 0, 0);
-        Drawable background =
-                typedArray.getDrawable(R.styleable.AutoCompleteLocation_background_layout);
+        Drawable background = typedArray.getDrawable(R.styleable.AutoCompleteLocation_background_layout);
         if (background == null) {
             background = resources.getDrawable(R.drawable.bg_rounded_white);
         }
         String hintText = typedArray.getString(R.styleable.AutoCompleteLocation_hint_text);
         if (hintText == null) {
-            hintText = resources.getString(R.string.default_hint_text);
+            hintText = resources.getString(R.string.address);
         }
         int hintTextColor = typedArray.getColor(R.styleable.AutoCompleteLocation_hint_text_color,
                 resources.getColor(R.color.default_hint_text));
         int textColor = typedArray.getColor(R.styleable.AutoCompleteLocation_text_color,
-                resources.getColor(R.color.default_text));
+                resources.getColor(R.color.app_black_text));
         int padding = resources.getDimensionPixelSize(R.dimen.x10);
         typedArray.recycle();
 
-        setBackground(background);
+       // setBackground(background);
         setHint(hintText);
-        setHintTextColor(hintTextColor);
+     //   setHintTextColor(hintTextColor);
         setTextColor(textColor);
-        setPadding(padding, padding, padding, padding);
+      //  setPadding(padding, padding, padding, padding);
         setMaxLines(resources.getInteger(R.integer.default_max_lines));
 
         mCloseIcon = context.getResources().getDrawable(R.drawable.ic_close);
+        location = context.getResources().getDrawable(R.drawable.location);
         mGoogleApiClient = new GoogleApiClient.Builder(context).addApi(Places.GEO_DATA_API)
                 .addApi(AppIndex.API)
                 .build();
@@ -97,9 +98,9 @@ public class AutoCompleteLocation extends android.support.v7.widget.AppCompatAut
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         if (!enabled) {
-            this.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            this.setCompoundDrawablesWithIntrinsicBounds(location, null, null, null);
         } else {
-            this.setCompoundDrawablesWithIntrinsicBounds(null, null,
+            this.setCompoundDrawablesWithIntrinsicBounds(location, null,
                     AutoCompleteLocation.this.getText().toString().equals("") ? null : mCloseIcon, null);
         }
     }
@@ -116,7 +117,7 @@ public class AutoCompleteLocation extends android.support.v7.widget.AppCompatAut
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            AutoCompleteLocation.this.setCompoundDrawablesWithIntrinsicBounds(null, null,
+            AutoCompleteLocation.this.setCompoundDrawablesWithIntrinsicBounds(location, null,
                     AutoCompleteLocation.this.getText().toString().equals("") ? null : mCloseIcon, null);
             if (mAutoCompleteLocationListener != null) {
                 mAutoCompleteLocationListener.onTextClear();
@@ -136,7 +137,7 @@ public class AutoCompleteLocation extends android.support.v7.widget.AppCompatAut
                     - AutoCompleteLocation.this.getPaddingRight()
                     - mCloseIcon.getIntrinsicWidth()) {
                 AutoCompleteLocation.this.setText("");
-                AutoCompleteLocation.this.setCompoundDrawables(null, null, null, null);
+                AutoCompleteLocation.this.setCompoundDrawables(location, null, null, null);
             }
             return false;
         }

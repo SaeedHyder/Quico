@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -22,6 +22,7 @@ import com.andreabaccega.formedittextvalidator.Validator;
 import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
 import com.app.quico.activities.MainActivity;
+import com.app.quico.global.WebServiceConstants;
 import com.app.quico.helpers.BasePreferenceHelper;
 import com.app.quico.helpers.GPSTracker;
 import com.app.quico.helpers.ServiceHelper;
@@ -32,12 +33,7 @@ import com.app.quico.retrofit.WebService;
 import com.app.quico.retrofit.WebServiceFactory;
 import com.app.quico.ui.views.AnyEditTextView;
 import com.app.quico.ui.views.TitleBar;
-import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 
 public abstract class BaseFragment extends Fragment implements webServiceResponseLisener {
@@ -49,6 +45,7 @@ public abstract class BaseFragment extends Fragment implements webServiceRespons
 	protected BasePreferenceHelper prefHelper;
 
 	protected  WebService webService;
+	protected  WebService headerWebService;
 	protected ServiceHelper serviceHelper;
 
 	protected GPSTracker mGpsTracker;
@@ -67,8 +64,12 @@ public abstract class BaseFragment extends Fragment implements webServiceRespons
 		mGpsTracker = new GPSTracker(getDockActivity());
 
 		if (webService == null) {
-			//webService = WebServiceFactory.getWebServiceInstanceWithCustomInterceptor(getDockActivity(),"End Point");
+			webService = WebServiceFactory.getWebServiceInstanceWithCustomInterceptor(getDockActivity(), WebServiceConstants.Local_SERVICE_URL);
 		}
+		if (headerWebService == null) {
+			headerWebService = WebServiceFactory.getWebServiceInstanceWithCustomInterceptorandheader(getDockActivity(), WebServiceConstants.Local_SERVICE_URL);
+		}
+
 		if (serviceHelper == null){
 			serviceHelper = new ServiceHelper(this,getDockActivity(),webService);
 		}
@@ -109,8 +110,8 @@ public abstract class BaseFragment extends Fragment implements webServiceRespons
 						.getWindow().getDecorView() );
 		
 	}
-	
-	protected void loadingStarted() {
+
+	public void loadingStarted() {
 		
 		if ( getParentFragment() != null )
 			((LoadingListener) getParentFragment()).onLoadingStarted();
@@ -122,7 +123,7 @@ public abstract class BaseFragment extends Fragment implements webServiceRespons
 
 
 	
-	protected void loadingFinished() {
+	public void loadingFinished() {
 		
 		if ( getParentFragment() != null )
 			((LoadingListener) getParentFragment()).onLoadingFinished();
@@ -140,7 +141,7 @@ public abstract class BaseFragment extends Fragment implements webServiceRespons
 		myDockActivity = (DockActivity)context;
 	}
 	@Override
-	public void ResponseSuccess(Object result, String Tag) {
+	public void ResponseSuccess(Object result, String Tag, String message) {
 
 	}
 
@@ -337,6 +338,9 @@ public abstract class BaseFragment extends Fragment implements webServiceRespons
 		if (imm != null)
 			imm.showSoftInput(textFocus, InputMethodManager.SHOW_IMPLICIT);
 	}
+
+
+
 
 
 	public class NumericKeyBoardTransformationMethod extends PasswordTransformationMethod {

@@ -82,6 +82,10 @@ public class TitleBar extends RelativeLayout {
 
 	}
 
+	public void hideBackButton() {
+		btnLeft.setVisibility(View.GONE);
+	}
+
 	public void showMenuButton() {
 		btnLeft.setVisibility(View.VISIBLE);
 		btnLeft.setOnClickListener(menuButtonListener);

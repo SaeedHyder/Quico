@@ -3,24 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg"
-    android:fillViewport="true">
+    android:clickable="true">
 
-    <LinearLayout
+    <com.app.quico.ui.views.AnyTextView
+        android:id="@+id/txt_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/x10"
-        android:orientation="vertical">
-
-        <com.app.quico.ui.views.AnyTextView
-            android:id="@+id/txt_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:alpha="0.7"
-            android:text="@string/lorem_ipsum"
-            android:textColor="@color/black"
-            android:textSize="@dimen/x13"
-            app:typeface="@string/font_normal" />
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/x15"
+        android:alpha="0.7"
+        android:textColor="@color/black"
+        android:textSize="@dimen/x13"
+        app:typeface="@string/font_normal" />
 
 
-    </LinearLayout>
 </ScrollView>

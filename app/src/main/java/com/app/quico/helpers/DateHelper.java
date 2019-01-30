@@ -8,10 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import org.apache.commons.lang3.time.DateUtils;
-
-
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
@@ -878,7 +874,23 @@ public class DateHelper {
 			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 			Date value = formatter.parse(OurDate);
 
-			SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //this format changeable
+			SimpleDateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss"); //this format changeable
+			dateFormatter.setTimeZone(TimeZone.getDefault());
+			OurDate = dateFormatter.format(value);
+
+			//Log.d("OurDate", OurDate);
+		} catch (Exception e) {
+			OurDate = "00-00-0000 00:00";
+		}
+		return OurDate;
+	}
+	public static String getReviewsDateFormat(String OurDate) {
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+			Date value = formatter.parse(OurDate);
+
+			SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd,yyyy"); //this format changeable
 			dateFormatter.setTimeZone(TimeZone.getDefault());
 			OurDate = dateFormatter.format(value);
 

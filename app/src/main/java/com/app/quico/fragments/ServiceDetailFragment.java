@@ -1,24 +1,47 @@
 package com.app.quico.fragments;
 
+import android.Manifest;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.app.quico.R;
+import com.app.quico.entities.CompanyDetail;
 import com.app.quico.fragments.abstracts.BaseFragment;
+import com.app.quico.global.AppConstants;
+import com.app.quico.global.WebServiceConstants;
+import com.app.quico.helpers.InternetHelper;
+import com.app.quico.helpers.ShareIntentHelper;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.CustomRatingBar;
 import com.app.quico.ui.views.TitleBar;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,6 +50,11 @@ import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.app.quico.activities.DockActivity.KEY_FRAG_FIRST;
+import static com.app.quico.global.WebServiceConstants.BatchCountService;
+import static com.app.quico.global.WebServiceConstants.CompanyDetailKey;
+import static com.app.quico.global.WebServiceConstants.Favorite;
+import static com.app.quico.global.WebServiceConstants.Services;
+import static com.app.quico.global.WebServiceConstants.UpdateReviews;
 
 public class ServiceDetailFragment extends BaseFragment {
     @BindView(R.id.image)
@@ -50,10 +78,29 @@ public class ServiceDetailFragment extends BaseFragment {
     ImageView btnShare;
     @BindView(R.id.fragmentContainer)
     FrameLayout fragmentContainer;
+    @BindView(R.id.mainFrameLayout)
+    CoordinatorLayout mainFrameLayout;
+    @BindView(R.id.txt_no_data)
+    AnyTextView txtNoData;
 
-    public static ServiceDetailFragment newInstance() {
+    private static String companyId;
+    private CompanyDetail companyDetail;
+    private ImageLoader imageLoader;
+    private static boolean backBtn = false;
+
+    public static ServiceDetailFragment newInstance(String id) {
         Bundle args = new Bundle();
+        companyId = id;
+        backBtn = false;
+        ServiceDetailFragment fragment = new ServiceDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
+    public static ServiceDetailFragment newInstance(String id, boolean showBtn) {
+        Bundle args = new Bundle();
+        companyId = id;
+        backBtn = showBtn;
         ServiceDetailFragment fragment = new ServiceDetailFragment();
         fragment.setArguments(args);
         return fragment;
@@ -62,6 +109,8 @@ public class ServiceDetailFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        imageLoader = ImageLoader.getInstance();
+
         if (getArguments() != null) {
         }
 
@@ -78,17 +127,33 @@ public class ServiceDetailFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setTabLayout();
-        tabLayoutistner();
+        if (backBtn) {
+            btnBack.setVisibility(View.GONE);
+        }
+        mainFrameLayout.setVisibility(View.GONE);
+        callService();
         favListner();
+
+
     }
+
+    private void callService() {
+        if (InternetHelper.CheckInternetConectivityand(getDockActivity())) {
+            txtNoData.setVisibility(View.GONE);
+            setTabLayout();
+            serviceHelper.enqueueCall(headerWebService.getCompanyDetail(companyId), CompanyDetailKey);
+        } else {
+            txtNoData.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     private void favListner() {
 
         cbFav.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.will_be_implemented));
+                serviceHelper.enqueueCall(headerWebService.favorite(companyId, b ? AppConstants.like : AppConstants.unlike), Favorite, false);
             }
         });
     }
@@ -100,6 +165,49 @@ public class ServiceDetailFragment extends BaseFragment {
         titleBar.hideTitleBar();
     }
 
+    @Override
+    public void ResponseSuccess(Object result, String Tag, String message) {
+        super.ResponseSuccess(result, Tag, message);
+        switch (Tag) {
+            case CompanyDetailKey:
+                mainFrameLayout.setVisibility(View.VISIBLE);
+                companyDetail = (CompanyDetail) result;
+                if (backBtn) {
+                    companyDetail.setBackBtn(true);
+                }
+                setCompanyDetail();
+                tabLayoutistner();
+                break;
+
+            case UpdateReviews:
+                companyDetail = (CompanyDetail) result;
+                replaceFragment(ServiceReviewsFragment.newInstance(companyDetail));
+                break;
+
+            case Favorite:
+
+                break;
+        }
+    }
+
+    private void setCompanyDetail() {
+        if (companyDetail != null) {
+            //   imageLoader.displayImage(companyDetail.getImageUrl(), image);
+            Picasso.with(getDockActivity()).load(companyDetail.getImageUrl()).placeholder(R.drawable.placeholder_thumb).into(image);
+            imageLoader.displayImage(companyDetail.getIconUrl(), logo);
+            txtName.setText(companyDetail.getName());
+            txtRating.setText(companyDetail.getReviewCount() + " " + getResString(R.string.reviews));
+            rbParlourRating.setScore(companyDetail.getAvgRate());
+
+            if (companyDetail.getIsFavorite() == 1) {
+                cbFav.setChecked(true);
+            } else {
+                cbFav.setChecked(false);
+            }
+        }
+
+    }
+
     private void setTabLayout() {
 
         if (tabLayout != null) {
@@ -107,15 +215,15 @@ public class ServiceDetailFragment extends BaseFragment {
             tabLayout.addTab(tabLayout.newTab().setText(getResString(R.string.about)));
             tabLayout.addTab(tabLayout.newTab().setText(getResString(R.string.project)));
             tabLayout.addTab(tabLayout.newTab().setText(getResString(R.string.reviews)));
-            TabLayout.Tab tab = tabLayout.getTabAt(0);
-            tab.select();
-            setData(tab);
-
-
         }
     }
 
     private void tabLayoutistner() {
+
+        TabLayout.Tab tab = tabLayout.getTabAt(0);
+        tab.select();
+        setData(tab);
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -138,11 +246,11 @@ public class ServiceDetailFragment extends BaseFragment {
     private void setData(TabLayout.Tab tab) {
 
         if (tab.getPosition() == 0) {
-            replaceFragment(ServiceAboutFragment.newInstance());
+            replaceFragment(ServiceAboutFragment.newInstance(companyDetail));
         } else if (tab.getPosition() == 1) {
-            replaceFragment(ServiceProjectsFragment.newInstance());
-        }else {
-            replaceFragment(ServiceReviewsFragment.newInstance());
+            replaceFragment(ServiceProjectsFragment.newInstance(companyDetail));
+        } else {
+            replaceFragment(ServiceReviewsFragment.newInstance(companyDetail));
         }
 
     }
@@ -165,8 +273,74 @@ public class ServiceDetailFragment extends BaseFragment {
                 getDockActivity().popFragment();
                 break;
             case R.id.btn_share:
-                UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.will_be_implemented));
+                requestStoragePermission();
                 break;
         }
+    }
+
+    private void requestStoragePermission() {
+        Dexter.withActivity(getDockActivity())
+                .withPermissions(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                        if (report.areAllPermissionsGranted()) {
+                            if (companyDetail != null && companyDetail.getName() != null && !companyDetail.getName().equals("")) {
+                                ShareIntentHelper.shareTextIntent(getDockActivity(), companyDetail.getLink());
+                            }
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            requestStoragePermission();
+
+                        } else if (report.getDeniedPermissionResponses().size() > 0) {
+                            requestStoragePermission();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).
+                withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+                        UIHelper.showShortToastInCenter(getDockActivity(), "Grant Storage Permission to processed");
+                        openSettings();
+                    }
+                })
+
+                .onSameThread()
+                .check();
+
+
+    }
+
+    private void openSettings() {
+
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        Uri uri = Uri.fromParts("package", getDockActivity().getPackageName(), null);
+        intent.setData(uri);
+        startActivity(intent);
+    }
+
+    public void updateReviews() {
+        serviceHelper.enqueueCall(headerWebService.getCompanyDetail(companyId), UpdateReviews, false);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDockActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 }

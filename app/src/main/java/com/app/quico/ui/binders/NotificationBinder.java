@@ -7,7 +7,9 @@ import android.widget.LinearLayout;
 
 import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
+import com.app.quico.entities.NotificationEnt;
 import com.app.quico.helpers.BasePreferenceHelper;
+import com.app.quico.helpers.DateHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 import com.app.quico.ui.views.AnyTextView;
@@ -16,7 +18,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NotificationBinder extends RecyclerViewBinder<String> {
+public class NotificationBinder extends RecyclerViewBinder<NotificationEnt> {
 
     private DockActivity dockActivity;
     private BasePreferenceHelper prefHelper;
@@ -37,11 +39,13 @@ public class NotificationBinder extends RecyclerViewBinder<String> {
     }
 
     @Override
-    public void bindView(String entity, int position, Object viewHolder, Context context) {
+    public void bindView(NotificationEnt entity, int position, Object viewHolder, Context context) {
 
         final ViewHolder holder = (ViewHolder) viewHolder;
 
-        imageLoader.displayImage(entity, holder.logo);
+        //imageLoader.displayImage(entity, holder.logo);
+        holder.txtDetail.setText(entity.getMessage()+"");
+        holder.txt_date.setText(DateHelper.getLocalTimeDate(entity.getCreatedAt()));
 
         holder.mainFrame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +61,8 @@ public class NotificationBinder extends RecyclerViewBinder<String> {
         ImageView logo;
         @BindView(R.id.txt_detail)
         AnyTextView txtDetail;
+        @BindView(R.id.txt_date)
+        AnyTextView txt_date;
         @BindView(R.id.mainFrame)
         LinearLayout mainFrame;
 

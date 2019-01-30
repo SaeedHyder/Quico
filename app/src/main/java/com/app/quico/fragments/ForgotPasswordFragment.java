@@ -1,8 +1,6 @@
 package com.app.quico.fragments;
 
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.app.quico.R;
+import com.app.quico.entities.UserEnt;
 import com.app.quico.fragments.abstracts.BaseFragment;
-import com.app.quico.helpers.UIHelper;
 import com.app.quico.ui.views.TitleBar;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -22,6 +20,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.app.quico.global.WebServiceConstants.ForgotPass;
 
 public class ForgotPasswordFragment extends BaseFragment {
     @BindView(R.id.edt_phone)
@@ -64,7 +64,7 @@ public class ForgotPasswordFragment extends BaseFragment {
         phoneUtil = PhoneNumberUtil.getInstance();
         edtPhone.setTransformationMethod(new NumericKeyBoardTransformationMethod());
 
-        Countrypicker.registerCarrierNumberEditText(edtPhone);
+       // Countrypicker.registerCarrierNumberEditText(edtPhone);
 
     }
 
@@ -79,12 +79,27 @@ public class ForgotPasswordFragment extends BaseFragment {
     @OnClick(R.id.btn_submit)
     public void onViewClicked() {
         if (isvalidated()) {
-            getDockActivity().replaceDockableFragment(PhoneVerificationFragment.newInstance(true), "PhoneVerificationFragment");
+          //  getDockActivity().replaceDockableFragment(PhoneVerificationFragment.newInstance(true), "PhoneVerificationFragment");
+            serviceHelper.enqueueCall(webService.forgetPassword(Countrypicker.getSelectedCountryCodeWithPlus().toString(),edtPhone.getText().toString()), ForgotPass);
+
+        }
+    }
+
+    @Override
+    public void ResponseSuccess(Object result, String Tag, String message) {
+        super.ResponseSuccess(result, Tag, message);
+        switch (Tag){
+            case ForgotPass:
+                UserEnt userEnt=(UserEnt)result;
+                prefHelper.putUser(userEnt);
+                prefHelper.set_TOKEN(userEnt.getUser().getAccessToken());
+                getDockActivity().replaceDockableFragment(PhoneVerificationFragment.newInstance(true), "PhoneVerificationFragment");
+                break;
         }
     }
 
     private boolean isvalidated() {
-        if (edtPhone.getText().toString().isEmpty() || edtPhone.getText().toString().length() < 3) {
+        if (edtPhone.getText().toString().trim().isEmpty() || edtPhone.getText().toString().length() < 3) {
             edtPhone.setError(getString(R.string.enter_phonenumber));
             if (edtPhone.requestFocus()) {
                 setEditTextFocus(edtPhone);

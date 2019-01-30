@@ -27,7 +27,7 @@
             android:text="@string/upload_photo"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:typeface="Roboto-Regular.ttf" />
+            app:typeface="@string/font_normal" />
 
         <View
             android:layout_width="match_parent"
@@ -50,7 +50,7 @@
             android:text="@string/how_do_you_want_to_set_your_photo"
             android:textColor="@color/black"
             android:textSize="@dimen/x17"
-            app:typeface="Roboto-Regular.ttf" />
+            app:typeface="@string/font_normal" />
 
 
     </LinearLayout>

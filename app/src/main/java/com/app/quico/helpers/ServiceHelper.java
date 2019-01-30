@@ -3,6 +3,7 @@ package com.app.quico.helpers;
 import android.util.Log;
 
 
+import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
 import com.app.quico.entities.ResponseWrapper;
 import com.app.quico.global.WebServiceConstants;
@@ -29,6 +30,7 @@ public class ServiceHelper<T> {
         this.context = conttext;
         this.webService = webService;
     }
+
     public void enqueueCall(Call<ResponseWrapper<T>> call, final String tag) {
         if (InternetHelper.CheckInternetConectivityandShowToast(context)) {
             context.onLoadingStarted();
@@ -36,10 +38,14 @@ public class ServiceHelper<T> {
                 @Override
                 public void onResponse(Call<ResponseWrapper<T>> call, Response<ResponseWrapper<T>> response) {
                     context.onLoadingFinished();
-                    if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
-                        serviceResponseLisener.ResponseSuccess(response.body().getResult(), tag);
+                    if (response != null && response.body() != null) {
+                        if (response.body().isSuccess()) {
+                            serviceResponseLisener.ResponseSuccess(response.body().getData(), tag, response.body().getMessage());
+                        } else {
+                            UIHelper.showShortToastInDialoge(context, response.body().getMessage());
+                        }
                     } else {
-                        UIHelper.showShortToastInCenter(context, response.body().getMessage());
+                        UIHelper.showShortToastInDialoge(context, context.getResources().getString(R.string.no_response));
                     }
 
                 }
@@ -48,7 +54,33 @@ public class ServiceHelper<T> {
                 public void onFailure(Call<ResponseWrapper<T>> call, Throwable t) {
                     context.onLoadingFinished();
                     t.printStackTrace();
-                    Log.e(ServiceHelper.class.getSimpleName()+" by tag: " + tag, t.toString());
+                    Log.e(ServiceHelper.class.getSimpleName() + " by tag: " + tag, t.toString());
+                }
+            });
+        }
+    }
+
+    public void enqueueCall(Call<ResponseWrapper<T>> call, final String tag,boolean isLoading) {
+        if (InternetHelper.CheckInternetConectivityandShowToast(context)) {
+            call.enqueue(new Callback<ResponseWrapper<T>>() {
+                @Override
+                public void onResponse(Call<ResponseWrapper<T>> call, Response<ResponseWrapper<T>> response) {
+                    if (response != null && response.body() != null) {
+                        if (response.body().isSuccess()) {
+                            serviceResponseLisener.ResponseSuccess(response.body().getData(), tag, response.body().getMessage());
+                        } else {
+                            UIHelper.showShortToastInDialoge(context, response.body().getMessage());
+                        }
+                    } else {
+                        UIHelper.showShortToastInDialoge(context, context.getResources().getString(R.string.no_response));
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<ResponseWrapper<T>> call, Throwable t) {
+                    t.printStackTrace();
+                    Log.e(ServiceHelper.class.getSimpleName() + " by tag: " + tag, t.toString());
                 }
             });
         }

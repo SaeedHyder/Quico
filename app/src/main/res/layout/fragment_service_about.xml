@@ -16,15 +16,16 @@
             android:id="@+id/txt_about"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x5"
             android:text="@string/lorem_small"
             android:textColor="@color/app_black_text"
             android:textSize="@dimen/x14"
             app:typeface="@string/font_normal" />
 
         <com.app.quico.ui.views.AnyTextView
+            android:id="@+id/txt_services_offered"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/x10"
             android:layout_marginTop="@dimen/x10"
             android:text="@string/services_offered"
             android:textColor="@color/sky_blue"
@@ -36,20 +37,23 @@
     <com.app.quico.ui.views.CustomRecyclerView
         android:id="@+id/rv_services"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/x10"
+       />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/x10"
+        android:layout_marginStart="@dimen/x10"
+        android:layout_marginEnd="@dimen/x10"
+        android:layout_marginBottom="@dimen/x10"
         android:orientation="vertical">
 
         <com.app.quico.ui.views.AnyTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/x10"
-            android:layout_marginTop="@dimen/x10"
             android:text="@string/contact_details"
             android:textColor="@color/sky_blue"
             android:textSize="@dimen/x16"
@@ -76,7 +80,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/address"
                 android:layout_marginTop="@dimen/x5"
-                android:text="@string/dummy_address"
+                android:layout_toStartOf="@+id/btnAddress"
+                android:layout_alignStart="@+id/address"
+                android:text="@string/address"
                 android:textColor="@color/app_black_text"
                 android:textSize="@dimen/x14"
                 app:typeface="@string/font_normal" />
@@ -85,6 +91,7 @@
                 android:id="@+id/btnAddress"
                 android:layout_width="@dimen/x40"
                 android:layout_height="@dimen/x40"
+                android:layout_marginStart="@dimen/x10"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/circle">
@@ -120,6 +127,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/phoneNumber"
+                android:layout_toStartOf="@+id/btnPhoneNumber"
+                android:layout_alignStart="@+id/phoneNumber"
                 android:layout_marginTop="@dimen/x5"
                 android:text="+1 123 456 789"
                 android:textColor="@color/app_black_text"
@@ -130,6 +139,7 @@
                 android:id="@+id/btnPhoneNumber"
                 android:layout_width="@dimen/x40"
                 android:layout_height="@dimen/x40"
+                android:layout_marginStart="@dimen/x10"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/circle">
@@ -165,6 +175,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/email"
+                android:layout_toStartOf="@+id/btnEmail"
+                android:layout_alignStart="@+id/email"
                 android:layout_marginTop="@dimen/x5"
                 android:text="brainwilliams@gmail.com"
                 android:textColor="@color/app_black_text"
@@ -175,6 +187,7 @@
                 android:id="@+id/btnEmail"
                 android:layout_width="@dimen/x40"
                 android:layout_height="@dimen/x40"
+                android:layout_marginStart="@dimen/x10"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/circle">
@@ -211,6 +224,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/website"
                 android:layout_marginTop="@dimen/x5"
+                android:layout_toStartOf="@+id/btnWebsite"
+                android:layout_alignStart="@+id/website"
                 android:text="www.domain.com"
                 android:textColor="@color/app_black_text"
                 android:textSize="@dimen/x14"
@@ -220,6 +235,7 @@
                 android:id="@+id/btnWebsite"
                 android:layout_width="@dimen/x40"
                 android:layout_height="@dimen/x40"
+                android:layout_marginStart="@dimen/x10"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/circle">
@@ -295,6 +311,7 @@
             android:background="@drawable/rounded_green_button"
             android:text="@string/chat_with_us"
             android:textColor="@color/white"
+
             android:textSize="@dimen/x14" />
 
     </LinearLayout>

@@ -7,17 +7,19 @@ import android.widget.ImageView;
 
 import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
+import com.app.quico.entities.ServicesEnt;
 import com.app.quico.helpers.BasePreferenceHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 import com.app.quico.ui.views.AnyTextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class ServiesBinder extends RecyclerViewBinder<String> {
+public class ServiesBinder extends RecyclerViewBinder<ServicesEnt> {
 
     private DockActivity dockActivity;
     private BasePreferenceHelper prefHelper;
@@ -38,17 +40,18 @@ public class ServiesBinder extends RecyclerViewBinder<String> {
     }
 
     @Override
-    public void bindView(String entity, int position, Object viewHolder, Context context) {
+    public void bindView(ServicesEnt entity, int position, Object viewHolder, Context context) {
 
         final ViewHolder holder = (ViewHolder) viewHolder;
 
-        if (position % 2 == 1) {
+       /* if (position % 2 == 1) {
             holder.txtTitle.setTextColor(context.getResources().getColor(R.color.white));
         } else {
             holder.txtTitle.setTextColor(context.getResources().getColor(R.color.app_blue_text));
-        }
-
-        imageLoader.displayImage(entity,holder.serviceImage);
+        }*/
+        if (entity.getIconUrl() != null)
+            Picasso.with(dockActivity).load(entity.getIconUrl()).placeholder(R.drawable.placeholder_thumb).into(holder.serviceImage);
+        // imageLoader.displayImage(entity.getIconUrl(),holder.serviceImage);
 
         holder.mainFrame.setOnClickListener(new View.OnClickListener() {
             @Override

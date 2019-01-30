@@ -25,7 +25,7 @@ public class GPSTracker extends Service implements LocationListener {
     // The minimum time beetwen updates in milliseconds
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
     private final Context mContext;
-    // Declaring a Location Manager
+    // Declaring a LocationEnt Manager
     protected LocationManager locationManager;
     // flag for GPS Status
     boolean isGPSEnabled = false;
@@ -95,7 +95,7 @@ public class GPSTracker extends Service implements LocationListener {
                 }
             }
         } catch (Exception e) {
-            Log.e("Error : Location",
+            Log.e("Error : LocationEnt",
                     "Impossible to connect to LocationManager", e);
         }
 

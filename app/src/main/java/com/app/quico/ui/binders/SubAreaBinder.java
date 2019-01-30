@@ -6,7 +6,9 @@ import android.widget.CompoundButton;
 
 import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
+import com.app.quico.entities.LocationEnt;
 import com.app.quico.helpers.BasePreferenceHelper;
+import com.app.quico.interfaces.AreaInterface;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 import com.app.quico.ui.views.AnyTextView;
@@ -16,14 +18,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class SubAreaBinder extends RecyclerViewBinder<String> {
+public class SubAreaBinder extends RecyclerViewBinder<LocationEnt> {
 
     private DockActivity dockActivity;
     private BasePreferenceHelper prefHelper;
     private ImageLoader imageLoader;
-    private RecyclerClickListner clickListner;
+    private AreaInterface clickListner;
 
-    public SubAreaBinder(DockActivity dockActivity,RecyclerClickListner clickListner) {
+    public SubAreaBinder(DockActivity dockActivity,AreaInterface clickListner) {
         super(R.layout.row_item_subareas);
         this.dockActivity = dockActivity;
         this.clickListner=clickListner;
@@ -37,16 +39,16 @@ public class SubAreaBinder extends RecyclerViewBinder<String> {
     }
 
     @Override
-    public void bindView(String entity, int position, Object viewHolder, Context context) {
+    public void bindView(LocationEnt entity, int position, Object viewHolder, Context context) {
 
         final ViewHolder holder = (ViewHolder) viewHolder;
 
-        holder.txtTitle.setText(entity);
+        holder.txtTitle.setText(entity.getLocation());
 
         holder.txtTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clickListner.onClick(entity,position);
+                clickListner.selectArea(entity,position);
             }
         });
 

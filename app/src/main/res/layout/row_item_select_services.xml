@@ -5,9 +5,16 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
     <com.app.quico.ui.views.AnyTextView
         android:id="@+id/txt_title"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="@dimen/x50"
         android:gravity="center_vertical"
         android:paddingEnd="@dimen/x15"
@@ -16,6 +23,16 @@
         android:textColor="@color/app_black_text"
         android:textSize="@dimen/x14"
         app:typeface="@string/font_normal" />
+
+        <ImageView
+            android:id="@+id/iv_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           android:padding="@dimen/x15"
+            android:src="@drawable/tick"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 
 
     <View

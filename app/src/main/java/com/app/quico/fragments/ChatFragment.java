@@ -1,13 +1,16 @@
 package com.app.quico.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -49,6 +52,7 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner {
 
     private ArrayList<String> collection;
 
+
     public static ChatFragment newInstance() {
         Bundle args = new Bundle();
 
@@ -60,6 +64,7 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getDockActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         if (getArguments() != null) {
         }
 
@@ -76,6 +81,23 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setData();
+
+        edtMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                rvChat.scrollToPosition(collection.size() - 1);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     private void setData() {
@@ -90,10 +112,14 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner {
         collection.add("left");
         collection.add("");
 
+        setTouchListner(collection.size() - 1);
+
 
         rvChat.BindRecyclerView(new ChatBinder(getDockActivity(), prefHelper, this), collection,
                 new LinearLayoutManager(getDockActivity(), LinearLayoutManager.VERTICAL, false)
                 , new DefaultItemAnimator());
+
+        rvChat.scrollToPosition(collection.size() - 1);
     }
 
     @Override
@@ -110,7 +136,7 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner {
     }
 
 
-    @OnClick({R.id.btn_attachMedia, R.id.btn_attachDocument, R.id.btn_attachLocation, R.id.btnAttachment, R.id.btnSend})
+    @OnClick({R.id.btn_attachMedia, R.id.btn_attachDocument, R.id.btn_attachLocation, R.id.btnAttachment, R.id.btnSend, R.id.edt_message})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_attachMedia:
@@ -134,6 +160,35 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner {
                 edtMessage.getText().clear();
                 UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.will_be_implemented));
                 break;
+
+            case R.id.edt_message:
+
+                break;
         }
     }
+
+    private void setTouchListner(final int position) {
+        edtMessage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEvent.ACTION_UP == event.getAction()) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            rvChat.scrollToPosition(position);
+                        }
+                    }, 1000);
+                }
+                return false;
+            }
+        });
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getDockActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
 }

@@ -1,161 +1,251 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg">
+    android:background="@drawable/bg"
+    android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/x20"
-        app:cardCornerRadius="@dimen/x8"
-        app:cardElevation="@dimen/x5">
+        android:layout_height="match_parent"
+        >
 
-        <LinearLayout
+
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/x15">
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/edt_username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/transparent"
-                    android:drawablePadding="@dimen/x10"
-                    android:drawableStart="@drawable/profile"
-                    android:hint="@string/full_name"
-                    android:imeOptions="actionNext"
-                    android:maxLength="40"
-                    android:inputType="textPersonName"
-                    android:paddingTop="@dimen/x10"
-                    android:textColor="@color/app_black_text"
-                    android:textSize="@dimen/x14" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/x1"
-                android:layout_marginTop="@dimen/x10"
-                android:background="@color/view_line_color" />
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/x20">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/edt_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/transparent"
-                    android:drawablePadding="@dimen/x10"
-                    android:drawableStart="@drawable/email"
-                    android:hint="@string/email_id"
-                    android:imeOptions="actionNext"
-                    android:maxLength="40"
-                    android:inputType="textEmailAddress"
-                    android:paddingTop="@dimen/x10"
-                    android:textColor="@color/app_black_text"
-                    android:textSize="@dimen/x14" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/x1"
-                android:layout_marginTop="@dimen/x10"
-                android:background="@color/view_line_color" />
-
+            android:layout_margin="@dimen/x20"
+            app:cardCornerRadius="@dimen/x8"
+            app:cardElevation="@dimen/x5">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="@dimen/x20">
+                android:orientation="vertical"
+                android:padding="@dimen/x15">
 
-                <ImageView
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x5"
-                    android:src="@drawable/phone"
-                    />
+                    android:layout_marginBottom="@dimen/x15"
+                    android:layout_marginTop="@dimen/x10"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                <com.hbb20.CountryCodePicker
-                    android:id="@+id/Countrypicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/x35"
-                    android:layout_marginTop="@dimen/x5"
-                    app:ccp_autoDetectCountry="false"
-                    app:ccp_contentColor="@color/app_black_text"
-                    app:ccpDialog_textColor="@color/app_black_text"
-                    app:ccp_defaultNameCode="AE"
-                    app:ccp_hintExampleNumber="true"
-                    app:ccp_hintExampleNumberType="MOBILE"
-                    app:ccp_showArrow="false"
-                    app:ccp_showFlag="false"
-                    app:ccp_autoFormatNumber="false"
-                    app:ccp_showNameCode="false"
-                    app:ccp_textGravity="RIGHT"
-                    app:ccp_textSize="@dimen/x14" />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_image"
+                        android:layout_width="@dimen/x100"
+                        android:layout_height="@dimen/x100"
+                        android:src="@drawable/placeholder" />
 
+                    <RelativeLayout
+                        android:id="@+id/btnUploadImage"
+                        android:layout_width="@dimen/x25"
+                        android:layout_height="@dimen/x25"
+                        android:layout_alignBottom="@+id/profile_image"
+                        android:layout_alignEnd="@+id/profile_image"
+                        android:layout_marginBottom="@dimen/x10"
+                        android:background="@drawable/green_radius"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:layout_width="@dimen/x15"
+                            android:layout_height="@dimen/x12"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/camera" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                  >
+                    android:layout_marginTop="@dimen/x10">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/edt_phone"
+                        android:id="@+id/edt_username"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/x40"
+                        android:layout_height="wrap_content"
                         android:background="@color/transparent"
-                        android:hint="@string/phone_number"
-                        android:imeOptions="actionDone"
-                        android:maxLength="16"
-                        android:digits="0123456789"
-                        android:inputType="numberPassword"
+                        android:drawablePadding="@dimen/x10"
+                        android:drawableStart="@drawable/profile"
+                        android:hint="@string/full_name"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPersonName"
+                        android:maxLength="40"
+                        android:paddingTop="@dimen/x10"
                         android:textColor="@color/app_black_text"
                         android:textSize="@dimen/x14" />
 
                 </android.support.design.widget.TextInputLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x1"
+                    android:layout_marginTop="@dimen/x10"
+                    android:background="@color/view_line_color" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x20">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/edt_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/transparent"
+                        android:drawablePadding="@dimen/x10"
+                        android:drawableStart="@drawable/email"
+                        android:hint="@string/email_id"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:maxLength="40"
+                        android:paddingTop="@dimen/x10"
+                        android:textColor="@color/app_black_text"
+                        android:textSize="@dimen/x14" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x1"
+                    android:layout_marginTop="@dimen/x10"
+                    android:background="@color/view_line_color" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x20">
+
+                    <com.app.quico.ui.views.AutoCompleteLocation
+                        android:id="@+id/edt_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/transparent"
+                        android:drawablePadding="@dimen/x7"
+                        android:drawableStart="@drawable/location"
+                        android:hint="@string/address"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPersonName"
+                        android:maxLength="40"
+                        android:paddingTop="@dimen/x10"
+                        android:textColor="@color/app_black_text"
+                        android:textSize="@dimen/x14" />
+
+
+                </android.support.design.widget.TextInputLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x1"
+                    android:layout_marginTop="@dimen/x10"
+                    android:background="@color/view_line_color" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="@dimen/x20"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/x5"
+                        android:src="@drawable/phone" />
+
+                    <com.hbb20.CountryCodePicker
+                        android:id="@+id/Countrypicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/x35"
+                        android:layout_marginTop="@dimen/x5"
+
+                        app:ccpDialog_textColor="@color/app_black_text"
+                        app:ccp_autoDetectCountry="false"
+                        app:ccp_autoFormatNumber="false"
+                        app:ccp_contentColor="@color/app_black_text"
+                        app:ccp_defaultNameCode="AE"
+                        app:ccp_hintExampleNumber="true"
+                        app:ccp_hintExampleNumberType="MOBILE"
+                        app:ccp_showArrow="false"
+                        app:ccp_showFlag="false"
+                        app:ccp_showNameCode="false"
+                        app:ccp_textGravity="RIGHT"
+                        app:ccp_textSize="@dimen/x14" />
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/edt_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/x40"
+                            android:background="@color/transparent"
+                            android:digits="0123456789"
+                            android:hint="@string/phone_number"
+                            android:imeOptions="actionDone"
+                            android:inputType="numberPassword"
+                            android:maxLength="16"
+                            android:textColor="@color/app_black_text"
+                            android:textSize="@dimen/x14" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+
+                </LinearLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x20"
+                    android:visibility="gone">
+
+                    <android.support.design.widget.TextInputEditText
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/transparent"
+                        android:drawablePadding="@dimen/x10"
+                        android:drawableStart="@drawable/phone"
+
+                        android:hint="@string/phone_number"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberPassword"
+                        android:maxLength="40"
+                        android:paddingTop="@dimen/x10"
+                        android:textColor="@color/app_black_text"
+                        android:textSize="@dimen/x14" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x1"
+                    android:layout_marginTop="@dimen/x10"
+                    android:background="@color/view_line_color" />
+
+
+                <Button
+                    android:id="@+id/btn_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x40"
+                    android:layout_marginBottom="@dimen/x10"
+                    android:layout_marginTop="@dimen/x20"
+                    android:background="@drawable/rounded_green_button"
+                    android:text="@string/edit"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x14" />
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/x1"
-                android:layout_marginTop="@dimen/x5"
-                android:background="@color/view_line_color" />
 
-
-
-
-            <Button
-                android:id="@+id/btn_edit"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/x40"
-                android:layout_marginBottom="@dimen/x10"
-                android:layout_marginTop="@dimen/x20"
-                android:background="@drawable/rounded_green_button"
-                android:text="@string/edit"
-                android:textColor="@color/white"
-                android:textSize="@dimen/x14" />
-
-        </LinearLayout>
-
-
-    </android.support.v7.widget.CardView>
-
+        </android.support.v7.widget.CardView>
+    </ScrollView>
 </LinearLayout>

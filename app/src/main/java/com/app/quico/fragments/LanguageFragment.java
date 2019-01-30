@@ -63,6 +63,7 @@ public class LanguageFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_english:
+                prefHelper.setLanguageSelected(true);
                 getDockActivity().replaceDockableFragment(LoginFragment.newInstance(),"LoginFragment");
                 break;
             case R.id.btn_arabic:

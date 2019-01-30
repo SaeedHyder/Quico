@@ -5,7 +5,9 @@ import android.view.View;
 
 import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
+import com.app.quico.entities.ReviewsDetail;
 import com.app.quico.helpers.BasePreferenceHelper;
+import com.app.quico.helpers.DateHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 import com.app.quico.ui.views.AnyTextView;
@@ -14,9 +16,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class ReviewBinder extends RecyclerViewBinder<String> {
+public class ReviewBinder extends RecyclerViewBinder<ReviewsDetail> {
 
     private DockActivity dockActivity;
     private BasePreferenceHelper prefHelper;
@@ -37,19 +40,35 @@ public class ReviewBinder extends RecyclerViewBinder<String> {
     }
 
     @Override
-    public void bindView(String entity, int position, Object viewHolder, Context context) {
+    public void bindView(ReviewsDetail entity, int position, Object viewHolder, Context context) {
 
         final ViewHolder holder = (ViewHolder) viewHolder;
+        if (entity != null ) {
+            if (entity.getUserDetail() != null && entity.getUserDetail().getDetails() != null && entity.getUserDetail().getDetails().getImageUrl() != null) {
+                imageLoader.displayImage(entity.getUserDetail().getDetails().getImageUrl(), holder.userImage);
+            }
+            if (entity.getUserDetail().getName() != null) {
+                holder.txtName.setText(entity.getUserDetail().getName());
+                holder.txtName.setSelected(true);
+            }
+
+            holder.txtDetail.setText(entity.getReview());
+            holder.rbRating.setScore(entity.getRate());
+            holder.txtDate.setText(DateHelper.getReviewsDateFormat(entity.getCreatedAt()));
+        }
+
 
     }
 
     static class ViewHolder extends BaseViewHolder {
         @BindView(R.id.txt_name)
         AnyTextView txtName;
+        @BindView(R.id.userImage)
+        CircleImageView userImage;
         @BindView(R.id.txt_date)
         AnyTextView txtDate;
-        @BindView(R.id.rbParlourRating)
-        CustomRatingBar rbParlourRating;
+        @BindView(R.id.rbRating)
+        CustomRatingBar rbRating;
         @BindView(R.id.txt_detail)
         AnyTextView txtDetail;
 

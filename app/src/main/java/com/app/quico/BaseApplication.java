@@ -5,12 +5,17 @@ import android.graphics.Bitmap;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
+import com.crashlytics.android.Crashlytics;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.L;
+
+import io.fabric.sdk.android.Fabric;
 
 public class BaseApplication extends MultiDexApplication {
 	
@@ -19,6 +24,9 @@ public class BaseApplication extends MultiDexApplication {
 		// TODO Auto-generated method stub
 		super.onCreate();
 		MultiDex.install(this);
+		FacebookSdk.sdkInitialize(this);
+		AppEventsLogger.activateApp(this);
+		Fabric.with(this, new Crashlytics());
 		initImageLoader();
 	}
 	

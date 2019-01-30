@@ -89,7 +89,7 @@
                 android:layout_height="@dimen/x30"
 
                 app:starPadding="@dimen/x5"
-                app:stars="4" />
+                app:stars="1" />
 
             <com.app.quico.ui.views.AnyTextView
                 android:layout_width="wrap_content"
@@ -107,7 +107,6 @@
                 android:layout_height="@dimen/x150"
                 android:imeOptions="actionDone"
                 android:gravity="top"
-                android:inputType="textPersonName"
                 android:layout_marginTop="@dimen/x10"
                 android:padding="@dimen/x15"
                 android:textColor="@color/app_black_text"

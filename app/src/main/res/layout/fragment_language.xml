@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg"
     android:orientation="vertical">
 
     <LinearLayout
@@ -41,7 +42,7 @@
             android:text="@string/you_can_change_your_language_anytime"
             android:layout_marginTop="@dimen/x7"
             android:textSize="@dimen/x14"
-            android:textColor="@color/black"
+            android:textColor="@color/language_color"
             android:gravity="center_horizontal"
             app:typeface="@string/font_normal"/>
 
@@ -50,9 +51,9 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/x40"
             android:textColor="@color/white"
-            android:layout_marginStart="@dimen/x25"
-            android:layout_marginEnd="@dimen/x25"
-            android:layout_marginTop="@dimen/x25"
+            android:layout_marginStart="@dimen/x55"
+            android:layout_marginEnd="@dimen/x55"
+            android:layout_marginTop="@dimen/x40"
             android:textSize="@dimen/x13"
             android:background="@drawable/rounded_green_button"
             android:text="@string/english"/>
@@ -62,8 +63,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/x40"
             android:textColor="@color/white"
-            android:layout_marginStart="@dimen/x25"
-            android:layout_marginEnd="@dimen/x25"
+            android:layout_marginStart="@dimen/x55"
+            android:layout_marginEnd="@dimen/x55"
             android:layout_marginTop="@dimen/x15"
             android:layout_marginBottom="@dimen/x15"
             android:background="@drawable/rounded_sky_blue_button"

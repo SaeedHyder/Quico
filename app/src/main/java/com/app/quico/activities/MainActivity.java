@@ -1,11 +1,17 @@
 package com.app.quico.activities;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
@@ -13,6 +19,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.Settings;
@@ -21,12 +28,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -37,27 +48,39 @@ import com.app.quico.fragments.HomeFragment;
 import com.app.quico.fragments.LanguageFragment;
 import com.app.quico.fragments.LoginFragment;
 import com.app.quico.fragments.NotificationsFragment;
+import com.app.quico.fragments.ServiceDetailFragment;
 import com.app.quico.fragments.SideMenuFragment;
 import com.app.quico.fragments.abstracts.BaseFragment;
 import com.app.quico.global.AppConstants;
 import com.app.quico.global.SideMenuChooser;
 import com.app.quico.global.SideMenuDirection;
+import com.app.quico.helpers.DialogHelper;
 import com.app.quico.helpers.ScreenHelper;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.interfaces.ImageSetter;
+import com.app.quico.interfaces.OnSettingActivateListener;
 import com.app.quico.residemenu.ResideMenu;
 import com.app.quico.ui.views.TitleBar;
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.kbeanie.imagechooser.api.ChooserType;
 import com.kbeanie.imagechooser.api.ChosenImage;
 import com.kbeanie.imagechooser.api.ChosenImages;
@@ -68,11 +91,17 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.app.quico.global.AppConstants.companyPush;
+import static com.app.quico.global.AppConstants.deletePush;
+import static com.app.quico.global.AppConstants.inactivePush;
 
 
 public class MainActivity extends DockActivity implements OnClickListener, ImageChooserListener {
@@ -89,7 +118,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
     private MainActivity mContext;
     private boolean loading;
 
-    private ResideMenu resideMenu;
+    public ResideMenu resideMenu;
     private ImageChooserManager imageChooserManager;
     private int chooserType;
     private String filePath;
@@ -105,9 +134,13 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
     private String sideMenuDirection;
     private AlertDialog alert;
     public final int WifiResultCode = 2;
+    public final int LocationResultCode = 1;
     private String address = "";
     private String country = "";
     private LocationManager locationManager;
+    private OnSettingActivateListener settingActivateListener;
+    protected BroadcastReceiver broadcastReceiver;
+    private boolean isFirstTime = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,6 +159,8 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
         StrictMode.setVmPolicy(builder.build());
 
         settingSideMenu(sideMenuType, sideMenuDirection);
+        printHashKey(getDockActivity());
+        onNotificationReceived();
 
         titleBar.setMenuButtonListener(new OnClickListener() {
 
@@ -133,6 +168,8 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
             public void onClick(View v) {
                 if (sideMenuType.equals(SideMenuChooser.DRAWER.getValue()) && getDrawerLayout() != null) {
                     if (sideMenuDirection.equals(SideMenuDirection.LEFT.getValue())) {
+                        InputMethodManager inputMethodManager = (InputMethodManager) getDockActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(getDockActivity().getCurrentFocus().getWindowToken(), 0);
                         drawerLayout.openDrawer(Gravity.LEFT);
                     } else {
                         drawerLayout.openDrawer(Gravity.RIGHT);
@@ -171,6 +208,14 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
         //  if (savedInstanceState == null)
         initFragment();
 
+        // ATTENTION: This was auto-generated to handle app links.
+
+
+    }
+
+
+    public void setOnSettingActivateListener(OnSettingActivateListener ActivateListener) {
+        this.settingActivateListener = ActivateListener;
     }
 
     public View getDrawerView() {
@@ -234,12 +279,94 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
 
     public void initFragment() {
         getSupportFragmentManager().addOnBackStackChangedListener(getListener());
+        Intent intent = getIntent();
         if (prefHelper.isLogin()) {
             popBackStackTillEntry(0);
-            replaceDockableFragment(HomeFragment.newInstance(), "HomeFragment",false);
+            replaceDockableFragment(HomeFragment.newInstance(), "HomeFragment", false);
+
+            if (getIntent().getAction() != null && getIntent().getData() != null) {
+                popBackStackTillEntry(0);
+                Uri data = intent.getData();
+                replaceDockableFragment(ServiceDetailFragment.newInstance(data.getQueryParameter("id"), true), "ServiceDetailFragment");
+            }
+
         } else {
-            replaceDockableFragment(LanguageFragment.newInstance(), "LanguageFragment",false);
+            if (prefHelper.isLanguageSelected()) {
+                replaceDockableFragment(LoginFragment.newInstance(), "LoginFragment", false);
+            } else {
+                replaceDockableFragment(LanguageFragment.newInstance(), "LanguageFragment", false);
+            }
         }
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            String Type = bundle.getString("actionType");
+            String Title = bundle.getString("title");
+            String id = bundle.getString("redId");
+
+            if (prefHelper.isLogin()) {
+                if (Type != null && Type.equals(companyPush)) {
+                    replaceDockableFragment(ServiceDetailFragment.newInstance(id), "ServiceDetailFragment");
+                } else if (Type != null && Type.equals(deletePush)) {
+                    UIHelper.showShortToastInCenter(getDockActivity(), getDockActivity().getResources().getString(R.string.deleted_by_admin));
+                    getDockActivity().popBackStackTillEntry(0);
+                    prefHelper.setLoginStatus(false);
+                    prefHelper.setSocialLogin(false);
+                    if (AccessToken.getCurrentAccessToken() != null) {
+                        LoginManager.getInstance().logOut();
+                    }
+                    NotificationManager notificationManager = (NotificationManager) getDockActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancelAll();
+                    getDockActivity().replaceDockableFragment(LoginFragment.newInstance(), "LoginFragment");
+
+                } else if (Type != null && Title != null && !Title.equals("")) {
+                    replaceDockableFragment(NotificationsFragment.newInstance(), "NotificationsFragment");
+                }
+
+            }
+        }
+    }
+
+    private void onNotificationReceived() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                if (intent.getAction().equals(AppConstants.PUSH_NOTIFICATION)) {
+
+                    Bundle bundle = intent.getExtras();
+                    if (bundle != null) {
+                        String Type = bundle.getString("actionType");
+
+                        if (Type != null && Type.equals(deletePush)) {
+                            UIHelper.showShortToastInDialoge(getDockActivity(), getDockActivity().getResources().getString(R.string.deleted_by_admin));
+                            getDockActivity().popBackStackTillEntry(0);
+                            prefHelper.setLoginStatus(false);
+                            prefHelper.setSocialLogin(false);
+                            if (AccessToken.getCurrentAccessToken() != null) {
+                                LoginManager.getInstance().logOut();
+                            }
+                            NotificationManager notificationManager = (NotificationManager) getDockActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                            notificationManager.cancelAll();
+                            getDockActivity().replaceDockableFragment(LoginFragment.newInstance(), "LoginFragment");
+                        } else if (Type != null && Type.equals(inactivePush)) {
+                            UIHelper.showShortToastInDialoge(getDockActivity(), getDockActivity().getResources().getString(R.string.blocked_by_admin));
+                            getDockActivity().popBackStackTillEntry(0);
+                            prefHelper.setLoginStatus(false);
+                            prefHelper.setSocialLogin(false);
+                            if (AccessToken.getCurrentAccessToken() != null) {
+                                LoginManager.getInstance().logOut();
+                            }
+                            NotificationManager notificationManager = (NotificationManager) getDockActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                            notificationManager.cancelAll();
+                            getDockActivity().replaceDockableFragment(LoginFragment.newInstance(), "LoginFragment");
+                        }
+                    }
+                }
+
+            }
+
+        };
     }
 
     private FragmentManager.OnBackStackChangedListener getListener() {
@@ -263,9 +390,13 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
     public void onLoadingStarted() {
 
         if (mainFrameLayout != null) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             mainFrameLayout.setVisibility(View.VISIBLE);
             if (progressBar != null) {
                 progressBar.setVisibility(View.VISIBLE);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             }
             loading = true;
         }
@@ -275,7 +406,9 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
     public void onLoadingFinished() {
         mainFrameLayout.setVisibility(View.VISIBLE);
 
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         if (progressBar != null) {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             progressBar.setVisibility(View.INVISIBLE);
         }
         loading = false;
@@ -356,6 +489,11 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
             }
             imageChooserManager.submit(requestCode, data);
         }
+        if (resultCode == Activity.RESULT_OK) {
+            if (settingActivateListener != null)
+                settingActivateListener.onLocationActivateListener();
+        }
+
 
     }
 
@@ -527,71 +665,73 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
 
     }
 
-    public void turnLocationOn(GoogleApiClient apiClient) {
-        if (apiClient == null) {
-            apiClient = new GoogleApiClient.Builder(getApplicationContext())
+    public void turnLocationOn(GoogleApiClient googleApiClient) {
+        if (googleApiClient == null) {
+            GoogleApiClient finalGoogleApiClient = googleApiClient;
+            googleApiClient = new GoogleApiClient.Builder(getApplicationContext())
                     .addApi(LocationServices.API)
                     .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                         @Override
-                        public void onConnected(@Nullable Bundle bundle) {
+                        public void onConnected(Bundle bundle) {
 
                         }
 
                         @Override
                         public void onConnectionSuspended(int i) {
-
+                            finalGoogleApiClient.connect();
                         }
                     })
                     .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
                         @Override
-                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        public void onConnectionFailed(ConnectionResult connectionResult) {
 
+                            Log.d("LocationEnt error", "LocationEnt error " + connectionResult.getErrorCode());
                         }
                     }).build();
-            apiClient.connect();
+            googleApiClient.connect();
 
             LocationRequest locationRequest = LocationRequest.create();
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             locationRequest.setInterval(30 * 1000);
             locationRequest.setFastestInterval(5 * 1000);
+
             LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                     .addLocationRequest(locationRequest);
+            builder.setNeedBle(true);
+            builder.setAlwaysShow(true);
+            Task<LocationSettingsResponse> task =
+                    LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
 
-            //**************************
-            builder.setAlwaysShow(true); //this is the key ingredient
-            //**************************
-
-            PendingResult<LocationSettingsResult> result =
-                    LocationServices.SettingsApi.checkLocationSettings(apiClient, builder.build());
-            result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            task.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
                 @Override
-                public void onResult(LocationSettingsResult result) {
-                    final Status status = result.getStatus();
-                    final LocationSettingsStates state = result.getLocationSettingsStates();
-                    switch (status.getStatusCode()) {
-                        case LocationSettingsStatusCodes.SUCCESS:
-                            // All drive_location drive_settings are satisfied. The client can initialize drive_location
-                            // requests here.
-                            break;
-                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            // Location drive_settings are not satisfied. But could be fixed by showing the user
-                            // a dialog.
-                            try {
-                                // Show the dialog by calling startResolutionForResult(),
-                                // and check the result in onActivityResult().
-                                status.startResolutionForResult(
-                                        getDockActivity(), 1000);
-                            } catch (IntentSender.SendIntentException e) {
-                                // Ignore the error.
-                            }
-                            break;
-                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            // Location drive_settings are not satisfied. However, we have no way to fix the
-                            // drive_settings so we won't show the dialog.
-                            break;
+                public void onComplete(Task<LocationSettingsResponse> task) {
+                    try {
+                        LocationSettingsResponse response = task.getResult(ApiException.class);
+                        if (settingActivateListener != null) {
+                            settingActivateListener.onLocationActivateListener();
+                        }
+
+                    } catch (ApiException exception) {
+                        switch (exception.getStatusCode()) {
+                            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                                try {
+                                    ResolvableApiException resolvable = (ResolvableApiException) exception;
+
+                                    resolvable.startResolutionForResult(getDockActivity(), 1000);
+                                } catch (IntentSender.SendIntentException e) {
+                                } catch (ClassCastException e) {
+                                    // Ignore, should be an impossible error.
+                                }
+                                break;
+                            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                // LocationEnt settings are not satisfied. However, we have no way to fix the
+                                // settings so we won't show the dialog.
+                                break;
+                        }
                     }
                 }
             });
+
         }
     }
 
@@ -606,7 +746,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
 
 
         String address = "";
-        LocationModel locationObj=new LocationModel();
+        LocationModel locationObj = new LocationModel();
         //  LocationModel locationObj = new LocationModel(address,24.829759,67.073822);
 
 
@@ -627,7 +767,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
 
         if (gpslocation != null) {
 
-            Log.d("Location", "GPS::" + gpslocation.getLatitude() + "," + gpslocation.getLongitude());
+            Log.d("LocationEnt", "GPS::" + gpslocation.getLatitude() + "," + gpslocation.getLongitude());
             address = getCurrentAddress(gpslocation.getLatitude(), gpslocation.getLongitude());
             locationObj = new LocationModel(address, gpslocation.getLatitude(), gpslocation.getLongitude());
 
@@ -635,21 +775,21 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
 
         } else if (networklocation != null) {
 
-            Log.d("Location", "NETWORK::" + networklocation.getLatitude() + "," + networklocation.getLongitude());
+            Log.d("LocationEnt", "NETWORK::" + networklocation.getLatitude() + "," + networklocation.getLongitude());
             address = getCurrentAddress(networklocation.getLatitude(), networklocation.getLongitude());
             locationObj = new LocationModel(address, networklocation.getLatitude(), networklocation.getLongitude());
 
             return locationObj;
         } else if (passivelocation != null) {
 
-            Log.d("Location", "PASSIVE::" + passivelocation.getLatitude() + "," + passivelocation.getLongitude());
+            Log.d("LocationEnt", "PASSIVE::" + passivelocation.getLatitude() + "," + passivelocation.getLongitude());
             address = getCurrentAddress(passivelocation.getLatitude(), passivelocation.getLongitude());
             locationObj = new LocationModel(address, passivelocation.getLatitude(), passivelocation.getLongitude());
 
             return locationObj;
         } else if (locationchangelocation != null) {
 
-            Log.d("Location", "CHAGELOCATION::" + locationchangelocation.getLatitude() + "," + locationchangelocation.getLongitude());
+            Log.d("LocationEnt", "CHAGELOCATION::" + locationchangelocation.getLatitude() + "," + locationchangelocation.getLongitude());
             address = getCurrentAddress(locationchangelocation.getLatitude(), locationchangelocation.getLongitude());
             locationObj = new LocationModel(address, locationchangelocation.getLatitude(), locationchangelocation.getLongitude());
 
@@ -660,7 +800,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
 
     }
 
-    private String getCurrentAddress(double lat, double lng) {
+    public String getCurrentAddress(double lat, double lng) {
         try {
 
 
@@ -687,5 +827,50 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
         return null;
     }
 
+    public void printHashKey(Context pContext) {
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String hashKey = new String(Base64.encode(md.digest(), 0));
+                Log.i(TAG, "printHashKey() Hash Key: " + hashKey);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(TAG, "printHashKey()", e);
+        } catch (Exception e) {
+            Log.e(TAG, "printHashKey()", e);
+        }
+    }
 
+    public void refreshSideMenu() {
+        sideMenuFragment.refreshSideMenuData();
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(getDockActivity()).unregisterReceiver(broadcastReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(getDockActivity()).registerReceiver(broadcastReceiver,
+                new IntentFilter(AppConstants.REGISTRATION_COMPLETE));
+
+        LocalBroadcastManager.getInstance(getDockActivity()).registerReceiver(broadcastReceiver,
+                new IntentFilter(AppConstants.PUSH_NOTIFICATION));
+
+       /* if (!prefHelper.isLogin() && !isFirstTime) {
+            replaceDockableFragment(LoginFragment.newInstance(), "LoginFragment");
+        }*/
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isFirstTime = false;
+    }
 }
