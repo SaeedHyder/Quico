@@ -4,6 +4,8 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:onClick="onClick"
     android:orientation="vertical">
 
     <com.app.quico.ui.views.AnyTextView
@@ -52,9 +54,9 @@
                         <ImageView
                             android:id="@+id/image"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/x200"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/electricina" />
+                            android:layout_height="@dimen/x170"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/placeholder_thumb" />
 
                         <ImageView
                             android:id="@+id/btnBack"
@@ -80,7 +82,7 @@
                             android:id="@+id/logo"
                             android:layout_width="@dimen/x80"
                             android:layout_height="@dimen/x80"
-                            android:src="@drawable/circle2" />
+                            android:src="@drawable/placeholder_thumb" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -94,7 +96,6 @@
                                 android:id="@+id/txt_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Electrical Company"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/x16"
                                 app:typeface="@string/font_normal" />

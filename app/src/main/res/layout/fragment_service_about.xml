@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/x5"
-            android:text="@string/lorem_small"
+            android:hint="About"
             android:textColor="@color/app_black_text"
             android:textSize="@dimen/x14"
             app:typeface="@string/font_normal" />
@@ -82,7 +82,7 @@
                 android:layout_marginTop="@dimen/x5"
                 android:layout_toStartOf="@+id/btnAddress"
                 android:layout_alignStart="@+id/address"
-                android:text="@string/address"
+                android:hint="@string/address"
                 android:textColor="@color/app_black_text"
                 android:textSize="@dimen/x14"
                 app:typeface="@string/font_normal" />
@@ -130,7 +130,7 @@
                 android:layout_toStartOf="@+id/btnPhoneNumber"
                 android:layout_alignStart="@+id/phoneNumber"
                 android:layout_marginTop="@dimen/x5"
-                android:text="+1 123 456 789"
+                android:hint="Phone Number"
                 android:textColor="@color/app_black_text"
                 android:textSize="@dimen/x14"
                 app:typeface="@string/font_normal" />
@@ -178,7 +178,7 @@
                 android:layout_toStartOf="@+id/btnEmail"
                 android:layout_alignStart="@+id/email"
                 android:layout_marginTop="@dimen/x5"
-                android:text="brainwilliams@gmail.com"
+                android:hint="Email"
                 android:textColor="@color/app_black_text"
                 android:textSize="@dimen/x14"
                 app:typeface="@string/font_normal" />
@@ -226,7 +226,7 @@
                 android:layout_marginTop="@dimen/x5"
                 android:layout_toStartOf="@+id/btnWebsite"
                 android:layout_alignStart="@+id/website"
-                android:text="www.domain.com"
+                android:hint="Website"
                 android:textColor="@color/app_black_text"
                 android:textSize="@dimen/x14"
                 app:typeface="@string/font_normal" />

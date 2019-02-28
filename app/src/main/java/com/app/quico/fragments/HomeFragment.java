@@ -3,6 +3,8 @@ package com.app.quico.fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,12 +23,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.app.quico.R;
+import com.app.quico.activities.DockActivity;
 import com.app.quico.entities.BatchCount;
 import com.app.quico.entities.LocationEnt;
 import com.app.quico.entities.LocationModel;
 import com.app.quico.entities.ServicesEnt;
 import com.app.quico.fragments.abstracts.BaseFragment;
 import com.app.quico.helpers.InternetHelper;
+import com.app.quico.helpers.ShareIntentHelper;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.interfaces.AreaInterface;
 import com.app.quico.interfaces.OnSettingActivateListener;
@@ -46,6 +50,11 @@ import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,6 +125,10 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
         super.onViewCreated(view, savedInstanceState);
         getMainActivity().setOnSettingActivateListener(this);
 
+
+
+
+        requestLocationPermission();
         HomeServiceCall();
         pullRefreshListner();
     }
@@ -151,7 +164,9 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnMenu:
-                getMainActivity().drawerLayout.openDrawer(Gravity.LEFT);
+                getMainActivity().getDrawerLayout().clearFocus();
+                getMainActivity().getDrawerLayout().clearAnimation();
+                getMainActivity().getDrawerLayout().openDrawer(Gravity.LEFT);
                 break;
             case R.id.btnNotification:
                 getDockActivity().replaceDockableFragment(NotificationsFragment.newInstance(), "NotificationsFragment");
@@ -262,7 +277,11 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
     @Override
     public void onClick(Object entity, int position) {
         ServicesEnt data = (ServicesEnt) entity;
-        getDockActivity().replaceDockableFragment(ServiceListingFragment.newInstance(data.getId() + "", data.getName()), "ServiceListingFragment", false);
+        if(locationLat!=null && !locationLat.equals(0.0) && locationLng!=null) {
+            getDockActivity().addDockableFragment(ServiceListingFragment.newInstance(data.getId() + "", data.getName(),locationLat+"",locationLng+""), "ServiceListingFragment");
+        }else{
+            getDockActivity().addDockableFragment(ServiceListingFragment.newInstance(data.getId() + "", data.getName()), "ServiceListingFragment");
+        }
     }
 
 

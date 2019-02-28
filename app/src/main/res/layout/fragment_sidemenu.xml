@@ -18,6 +18,8 @@
         android:id="@+id/SideMenu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:nestedScrollingEnabled="false"
+        android:animateLayoutChanges="false"
         android:layout_marginTop="@dimen/x5"
         />
 </LinearLayout>

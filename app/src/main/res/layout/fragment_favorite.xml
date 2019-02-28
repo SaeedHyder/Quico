@@ -26,6 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/x15"
         android:layout_marginStart="@dimen/x15"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/x7"
        />
 
 </LinearLayout>

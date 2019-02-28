@@ -49,6 +49,10 @@ public class GoogleHelper implements GoogleApiClient.OnConnectionFailedListener 
         mGoogleApiClient.connect();
     }
 
+    public GoogleApiClient getGoogleApiClient() {
+       return mGoogleApiClient;
+    }
+
     public void configGoogleApiClient(BaseFragment activity, GoogleHelperInterfce interfce) {
         this.context = activity;
         this.googleHelperInterface = interfce;
@@ -93,14 +97,16 @@ public class GoogleHelper implements GoogleApiClient.OnConnectionFailedListener 
 
     public void googleSignOut() {
         // showProgressDialog();
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        hideProgressDialog();
-                        setGoogleSign(false);
-                    }
-                });
+        if (mGoogleApiClient.isConnected()) {
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                    new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {
+                            hideProgressDialog();
+                            setGoogleSign(false);
+                        }
+                    });
+        }
     }
 
     public void googleRevokeAccess() {

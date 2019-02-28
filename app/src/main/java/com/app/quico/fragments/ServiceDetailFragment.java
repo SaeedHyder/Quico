@@ -193,7 +193,7 @@ public class ServiceDetailFragment extends BaseFragment {
     private void setCompanyDetail() {
         if (companyDetail != null) {
             //   imageLoader.displayImage(companyDetail.getImageUrl(), image);
-            Picasso.with(getDockActivity()).load(companyDetail.getImageUrl()).placeholder(R.drawable.placeholder_thumb).into(image);
+            Picasso.get().load(companyDetail.getImageUrl()).placeholder(R.drawable.placeholder_thumb).into(image);
             imageLoader.displayImage(companyDetail.getIconUrl(), logo);
             txtName.setText(companyDetail.getName());
             txtRating.setText(companyDetail.getReviewCount() + " " + getResString(R.string.reviews));
@@ -213,7 +213,7 @@ public class ServiceDetailFragment extends BaseFragment {
         if (tabLayout != null) {
             tabLayout.removeAllTabs();
             tabLayout.addTab(tabLayout.newTab().setText(getResString(R.string.about)));
-            tabLayout.addTab(tabLayout.newTab().setText(getResString(R.string.project)));
+            tabLayout.addTab(tabLayout.newTab().setText(getResString(R.string.photos)));
             tabLayout.addTab(tabLayout.newTab().setText(getResString(R.string.reviews)));
         }
     }

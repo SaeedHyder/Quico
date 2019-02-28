@@ -744,48 +744,7 @@ public class DateHelper {
 	}
 
 
-	public static String getChatMessageTime(String sDate) {
-		long between; // divide by 1000 to convert seconds
-		long week = 0;
-		long day = 0;
-		long hour = 0;
-		long minute = 0;
-		long second;
-		Date end;
-		Date begin;
 
-		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-		DateFormat returnHourFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
-		String systemTime = sdf.format(new Date()).toString();
-		String finalTime = "";
-		try {
-			end = sdf.parse(systemTime);
-			begin = sdf.parse(sDate);
-			between = (end.getTime() - begin.getTime()) / 1000;
-			day = between / (24 * 3600);
-			hour = between % (24 * 3600) / 3600;
-			minute = between % 3600 / 60;
-			second = (between % 60) / 60;
-
-			if (minute > 0)
-				finalTime = finalTime.concat("" + minute + "m");
-
-			if (second > 0)
-				finalTime = finalTime.concat("" + second + "s");
-
-			if (day > 0 || hour > 0) {
-				finalTime = returnHourFormat.format(begin);
-			}
-
-			if (finalTime.isEmpty()) {
-				finalTime = "now";
-			}
-		} catch (ParseException e1) {
-			e1.printStackTrace();
-		}
-
-		return finalTime;
-	}
 
 	public static String getCurrentTimeStamp() {
 		java.util.Date utilDate = new java.util.Date();
@@ -891,6 +850,39 @@ public class DateHelper {
 			Date value = formatter.parse(OurDate);
 
 			SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd,yyyy"); //this format changeable
+			dateFormatter.setTimeZone(TimeZone.getDefault());
+			OurDate = dateFormatter.format(value);
+
+			//Log.d("OurDate", OurDate);
+		} catch (Exception e) {
+			OurDate = "00-00-0000 00:00";
+		}
+		return OurDate;
+	}
+	public static String getChatTime(String OurDate) {
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+			Date value = formatter.parse(OurDate);
+
+			SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM,yyyy - hh:mm a"); //this format changeable
+			dateFormatter.setTimeZone(TimeZone.getDefault());
+			OurDate = dateFormatter.format(value);
+
+			//Log.d("OurDate", OurDate);
+		} catch (Exception e) {
+			OurDate = "00-00-0000 00:00";
+		}
+		return OurDate;
+	}
+	public static String getChatMessageTime(String OurDate) {
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+			Date value = formatter.parse(OurDate);
+
+			//SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"); //this format changeable
+			SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a"); //this format changeable
 			dateFormatter.setTimeZone(TimeZone.getDefault());
 			OurDate = dateFormatter.format(value);
 

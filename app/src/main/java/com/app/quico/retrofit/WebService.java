@@ -3,6 +3,8 @@ package com.app.quico.retrofit;
 
 import com.app.quico.entities.AllServicesEnt;
 import com.app.quico.entities.BatchCount;
+import com.app.quico.entities.Chat.ChatThreadEnt;
+import com.app.quico.entities.Chat.ThreadMsgesEnt;
 import com.app.quico.entities.CitiesEnt;
 import com.app.quico.entities.Cms;
 import com.app.quico.entities.CompanyDetail;
@@ -68,7 +70,8 @@ public interface WebService {
                                                @Field("role") String role,
                                                @Field("push_notification") String push_notification,
                                                @Field("device_token") String device_token,
-                                               @Field("device_type") String device_type);
+                                               @Field("device_type") String device_type,
+                                               @Field("image") String image);
 
     @FormUrlEncoded
     @POST("social_login")
@@ -79,7 +82,8 @@ public interface WebService {
                                                @Field("role") String role,
                                                @Field("push_notification") String push_notification,
                                                @Field("device_token") String device_token,
-                                               @Field("device_type") String device_type);
+                                               @Field("device_type") String device_type,
+                                               @Field("image") String image);
 
 
     @GET("forget-password")
@@ -132,7 +136,8 @@ public interface WebService {
     Call<ResponseWrapper> contactUs(@Field("name") String name,
                                     @Field("email") String email,
                                     @Field("phone") String phone,
-                                    @Field("message") String message
+                                    @Field("message") String message,
+                                    @Field("company_name") String company_name
     );
 
     @FormUrlEncoded
@@ -168,7 +173,6 @@ public interface WebService {
     @GET("notifications")
     Call<ResponseWrapper<ArrayList<NotificationEnt>>> notifications(
     );
-
 
 
     @GET("companies/{id}")
@@ -207,6 +211,7 @@ public interface WebService {
             @Query("is_near") Integer is_near
 
     );
+
     @GET("companies")
     Call<ResponseWrapper<ArrayList<CompanyEnt>>> getCompanies(
             @Query("service_id") String service_id,
@@ -231,10 +236,52 @@ public interface WebService {
             @Query("is_near") Integer is_near
     );
 
+
     @GET("get-all-services")
     Call<ResponseWrapper<ArrayList<AllServicesEnt>>> getAllServices();
 
+    @GET("chats")
+    Call<ResponseWrapper<ArrayList<ChatThreadEnt>>> getChatThreads(
+            @Query("offset") int offset,
+            @Query("limit") int limit
+            );
+
+    @GET("chats/{id}")
+    Call<ResponseWrapper<ArrayList<ThreadMsgesEnt>>> getThreadMsges(
+            @Path("id") String id,
+            @Query("offset") int offset,
+            @Query("limit") int limit
+         );
+
+    @GET("get-thread/{id}")
+    Call<ResponseWrapper<ChatThreadEnt>> getThreadDetail(
+            @Path("id") String id);
 
 
+
+    @Multipart
+    @POST("chats")
+    Call<ResponseWrapper<ThreadMsgesEnt>> sendMediaMessage(
+            @Part("company_id") RequestBody company_id,
+            @Part("receiver_id") RequestBody receiver_id,
+            @Part("message") RequestBody message,
+            @Part ArrayList<MultipartBody.Part> file,
+            @Part ArrayList<MultipartBody.Part> thumb_nail,
+            @Part ArrayList<MultipartBody.Part> type);
+
+    @FormUrlEncoded
+    @POST("chats")
+    Call<ResponseWrapper<ThreadMsgesEnt>> sendLocation(
+            @Field("company_id") String company_id,
+            @Field("receiver_id") String receiver_id,
+            @Field("latitude") String latitude,
+            @Field("longitude") String longitude);
+
+    @FormUrlEncoded
+    @POST("chats")
+    Call<ResponseWrapper<ThreadMsgesEnt>> sendMessage(
+            @Field("company_id") String company_id,
+            @Field("receiver_id") String receiver_id,
+            @Field("message") String message);
 
 }

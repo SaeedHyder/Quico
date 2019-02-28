@@ -136,8 +136,8 @@
             android:id="@+id/btn_find_quico"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x40"
-            android:layout_marginBottom="@dimen/x5"
             android:layout_marginTop="@dimen/x10"
+            android:layout_marginBottom="@dimen/x1"
             android:background="@drawable/rounded_green_button"
             android:text="@string/find_quico"
             android:textColor="@color/white"
@@ -170,6 +170,8 @@
                     android:id="@+id/rv_services"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:paddingBottom="@dimen/x10"
+                    android:clipToPadding="false"
                     android:visibility="visible" />
 
             </LinearLayout>

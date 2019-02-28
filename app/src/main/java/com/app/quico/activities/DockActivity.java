@@ -2,6 +2,8 @@ package com.app.quico.activities;
 
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.BinderThread;
 import android.support.v4.app.DialogFragment;
@@ -9,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 
 import com.app.quico.BaseApplication;
@@ -26,6 +27,10 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 
 /**
  * This class is marked abstract so that it can pair with Dockable Fragments
@@ -41,11 +46,8 @@ public abstract class DockActivity extends AppCompatActivity implements
 
     BaseFragment baseFragment;
 
-
     protected BasePreferenceHelper prefHelper;
 
-    //For side menu
-    public DrawerLayout drawerLayout;
     public SideMenuFragment sideMenuFragment;
 
     private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
@@ -146,26 +148,6 @@ public abstract class DockActivity extends AppCompatActivity implements
 
     }
 
-    public DrawerLayout getDrawerLayout() {
-        return drawerLayout;
-    }
-
-    public void closeDrawer() {
-        drawerLayout.closeDrawers();
-
-    }
-
-    public void lockDrawer() {
-        try {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void releaseDrawer() {
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-    }
 
     public void addAndShowDialogFragment(
             android.support.v4.app.DialogFragment dialog) {
@@ -294,6 +276,36 @@ public abstract class DockActivity extends AppCompatActivity implements
 
     public DockActivity getDockActivity() {
         return (DockActivity) this;
+    }
+
+    public String getCurrentAddress(double lat, double lng) {
+        try {
+
+
+            Geocoder geocoder;
+            List<Address> addresses;
+            String address = "";
+            String country="";
+
+            geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+            addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            if (addresses.size() > 0) {
+                address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            }
+// String city = addresses.get(0).getLocality();
+// String state = addresses.get(0).getAdminArea();
+            if (addresses.size() > 0) {
+                country = addresses.get(0).getCountryName();
+            }
+// String postalCode = addresses.get(0).getPostalCode();
+// String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+            return address + ", " + country;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }

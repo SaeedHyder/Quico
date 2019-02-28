@@ -44,9 +44,11 @@ import android.widget.Toast;
 
 import com.app.quico.R;
 import com.app.quico.entities.LocationModel;
+import com.app.quico.fragments.ChatFragment;
 import com.app.quico.fragments.HomeFragment;
 import com.app.quico.fragments.LanguageFragment;
 import com.app.quico.fragments.LoginFragment;
+import com.app.quico.fragments.MyChatThreadFragment;
 import com.app.quico.fragments.NotificationsFragment;
 import com.app.quico.fragments.ServiceDetailFragment;
 import com.app.quico.fragments.SideMenuFragment;
@@ -99,6 +101,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.app.quico.global.AppConstants.chatPush;
 import static com.app.quico.global.AppConstants.companyPush;
 import static com.app.quico.global.AppConstants.deletePush;
 import static com.app.quico.global.AppConstants.inactivePush;
@@ -115,6 +118,9 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
     FrameLayout mainFrameLayout;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+
     private MainActivity mContext;
     private boolean loading;
 
@@ -142,6 +148,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
     protected BroadcastReceiver broadcastReceiver;
     private boolean isFirstTime = true;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,6 +161,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
 
         sideMenuType = SideMenuChooser.DRAWER.getValue();
         sideMenuDirection = SideMenuDirection.LEFT.getValue();
+        lockDrawer();
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
@@ -211,6 +219,10 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
         // ATTENTION: This was auto-generated to handle app links.
 
 
+    }
+
+    public DrawerLayout getDrawerLayout() {
+        return drawerLayout;
     }
 
 
@@ -307,7 +319,14 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
             if (prefHelper.isLogin()) {
                 if (Type != null && Type.equals(companyPush)) {
                     replaceDockableFragment(ServiceDetailFragment.newInstance(id), "ServiceDetailFragment");
-                } else if (Type != null && Type.equals(deletePush)) {
+                } else if (Type != null && Type.equals(chatPush)) {
+                    if (id != null) {
+                        //   replaceDockableFragment(ChatFragment.newInstance(id), "ChatFragment");
+                    }
+                } else if (Type != null && Title != null && !Title.equals("")) {
+                    replaceDockableFragment(NotificationsFragment.newInstance(), "NotificationsFragment");
+                }
+                /*else if (Type != null && Type.equals(deletePush)) {
                     UIHelper.showShortToastInCenter(getDockActivity(), getDockActivity().getResources().getString(R.string.deleted_by_admin));
                     getDockActivity().popBackStackTillEntry(0);
                     prefHelper.setLoginStatus(false);
@@ -319,9 +338,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
                     notificationManager.cancelAll();
                     getDockActivity().replaceDockableFragment(LoginFragment.newInstance(), "LoginFragment");
 
-                } else if (Type != null && Title != null && !Title.equals("")) {
-                    replaceDockableFragment(NotificationsFragment.newInstance(), "NotificationsFragment");
-                }
+                }*/
 
             }
         }
@@ -378,7 +395,14 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
                     BaseFragment currFrag = (BaseFragment) manager.findFragmentById(getDockFrameLayoutId());
                     if (currFrag != null) {
                         currFrag.fragmentResume();
+
+                        if (currFrag instanceof ChatFragment) {
+                            prefHelper.setChatScreen(true);
+                        } else {
+                            prefHelper.setChatScreen(false);
+                        }
                     }
+
                 }
             }
         };
@@ -873,4 +897,22 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
         super.onStop();
         isFirstTime = false;
     }
+
+    public void lockDrawer() {
+        try {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeDrawer() {
+        drawerLayout.closeDrawers();
+
+    }
+
+    public void releaseDrawer() {
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    }
+
 }

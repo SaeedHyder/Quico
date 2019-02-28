@@ -8,7 +8,7 @@
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
 
-    <string name="api_key">AIzaSyCGD2SVEAbUW0l6uLPhZv86fKCrZvRf2Dk</string>
+    <string name="api_key">AIzaSyD_mPqpv43RBl7plkEhr49a4DJdtiMOkFw</string>
     <string name="app_name">Quico</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -90,6 +90,7 @@
     <string name="lorem_small_2">Lorem Ipsum is simply dummy text of the printing and types
         etting industry. </string>
     <string name="lorem_small_3">Lorem Ipsum is simply dummy text. </string>
+    <string name="date_sample">12-12-2019 11:25:12</string>
 
     <string name="default_hint_text">Where are you going?</string>
 
@@ -128,7 +129,10 @@
     <string name="enter_username">Enter UserName</string>
     <string name="enter_address">Enter Address</string>
     <string name="enter_name">Enter Name</string>
+    <string name="enter_company_name">Enter Company Name</string>
     <string name="enter_fullname">Enter Full Name</string>
+    <string name="write_something_here">Enter Message </string>
+    <string name="filed_cannot_be_empty">This field cannot be empty</string>
     <string name="enter_phonenumber">Enter Phone Number</string>
     <string name="enter_your_message">Enter your message here</string>
     <string name="same_password_error">New password should be changed from old password</string>
@@ -153,6 +157,7 @@
     <string name="TermsCondition">Terms and Conditions</string>
     <string name="AboutUs">About Us</string>
     <string name="ContactUs">Contact Us</string>
+    <string name="BEQUICO">Be Quico</string>
     <string name="TermsOfService">Terms Of Service</string>
     <string name="forgot_password">Forgot Password</string>
     <string name="phone_verification">Phone Verification</string>
@@ -179,6 +184,7 @@
     <string name="no_chat_found">No Chat Found</string>
     <string name="type_your_message_here">Type your message here</string>
     <string name="name">Name</string>
+    <string name="company_name">Company Name</string>
     <string name="settings">Settings</string>
     <string name="language">Language</string>
     <string name="done">Done</string>
@@ -189,6 +195,7 @@
     <string name="i_agree_to_the">I agree to the  </string>
     <string name="about">About</string>
     <string name="project">Projects</string>
+    <string name="photos">Photos</string>
     <string name="reviews">Reviews</string>
     <string name="services_offered">Services Offered</string>
     <string name="contact_details">Contact Details</string>
@@ -223,6 +230,7 @@
     <string name="no_companies_found">No companies found</string>
     <string name="company">Companies</string>
     <string name="no_project_found">No project found</string>
+    <string name="no_photos_found">No photos found</string>
     <string name="no_service_found">No service found</string>
     <string name="no_area_found">No area found</string>
     <string name="no_of_reviews">Number of Reviews</string>
@@ -232,5 +240,8 @@
     <string name="select_service_to_proceed">Select service to proceed</string>
     <string name="companies">Companies</string>
     <string name="profile_updated_successfully">Profile updated successfully</string>
+    <string name="pdf">PDF File</string>
+    <string name="pdf_files">PDF Files</string>
+    <string name="no_message_found">No message found</string>
 
 </resources>

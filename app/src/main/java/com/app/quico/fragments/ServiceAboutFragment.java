@@ -209,7 +209,13 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
                 }
                 break;
             case R.id.btn_chat_with_us:
-                getDockActivity().replaceDockableFragment(ChatFragment.newInstance(), "ChatFragment");
+              /*  if(companyDetail.getThreadId()!=null && !companyDetail.getThreadId().equals("") && !companyDetail.getThreadId().isEmpty()) {
+                    getDockActivity().replaceDockableFragment(ChatFragment.newInstance(companyDetail.getThreadId() + ""), "ChatFragment");
+                }else{
+                    getDockActivity().replaceDockableFragment(ChatFragment.newInstance(companyDetail.getId() + "",companyDetail), "ChatFragment");
+                }*/
+                UIHelper.showShortToastInDialoge(getDockActivity(),getResString(R.string.will_be_implemented));
+
                 break;
             case R.id.btnAddress:
                 if (companyDetail != null && companyDetail.getLatitude() != null && companyDetail.getLongitude() != null && !companyDetail.getLatitude().equals("")) {

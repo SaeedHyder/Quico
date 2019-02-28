@@ -1,36 +1,256 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rl_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/x5"
         android:layout_marginEnd="@dimen/x10"
         android:layout_marginStart="@dimen/x10"
-        android:layout_marginTop="@dimen/x10"
-        android:background="@drawable/chat_shape"
-        android:layout_marginBottom="@dimen/x5">
+        android:layout_marginTop="@dimen/x5">
 
-        <com.app.quico.ui.views.AnyTextView
-            android:id="@+id/txt_left"
+        <LinearLayout
+            android:id="@+id/ll_left_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/x8"
+            android:layout_alignParentStart="true"
             android:layout_marginEnd="@dimen/x5"
-            android:padding="@dimen/x15"
-            android:text="@string/lorem_small_2"
-            app:typeface="@string/font_normal"/>
+            android:layout_marginStart="@dimen/x8"
+            android:background="@drawable/chat_left_item"
+            android:orientation="vertical"
+            android:padding="@dimen/x10">
 
-        <ImageView
-            android:layout_width="wrap_content"
+            <com.app.quico.ui.views.AnyTextView
+                android:id="@+id/txt_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="sdadasdasdasdasd"
+                android:textColor="@color/app_black_text"
+                android:textSize="@dimen/x12"
+                android:visibility="visible"
+                app:typeface="@string/font_normal" />
+
+            <com.app.quico.ui.views.AnyTextView
+                android:id="@+id/txt_left_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/x2"
+                android:text="12 Dec,2019 - 12:30 am"
+                android:textColor="@color/app_gray_text"
+                android:textSize="@dimen/x10"
+                android:visibility="visible"
+                app:typeface="@string/font_normal" />
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_image_left"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/txt_left"
-            android:src="@drawable/shape"
-            android:visibility="gone"/>
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="@dimen/x3"
+            android:layout_marginEnd="@dimen/x80"
+            android:layout_marginStart="@dimen/x3"
+            android:layout_marginTop="@dimen/x3"
+            android:visibility="gone"
+            app:cardCornerRadius="@dimen/x10"
+            app:cardElevation="@dimen/x2">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_image_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x120"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/placeholder_thumb" />
+
+                <com.app.quico.ui.views.AnyTextView
+                    android:id="@+id/txt_left_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/x40"
+                    android:background="@drawable/circle_placeholder"
+                    android:gravity="center"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="2"
+                    android:text="1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x25"
+                    android:textStyle="bold"
+                    app:typeface="@string/font_bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_image_left"
+
+                    android:orientation="vertical">
+
+                    <com.app.quico.ui.views.AnyTextView
+                        android:id="@+id/txt_image_message_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lorem_small_2"
+                        android:textColor="@color/app_black_text"
+                        android:layout_marginStart="@dimen/x5"
+                        android:layout_marginEnd="@dimen/x5"
+                        android:layout_marginTop="@dimen/x5"
+                        android:textSize="@dimen/x12"
+                        app:typeface="@string/font_normal" />
+
+                    <com.app.quico.ui.views.AnyTextView
+                        android:id="@+id/txt_image_date_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/x5"
+                        android:text="@string/date_sample"
+                        android:textColor="@color/app_gray_text"
+                        android:textSize="@dimen/x10"
+                        app:typeface="@string/font_normal" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_pdf_left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/cv_image_left"
+            android:layout_marginBottom="@dimen/x3"
+            android:layout_marginEnd="@dimen/x80"
+            android:layout_marginStart="@dimen/x3"
+            android:layout_marginTop="@dimen/x3"
+            android:visibility="gone"
+            app:cardCornerRadius="@dimen/x10"
+            app:cardElevation="@dimen/x2">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_pdf_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x120"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/pdf_palceholder" />
+
+                <com.app.quico.ui.views.AnyTextView
+                    android:id="@+id/txt_pdf_count_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/x40"
+                    android:background="@drawable/circle_placeholder"
+                    android:gravity="center"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="2"
+                    android:text="1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x25"
+                    android:textStyle="bold"
+                    app:typeface="@string/font_bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_pdf_left"
+
+                    android:orientation="vertical">
+
+                    <com.app.quico.ui.views.AnyTextView
+                        android:id="@+id/txt_pdf_message_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lorem_small_2"
+                        android:textColor="@color/app_black_text"
+                        android:textSize="@dimen/x12"
+                        android:layout_marginStart="@dimen/x5"
+                        android:layout_marginEnd="@dimen/x5"
+                        android:layout_marginTop="@dimen/x5"
+                        app:typeface="@string/font_normal" />
+
+                    <com.app.quico.ui.views.AnyTextView
+                        android:id="@+id/txt_pdf_date_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/x5"
+                        android:text="@string/date_sample"
+                        android:textSize="@dimen/x10"
+                        app:typeface="@string/font_normal" />
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_map_left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="@dimen/x3"
+            android:layout_marginEnd="@dimen/x80"
+            android:layout_marginStart="@dimen/x3"
+            android:layout_marginTop="@dimen/x3"
+            android:visibility="gone"
+            app:cardCornerRadius="@dimen/x10"
+            app:cardElevation="@dimen/x2">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_map_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x120"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/map_placeholder" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_map_left"
+
+                    android:orientation="vertical">
+
+                    <com.app.quico.ui.views.AnyTextView
+                        android:id="@+id/txt_map_address_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lorem_small_2"
+                        android:layout_marginStart="@dimen/x5"
+                        android:layout_marginEnd="@dimen/x5"
+                        android:layout_marginTop="@dimen/x5"
+                        android:textColor="@color/app_black_text"
+                        android:textSize="@dimen/x12"
+                        app:typeface="@string/font_normal" />
+
+                    <com.app.quico.ui.views.AnyTextView
+                        android:id="@+id/txt_map_date_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/x5"
+                        android:text="@string/date_sample"
+                        android:textColor="@color/app_gray_text"
+                        android:textSize="@dimen/x10"
+                        app:typeface="@string/font_normal" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
 
     </RelativeLayout>
 
@@ -38,34 +258,253 @@
         android:id="@+id/rl_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/x5"
         android:layout_marginEnd="@dimen/x10"
         android:layout_marginStart="@dimen/x10"
-        android:layout_marginTop="@dimen/x10"
-        android:layout_marginBottom="@dimen/x5"
-        android:background="@drawable/chatshape2"
-       >
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/txt_right"
-            android:layout_alignBottom="@+id/txt_right"
-            android:scaleType="fitXY"
-            android:layout_marginEnd="@dimen/x1_"
-            android:src="@drawable/chatshape2"
-            android:visibility="gone"/>
+        android:layout_marginTop="@dimen/x5">
 
-
-        <com.app.quico.ui.views.AnyTextView
-            android:id="@+id/txt_right"
+        <LinearLayout
+            android:id="@+id/ll_right_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/x3"
-            android:layout_marginEnd="@dimen/x5"
-            android:padding="@dimen/x15"
-            android:text="@string/lorem_small_2"
-            app:typeface="@string/font_normal"/>
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/x8"
+            android:layout_marginStart="@dimen/x5"
+            android:background="@drawable/chat_right_item"
+            android:orientation="vertical"
+            android:padding="@dimen/x10">
+
+            <com.app.quico.ui.views.AnyTextView
+                android:id="@+id/txt_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="sdadasdasdasdasd"
+                android:textColor="@color/app_black_text"
+                android:textSize="@dimen/x12"
+                android:visibility="visible"
+                app:typeface="@string/font_normal" />
+
+            <com.app.quico.ui.views.AnyTextView
+                android:id="@+id/txt_right_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/x2"
+                android:text="sdadasdasdasdasd"
+                android:textColor="@color/app_gray_text"
+                android:textSize="@dimen/x10"
+                android:visibility="visible"
+                app:typeface="@string/font_normal" />
+        </LinearLayout>
 
 
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_image_right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="@dimen/x3"
+            android:layout_marginEnd="@dimen/x3"
+            android:layout_marginStart="@dimen/x80"
+            android:layout_marginTop="@dimen/x3"
+            android:visibility="gone"
+            app:cardCornerRadius="@dimen/x10"
+            app:cardElevation="@dimen/x2">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_image_right"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x120"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/placeholder_thumb" />
+
+                <com.app.quico.ui.views.AnyTextView
+                    android:id="@+id/txt_right_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/x40"
+                    android:background="@drawable/circle_placeholder"
+                    android:gravity="center"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="2"
+                    android:text="1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x25"
+                    android:textStyle="bold"
+                    app:typeface="@string/font_bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_image_right"
+
+                    android:orientation="vertical"
+                    >
+
+                    <com.app.quico.ui.views.AnyTextView
+                        android:id="@+id/txt_image_message_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/x5"
+                        android:layout_marginEnd="@dimen/x5"
+                        android:layout_marginTop="@dimen/x5"
+                        android:text="@string/lorem_small_2"
+                        android:textColor="@color/app_black_text"
+                        android:textSize="@dimen/x12"
+                        app:typeface="@string/font_normal" />
+
+                    <com.app.quico.ui.views.AnyTextView
+                        android:id="@+id/txt_image_date_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/x5"
+                        android:text="@string/date_sample"
+                        android:textColor="@color/app_gray_text"
+                        android:textSize="@dimen/x10"
+                        app:typeface="@string/font_normal" />
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_pdf_right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="@dimen/x3"
+            android:layout_marginEnd="@dimen/x3"
+            android:layout_below="@+id/cv_image_right"
+            android:layout_marginStart="@dimen/x80"
+            android:layout_marginTop="@dimen/x3"
+            android:visibility="gone"
+            app:cardCornerRadius="@dimen/x10"
+            app:cardElevation="@dimen/x2">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_pdf_right"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x120"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/pdf_palceholder" />
+
+                <com.app.quico.ui.views.AnyTextView
+                    android:id="@+id/txt_pdf_count_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/x40"
+                    android:background="@drawable/circle_placeholder"
+                    android:gravity="center"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="2"
+                    android:text="1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x25"
+                    android:textStyle="bold"
+                    app:typeface="@string/font_bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_pdf_right"
+
+                    android:orientation="vertical">
+
+                    <com.app.quico.ui.views.AnyTextView
+                        android:id="@+id/txt_pdf_message_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lorem_small_2"
+                        android:textColor="@color/app_black_text"
+                        android:textSize="@dimen/x12"
+                        android:layout_marginStart="@dimen/x5"
+                        android:layout_marginEnd="@dimen/x5"
+                        android:layout_marginTop="@dimen/x5"
+                        app:typeface="@string/font_normal" />
+
+                    <com.app.quico.ui.views.AnyTextView
+                        android:id="@+id/txt_pdf_date_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/x5"
+                        android:text="@string/date_sample"
+                        android:textColor="@color/app_gray_text"
+                        android:textSize="@dimen/x10"
+                        app:typeface="@string/font_normal" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_map_right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="@dimen/x3"
+            android:layout_marginEnd="@dimen/x3"
+            android:layout_marginStart="@dimen/x80"
+            android:layout_marginTop="@dimen/x3"
+            android:visibility="gone"
+            app:cardCornerRadius="@dimen/x10"
+            app:cardElevation="@dimen/x2">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_map_right"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x120"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/map_placeholder" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_map_right"
+
+                    android:orientation="vertical">
+
+                    <com.app.quico.ui.views.AnyTextView
+                        android:id="@+id/txt_map_address_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lorem_small_2"
+                        android:layout_marginStart="@dimen/x5"
+                        android:layout_marginEnd="@dimen/x5"
+                        android:layout_marginTop="@dimen/x5"
+                        android:textColor="@color/app_black_text"
+                        android:textSize="@dimen/x12"
+                        app:typeface="@string/font_normal" />
+
+                    <com.app.quico.ui.views.AnyTextView
+                        android:id="@+id/txt_map_date_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/x5"
+                        android:text="@string/date_sample"
+                        android:textColor="@color/app_gray_text"
+                        android:textSize="@dimen/x10"
+                        app:typeface="@string/font_normal" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
 
 
     </RelativeLayout>

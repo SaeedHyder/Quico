@@ -1,12 +1,15 @@
 package com.app.quico.ui.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.app.quico.interfaces.LoadMoreChatInterface;
 import com.app.quico.interfaces.LoadMoreListener;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +17,7 @@ import java.util.List;
  */
 
 public class RecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerViewBinder.BaseViewHolder> {
-    private List<T> collections;
+    private List<T> collections = new ArrayList<>();
     private RecyclerViewBinder<T> viewBinder;
     private Context mContext;
     private LoadMoreListener onLoadMoreListener;
@@ -23,11 +26,12 @@ public class RecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerViewBin
         this.onLoadMoreListener = onLoadMoreListener;
     }
 
+
     public RecyclerViewAdapter(List<T> collections, RecyclerViewBinder<T> viewBinder, Context context) {
         this.collections = collections;
         this.viewBinder = viewBinder;
         this.mContext = context;
-        
+
     }
 
     @Override
@@ -38,26 +42,39 @@ public class RecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerViewBin
 
     @Override
     public void onBindViewHolder(RecyclerViewBinder.BaseViewHolder holder, int position) {
-        T entity = (T)this.collections.get(position);
-        this.viewBinder.bindView(entity,position,holder,this.mContext);
-        if (position == collections.size() - 1) {
-            if (onLoadMoreListener != null) {
-                onLoadMoreListener.onLoadMoreItem(position);
+        T entity = (T) this.collections.get(position);
+        this.viewBinder.bindView(entity, position, holder, this.mContext);
+        if (collections.size() > 8) {
+
+            if (position == collections.size() - 1) {
+                if (onLoadMoreListener != null) {
+                    onLoadMoreListener.onLoadMoreItem(position);
+                }
             }
+
         }
+
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     @Override
     public int getItemCount() {
         return this.collections.size();
     }
-    public T getItemFromList(int index ) {
-        return collections.get( index );
+
+    public T getItemFromList(int index) {
+        return collections.get(index);
     }
 
     public List<T> getList() {
         return collections;
     }
+
     /**
      * Clears the internal list
      */
@@ -72,10 +89,11 @@ public class RecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerViewBin
      *
      * @see #addAll(List)
      */
-    public void add( T entity ) {
-        collections.add( entity );
+    public void add(T entity) {
+        collections.add(entity);
         notifyDataSetChanged();
     }
+
 
     /**
      * Adds a NotificationDummy to the list and calls
@@ -84,8 +102,22 @@ public class RecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerViewBin
      *
      * @see #addAll(List)
      */
-    public void addAll( List<T> entityList ) {
-        collections.addAll( entityList );
+    public void addAll(List<T> entityList) {
+        collections.addAll(entityList);
         notifyDataSetChanged();
     }
+
+
+    public void addAllStart(List<T> entityList) {
+        collections.addAll(entityList);
+        // notifyDataSetChanged();
+    }
+
+    public void addStart(T entityList) {
+        collections.add(0, entityList);
+        notifyDataSetChanged();
+        // notifyDataSetChanged();
+    }
+
+
 }

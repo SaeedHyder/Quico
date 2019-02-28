@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
 
     <com.app.quico.ui.views.AnyTextView
         android:id="@+id/txt_no_data"
@@ -25,6 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/x15"
         android:layout_marginStart="@dimen/x15"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/x7"
          />
 
 </LinearLayout>

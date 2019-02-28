@@ -16,6 +16,7 @@ import com.app.quico.fragments.abstracts.BaseFragment;
 import com.app.quico.global.AppConstants;
 import com.app.quico.global.WebServiceConstants;
 import com.app.quico.helpers.DialogHelper;
+import com.app.quico.helpers.GoogleHelper;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.binders.SideMenuBinder;
@@ -81,7 +82,7 @@ public class SideMenuFragment extends BaseFragment implements RecyclerClickListn
         collection.add(new SideMenuEnt(AppConstants.MyChat, R.drawable.mychat, R.drawable.mychat2));
         collection.add(new SideMenuEnt(AppConstants.AccountSetting, R.drawable.accountsettings, R.drawable.accountsettings2));
         collection.add(new SideMenuEnt(AppConstants.AboutUs, R.drawable.aboutus, R.drawable.aboutus2));
-        collection.add(new SideMenuEnt(AppConstants.ContactUs, R.drawable.contactus, R.drawable.contactus2));
+        collection.add(new SideMenuEnt(AppConstants.BEQUICO, R.drawable.contactus, R.drawable.contactus2));
         collection.add(new SideMenuEnt(AppConstants.TermsOfServices, R.drawable.termsofservice, R.drawable.termsofservice2));
         collection.add(new SideMenuEnt(AppConstants.Logout, R.drawable.logout, R.drawable.logout2));
 
@@ -89,6 +90,7 @@ public class SideMenuFragment extends BaseFragment implements RecyclerClickListn
         SideMenu.BindRecyclerView(new SideMenuBinder(getDockActivity(), prefHelper, this), collection,
                 new LinearLayoutManager(getDockActivity(), LinearLayoutManager.VERTICAL, false)
                 , new DefaultItemAnimator());
+        SideMenu.setNestedScrollingEnabled(false);
     }
 
 
@@ -113,31 +115,39 @@ public class SideMenuFragment extends BaseFragment implements RecyclerClickListn
         previousSelectedPos = position;
 
         SideMenuEnt ent = (SideMenuEnt) entity;
-       // getDockActivity().popBackStackTillEntry(1);
-            getDockActivity().popFragment();
+        // getDockActivity().popBackStackTillEntry(1);
+
         if (ent.getTitle().equals(AppConstants.Home)) {
-          //  getDockActivity().popBackStackTillEntry(0);
+            getDockActivity().popFragment();
             getDockActivity().replaceDockableFragment(HomeFragment.newInstance(), "HomeFragment", false);
 
         } else if (ent.getTitle().equals(AppConstants.Favorites)) {
+            getDockActivity().popFragment();
             getDockActivity().replaceDockableFragment(FavoriteFragment.newInstance(), "FavoriteFragment", false);
 
         } else if (ent.getTitle().equals(AppConstants.MyChat)) {
-            getDockActivity().replaceDockableFragment(MyChatThreadFragment.newInstance(), "MyChatThreadFragment", false);
+          //  getDockActivity().popFragment();
+          //  getDockActivity().replaceDockableFragment(MyChatThreadFragment.newInstance(), "MyChatThreadFragment", false);
+            UIHelper.showShortToastInDialoge(getDockActivity(),getResString(R.string.will_be_implemented));
 
         } else if (ent.getTitle().equals(AppConstants.AccountSetting)) {
+            getDockActivity().popFragment();
             getDockActivity().replaceDockableFragment(SettingFragment.newInstance(), "SettingFragment", false);
 
         } else if (ent.getTitle().equals(AppConstants.AboutUs)) {
+            getDockActivity().popFragment();
             getDockActivity().replaceDockableFragment(CmsFragment.newInstance(getResString(R.string.AboutUs)), "CmsFragment", false);
 
-        } else if (ent.getTitle().equals(AppConstants.ContactUs)) {
+        } else if (ent.getTitle().equals(AppConstants.BEQUICO)) {
+            getDockActivity().popFragment();
             getDockActivity().replaceDockableFragment(ContactUsFragment.newInstance(), "ContactUsFragment", false);
 
         } else if (ent.getTitle().equals(AppConstants.TermsOfServices)) {
+            getDockActivity().popFragment();
             getDockActivity().replaceDockableFragment(CmsFragment.newInstance(getResString(R.string.TermsOfService)), "CmsFragment", false);
 
         } else if (ent.getTitle().equals(AppConstants.Logout)) {
+
             DialogHelper dialoge = new DialogHelper(getDockActivity());
             dialoge.initlogout(new View.OnClickListener() {
                 @Override
@@ -158,8 +168,7 @@ public class SideMenuFragment extends BaseFragment implements RecyclerClickListn
     @Override
     public void ResponseSuccess(Object result, String Tag, String message) {
         super.ResponseSuccess(result, Tag, message);
-        switch (Tag)
-        {
+        switch (Tag) {
             case Logout:
                 getDockActivity().popBackStackTillEntry(0);
                 prefHelper.setLoginStatus(false);
@@ -167,25 +176,30 @@ public class SideMenuFragment extends BaseFragment implements RecyclerClickListn
                 if (AccessToken.getCurrentAccessToken() != null) {
                     LoginManager.getInstance().logOut();
                 }
+
+              /*  if (GoogleHelper.mGoogleHelper.getGoogleApiClient().isConnected()) {
+                    GoogleHelper.mGoogleHelper.googleSignOut();
+                }*/
+
                 NotificationManager notificationManager = (NotificationManager) getDockActivity().getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.cancelAll();
                 getDockActivity().replaceDockableFragment(LoginFragment.newInstance(), "LoginFragment");
-                UIHelper.showShortToastInCenter(getDockActivity(),getResString(R.string.logout_successfully));
+                UIHelper.showShortToastInCenter(getDockActivity(), getResString(R.string.logout_successfully));
                 break;
 
         }
     }
 
-    public void refreshSideMenuData(){
+    public void refreshSideMenuData() {
 
-        previousSelectedPos=0;
+        previousSelectedPos = 0;
         collection = new ArrayList<>();
         collection.add(new SideMenuEnt(AppConstants.Home, R.drawable.home2, R.drawable.home, true));
         collection.add(new SideMenuEnt(AppConstants.Favorites, R.drawable.fav, R.drawable.fav2));
         collection.add(new SideMenuEnt(AppConstants.MyChat, R.drawable.mychat, R.drawable.mychat2));
         collection.add(new SideMenuEnt(AppConstants.AccountSetting, R.drawable.accountsettings, R.drawable.accountsettings2));
         collection.add(new SideMenuEnt(AppConstants.AboutUs, R.drawable.aboutus, R.drawable.aboutus2));
-        collection.add(new SideMenuEnt(AppConstants.ContactUs, R.drawable.contactus, R.drawable.contactus2));
+        collection.add(new SideMenuEnt(AppConstants.BEQUICO, R.drawable.contactus, R.drawable.contactus2));
         collection.add(new SideMenuEnt(AppConstants.TermsOfServices, R.drawable.termsofservice, R.drawable.termsofservice2));
         collection.add(new SideMenuEnt(AppConstants.Logout, R.drawable.logout, R.drawable.logout2));
 
@@ -193,4 +207,7 @@ public class SideMenuFragment extends BaseFragment implements RecyclerClickListn
                 new LinearLayoutManager(getDockActivity(), LinearLayoutManager.VERTICAL, false)
                 , new DefaultItemAnimator());
     }
+
+
+
 }

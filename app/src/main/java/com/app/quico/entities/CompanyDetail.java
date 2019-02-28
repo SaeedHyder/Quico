@@ -93,6 +93,9 @@ public class CompanyDetail {
     @SerializedName("about")
     @Expose
     private String about;
+    @SerializedName("thread_id")
+    @Expose
+    private String threadId;
     @SerializedName("detail")
     @Expose
     private String detail;
@@ -111,6 +114,14 @@ public class CompanyDetail {
     @SerializedName("project_details")
     @Expose
     private ArrayList<ProjectDetail> projectDetails = new ArrayList<>();
+
+    public String getThreadId() {
+        return threadId;
+    }
+
+    public void setThreadId(String threadId) {
+        this.threadId = threadId;
+    }
 
     private boolean isBackBtn=false;
 

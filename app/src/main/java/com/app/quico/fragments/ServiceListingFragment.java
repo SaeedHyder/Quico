@@ -105,6 +105,18 @@ public class ServiceListingFragment extends BaseFragment implements RecyclerClic
         fragment.setArguments(args);
         return fragment;
     }
+    public static ServiceListingFragment newInstance(String id, String Name, String latitudeKey, String longitudeKey) {
+        Bundle args = new Bundle();
+        serviceId = id;
+        serviceName = Name;
+        cityId = "";
+        areaId = "";
+        latitude = latitudeKey;
+        longitude = longitudeKey;
+        ServiceListingFragment fragment = new ServiceListingFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,8 +140,8 @@ public class ServiceListingFragment extends BaseFragment implements RecyclerClic
         if (serviceId != null && !serviceId.equals("") && cityId != null && !cityId.equals("")) {
             serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 0, 0, 0), GetCompanies);
         } else if (serviceId != null && !serviceId.equals("") && latitude != null && !latitude.equals("")) {
-            serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 0, 0, 0), GetCompanies);
-        } else if (serviceId != null && !serviceId.equals("")) {
+            serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 0, 0, 0, 1), GetCompanies);
+        }  else if (serviceId != null && !serviceId.equals("")) {
             serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 0, 0, 0, 0), GetCompanies);
         }
         searchListner();
@@ -240,7 +252,8 @@ public class ServiceListingFragment extends BaseFragment implements RecyclerClic
     @Override
     public void onClick(Object entity, int position) {
         CompanyEnt data = (CompanyEnt) entity;
-        getDockActivity().replaceDockableFragment(ServiceDetailFragment.newInstance(data.getId() + ""), "ServiceDetailFragment");
+        UIHelper.hideSoftKeyboard(getDockActivity(),edtSearch);
+        getDockActivity().addDockableFragment(ServiceDetailFragment.newInstance(data.getId() + ""), "ServiceDetailFragment");
     }
 
 
@@ -301,4 +314,6 @@ public class ServiceListingFragment extends BaseFragment implements RecyclerClic
 
         }
     }
+
+
 }

@@ -30,6 +30,7 @@ public class AppConstants {
     public static String AboutUs = "About Us";
     public static String Bearer = "Bearer ";
     public static String ContactUs = "Contact Us";
+    public static String BEQUICO = "Be Quico";
     public static String TermsOfServices = "Terms Of Service";
     public static String Logout = "Logout";
     public static String facebook = "facebook";
@@ -53,8 +54,18 @@ public class AppConstants {
     public static String NearestSort = "NearestSort";
 
     public static String companyPush= "COMPANY_CREATE";
+    public static String chatPush= "chat";
     public static String deletePush= "USER_DELETED";
     public static String inactivePush= "USER_STATUS";
+
+
+    public static String file= "file";
+    public static String photo= "photo";
+    public static String PDF= "file";
+ //   public static String PDF= "pdf";
+    public static String PHOTO= "photo";
+
+
 
 
 

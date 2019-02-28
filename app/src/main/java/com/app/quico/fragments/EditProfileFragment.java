@@ -113,11 +113,15 @@ public class EditProfileFragment extends BaseFragment implements ImageSetter {
         if (prefHelper.isSocialLogin()) {
             edtPhone.setFocusable(true);
             edtPhone.setFocusableInTouchMode(true);
+            edtEmail.setFocusable(false);
+            edtEmail.setFocusableInTouchMode(false);
 
         } else {
             edtPhone.setFocusable(false);
             edtPhone.setFocusableInTouchMode(false);
             Countrypicker.setCcpClickable(false);
+            edtEmail.setFocusable(true);
+            edtEmail.setFocusableInTouchMode(true);
         }
         phoneUtil = PhoneNumberUtil.getInstance();
         edtPhone.setTransformationMethod(new NumericKeyBoardTransformationMethod());
@@ -159,7 +163,7 @@ public class EditProfileFragment extends BaseFragment implements ImageSetter {
             if (prefHelper.getUser().getUser().getDetails().getImageUrl() != null && !prefHelper.getUser().getUser().getDetails().getImageUrl().equals("")) {
                 profilePath = prefHelper.getUser().getUser().getDetails().getImageUrl();
                 //   imageLoader.displayImage(prefHelper.getUser().getUser().getDetails().getImageUrl(), profileImage);
-                Picasso.with(getDockActivity()).load(prefHelper.getUser().getUser().getDetails().getImageUrl()).placeholder(R.drawable.placeholder).into(profileImage);
+                Picasso.get().load(prefHelper.getUser().getUser().getDetails().getImageUrl()).placeholder(R.drawable.placeholder).into(profileImage);
             }
             if (prefHelper.getUser().getUser().getDetails().getAddress() != null && !prefHelper.getUser().getUser().getDetails().getAddress().equals("") && !prefHelper.getUser().getUser().getDetails().getAddress().equals("null")) {
                 edtAddress.setText(prefHelper.getUser().getUser().getDetails().getAddress());

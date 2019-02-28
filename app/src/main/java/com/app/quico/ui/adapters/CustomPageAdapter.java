@@ -53,7 +53,7 @@ public class CustomPageAdapter extends PagerAdapter {
         ZoomageView imageView = (ZoomageView) itemView.findViewById(R.id.imageView);
        // ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView);
         if (images.get(position).getImageUrl() != null && !images.get(position).getImageUrl().equals("")) {
-            Picasso.with(context).load(images.get(position).getImageUrl()).placeholder(R.drawable.placeholder_thumb).into(imageView);
+            Picasso.get().load(images.get(position).getImageUrl()).placeholder(R.drawable.placeholder_thumb).into(imageView);
            // imageLoader.displayImage(images.get(position).getImageUrl(), imageView);
         }
         //  imageView.setImageResource(images[position]);

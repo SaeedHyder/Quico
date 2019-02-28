@@ -13,6 +13,7 @@ import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.CustomRatingBar;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +46,7 @@ public class ReviewBinder extends RecyclerViewBinder<ReviewsDetail> {
         final ViewHolder holder = (ViewHolder) viewHolder;
         if (entity != null ) {
             if (entity.getUserDetail() != null && entity.getUserDetail().getDetails() != null && entity.getUserDetail().getDetails().getImageUrl() != null) {
-                imageLoader.displayImage(entity.getUserDetail().getDetails().getImageUrl(), holder.userImage);
+                    Picasso.get().load(entity.getUserDetail().getDetails().getImageUrl()).placeholder(R.drawable.placeholder_thumb).into(holder.userImage);
             }
             if (entity.getUserDetail().getName() != null) {
                 holder.txtName.setText(entity.getUserDetail().getName());

@@ -1,7 +1,12 @@
 package com.app.quico.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -11,10 +16,16 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 
 import com.app.quico.R;
+import com.app.quico.entities.Chat.ChatThreadEnt;
+import com.app.quico.entities.NotificationEnt;
 import com.app.quico.fragments.abstracts.BaseFragment;
+import com.app.quico.global.AppConstants;
+import com.app.quico.global.WebServiceConstants;
 import com.app.quico.helpers.UIHelper;
+import com.app.quico.interfaces.LoadMoreListener;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.binders.MyChatThreadBinder;
+import com.app.quico.ui.binders.NotificationBinder;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.CustomRecyclerView;
 import com.app.quico.ui.views.TitleBar;
@@ -25,7 +36,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class MyChatThreadFragment extends BaseFragment implements RecyclerClickListner{
+import static com.app.quico.global.AppConstants.chatPush;
+import static com.app.quico.global.WebServiceConstants.ChatThreads;
+import static com.app.quico.global.WebServiceConstants.ChatThreadsPaging;
+import static com.app.quico.global.WebServiceConstants.ThreadMsges;
+
+public class MyChatThreadFragment extends BaseFragment implements RecyclerClickListner {
     @BindView(R.id.txt_no_data)
     AnyTextView txtNoData;
     @BindView(R.id.rv_mychat)
@@ -33,6 +49,15 @@ public class MyChatThreadFragment extends BaseFragment implements RecyclerClickL
     Unbinder unbinder;
 
     private ArrayList<String> collection;
+
+    private LinearLayoutManager linearLayoutManager;
+    boolean canCallForMore = true;
+    boolean isOnCall;
+    int currentPageNumber = 0;
+    int totalCount = 15;
+    int offset ;
+    boolean firstTime = true;
+    protected BroadcastReceiver broadcastReceiver;
 
     public static MyChatThreadFragment newInstance() {
         Bundle args = new Bundle();
@@ -60,31 +85,87 @@ public class MyChatThreadFragment extends BaseFragment implements RecyclerClickL
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        onNotificationReceived();
+        offset = 0;
+        currentPageNumber = 0;
+        firstTime = true;
+        canCallForMore = true;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation(getDockActivity(), R.anim.layout_animation_from_right);
             rvMychat.setLayoutAnimation(anim);
         }
-        setData();
+
+        serviceHelper.enqueueCall(headerWebService.getChatThreads(offset, totalCount), ChatThreads);
+
     }
 
-    private void setData() {
+    @Override
+    public void ResponseSuccess(Object result, String Tag, String message) {
+        super.ResponseSuccess(result, Tag, message);
+        switch (Tag) {
+            case ChatThreads:
+                ArrayList<ChatThreadEnt> data = (ArrayList<ChatThreadEnt>) result;
 
-        collection = new ArrayList<>();
-        collection.add("drawable://" + R.drawable.circle1);
-        collection.add("drawable://" + R.drawable.circle2);
-        collection.add("drawable://" + R.drawable.circle3);
-        collection.add("drawable://" + R.drawable.circle4);
-        collection.add("drawable://" + R.drawable.circle1);
-        collection.add("drawable://" + R.drawable.circle2);
-        collection.add("drawable://" + R.drawable.circle3);
-        collection.add("drawable://" + R.drawable.circle4);
+                if (data != null && data.size() > 0) {
+
+                    rvMychat.setVisibility(View.VISIBLE);
+                    txtNoData.setVisibility(View.GONE);
+
+                    if (firstTime) {
+                        linearLayoutManager = new LinearLayoutManager(getDockActivity());
+
+                        rvMychat.clearList();
+                        rvMychat.BindRecyclerView(new MyChatThreadBinder(getDockActivity(), prefHelper, this), data,
+                                linearLayoutManager
+                                , new DefaultItemAnimator());
+                        firstTime = false;
+                    } else {
+                        rvMychat.clearList();
+                        rvMychat.addAll(data);
+                        rvMychat.notifyItemRangeChanged(linearLayoutManager.findFirstVisibleItemPosition(), data.size());
+
+                    }
+                } else {
+                    rvMychat.setVisibility(View.GONE);
+                    txtNoData.setVisibility(View.VISIBLE);
+                }
 
 
-        rvMychat.BindRecyclerView(new MyChatThreadBinder(getDockActivity(), prefHelper, this), collection,
-                new LinearLayoutManager(getDockActivity(), LinearLayoutManager.VERTICAL, false)
-                , new DefaultItemAnimator());
+                    if (rvMychat.getAdapter() != null) {
+                        rvMychat.getAdapter().setOnLoadMoreListener(new LoadMoreListener() {
+                            @Override
+                            public void onLoadMoreItem(int position) {
+                                if (canCallForMore) {
+                                   // if (!isOnCall) {
+                                        currentPageNumber = (currentPageNumber + 1);
+                                        offset=currentPageNumber*totalCount;
+                                        //  progressBar.setVisibility(View.VISIBLE);
+                                      //  isOnCall = true;
+                                        serviceHelper.enqueueCall(headerWebService.getChatThreads(offset, totalCount), ChatThreadsPaging);
+                                   // }
+                                }
+                            }
+                        });
+                    }
+
+                break;
+
+            case ChatThreadsPaging:
+
+                ArrayList<ChatThreadEnt> dataPaging = (ArrayList<ChatThreadEnt>) result;
+
+              //  isOnCall = false;
+                if (dataPaging.size() > 0) {
+                    rvMychat.addAll(dataPaging);
+                } else {
+                    canCallForMore = false;
+                }
+
+                break;
+        }
     }
+
 
     @Override
     public void setTitleBar(TitleBar titleBar) {
@@ -96,6 +177,47 @@ public class MyChatThreadFragment extends BaseFragment implements RecyclerClickL
 
     @Override
     public void onClick(Object entity, int position) {
-        getDockActivity().replaceDockableFragment(ChatFragment.newInstance(),"ChatFragment");
+
+        ChatThreadEnt data = (ChatThreadEnt) entity;
+        getDockActivity().replaceDockableFragment(ChatFragment.newInstance(data.getId() + ""), "ChatFragment");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(getDockActivity()).registerReceiver(broadcastReceiver,
+                new IntentFilter(AppConstants.REGISTRATION_COMPLETE));
+
+        LocalBroadcastManager.getInstance(getDockActivity()).registerReceiver(broadcastReceiver,
+                new IntentFilter(AppConstants.PUSH_NOTIFICATION));
+
+
+    }
+
+    @Override
+    public void onPause() {
+        LocalBroadcastManager.getInstance(getDockActivity()).unregisterReceiver(broadcastReceiver);
+        super.onPause();
+    }
+
+    private void onNotificationReceived() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(AppConstants.PUSH_NOTIFICATION)) {
+                    Bundle bundle = intent.getExtras();
+
+                    if (bundle != null) {
+                        String Type = bundle.getString("actionType");
+                        String Title = bundle.getString("title");
+                        String id = bundle.getString("redId");
+
+                        if (Type != null && Type.equals(chatPush)) {
+                            serviceHelper.enqueueCall(headerWebService.getChatThreads(0, totalCount), ChatThreads, false);
+                        }
+                    }
+                }
+            }
+        };
     }
 }

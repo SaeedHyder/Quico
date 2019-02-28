@@ -1,4 +1,4 @@
-package com.app.wewash.helpers;
+package com.app.quico.helpers;
 
 /**
  * Created on 9/26/2017.

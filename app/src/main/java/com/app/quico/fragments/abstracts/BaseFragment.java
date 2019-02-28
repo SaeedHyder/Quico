@@ -57,9 +57,6 @@ public abstract class BaseFragment extends Fragment implements webServiceRespons
 	public void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 		prefHelper = new BasePreferenceHelper(getContext());
-		if(getDockActivity().getDrawerLayout() != null) {
-			getDockActivity().lockDrawer();
-		}
 
 		mGpsTracker = new GPSTracker(getDockActivity());
 
@@ -81,10 +78,8 @@ public abstract class BaseFragment extends Fragment implements webServiceRespons
 	public void onResume() {
 		super.onResume();
 	//	setTitleBar( ((MainActivity) getDockActivity()).titleBar );
+		getMainActivity().closeDrawer();
 
-		if(getDockActivity().getDrawerLayout() != null){
-			getDockActivity().lockDrawer();
-		}
 	}
 	public void fragmentResume() {
 		setTitleBar(((MainActivity) getDockActivity()).titleBar);
@@ -150,16 +145,7 @@ public abstract class BaseFragment extends Fragment implements webServiceRespons
 
 	}
 	protected DockActivity getDockActivity() {
-		
-		/*DockActivity activity = (DockActivity) getActivity();
-		while ( activity == null ) {
-			activity = (DockActivity) getActivity();
-			try {
-				Thread.sleep( 50 );
-			} catch ( InterruptedException e ) {
-				e.printStackTrace();
-			}
-		}*/
+
 		return myDockActivity;
 		
 	}
@@ -169,7 +155,12 @@ public abstract class BaseFragment extends Fragment implements webServiceRespons
 	}
 	
 	protected TitleBar getTitleBar() {
-		return getMainActivity().titleBar;
+		if(getMainActivity()!=null && getMainActivity().titleBar!=null){
+			return getMainActivity().titleBar;
+		}else{
+			return null;
+		}
+
 	}
 	
 	public String getTitleName() {
@@ -350,5 +341,12 @@ public abstract class BaseFragment extends Fragment implements webServiceRespons
 		}
 	}
 
+	protected String getUserId(String senderId, String receiverId, String myId) {
+		if (myId.equals(senderId)) {
+			return receiverId;
+		} else {
+			return senderId;
+		}
+	}
 
 }

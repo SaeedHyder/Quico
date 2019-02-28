@@ -227,10 +227,10 @@ public class LoginFragment extends BaseFragment implements FacebookLoginHelper.F
 
         if (facebookLoginEnt.getFacebookEmail() != null && !facebookLoginEnt.getFacebookEmail().equals("") && !facebookLoginEnt.getFacebookEmail().isEmpty()) {
             serviceHelper.enqueueCall(webService.socialLogin(AppConstants.facebook, facebookLoginEnt.getFacebookUID(), facebookLoginEnt.getFacebookToken(), facebookLoginEnt.getFacebookFullName(), facebookLoginEnt.getFacebookEmail(),
-                    AppConstants.User, AppConstants.PushNotification, FirebaseInstanceId.getInstance().getToken(), AppConstants.Device_Type), SocialLogin);
+                    AppConstants.User, AppConstants.PushNotification, FirebaseInstanceId.getInstance().getToken(), AppConstants.Device_Type,facebookLoginEnt.getFacebookUProfilePicture()), SocialLogin);
         } else {
             serviceHelper.enqueueCall(webService.socialLogin(AppConstants.facebook, facebookLoginEnt.getFacebookUID(), facebookLoginEnt.getFacebookToken(), facebookLoginEnt.getFacebookFullName(), "",
-                    AppConstants.User, AppConstants.PushNotification, FirebaseInstanceId.getInstance().getToken(), AppConstants.Device_Type), SocialLogin);
+                    AppConstants.User, AppConstants.PushNotification, FirebaseInstanceId.getInstance().getToken(), AppConstants.Device_Type,facebookLoginEnt.getFacebookUProfilePicture()), SocialLogin);
         }
         //   getDockActivity().replaceDockableFragment(SocialSignupFragment.newInstance(facebookLoginEnt,true), "SocialSignupFragment");
 
@@ -242,10 +242,10 @@ public class LoginFragment extends BaseFragment implements FacebookLoginHelper.F
 
         if (entGoogle.getEmail() != null && !entGoogle.getEmail().equals("") && !entGoogle.getEmail().isEmpty()) {
             serviceHelper.enqueueCall(webService.socialLogin(AppConstants.google, entGoogle.getId(), entGoogle.getName(), entGoogle.getEmail(),
-                    AppConstants.User, AppConstants.PushNotification, FirebaseInstanceId.getInstance().getToken(), AppConstants.Device_Type), SocialLogin);
+                    AppConstants.User, AppConstants.PushNotification, FirebaseInstanceId.getInstance().getToken(), AppConstants.Device_Type,entGoogle.getPhoto()), SocialLogin);
         } else {
             serviceHelper.enqueueCall(webService.socialLogin(AppConstants.google, entGoogle.getId(), entGoogle.getName(), "",
-                    AppConstants.User, AppConstants.PushNotification, FirebaseInstanceId.getInstance().getToken(), AppConstants.Device_Type), SocialLogin);
+                    AppConstants.User, AppConstants.PushNotification, FirebaseInstanceId.getInstance().getToken(), AppConstants.Device_Type,entGoogle.getPhoto()), SocialLogin);
         }
 
         //  getDockActivity().replaceDockableFragment(SocialSignupFragment.newInstance(ent), "SocialSignupFragment");

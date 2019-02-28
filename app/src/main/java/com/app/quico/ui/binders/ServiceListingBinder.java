@@ -14,6 +14,7 @@ import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.CustomRatingBar;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +63,9 @@ public class ServiceListingBinder extends RecyclerViewBinder<CompanyEnt> {
                 }
             });
 
-            imageLoader.displayImage(entity.getIconUrl(), holder.logo);
+            if(entity.getIconUrl()!=null) {
+                Picasso.get().load(entity.getIconUrl()).placeholder(R.drawable.placeholder_thumb).into(holder.logo);
+            }
         }
 
     }

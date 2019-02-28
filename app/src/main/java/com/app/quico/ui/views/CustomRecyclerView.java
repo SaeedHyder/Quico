@@ -2,6 +2,7 @@ package com.app.quico.ui.views;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
@@ -44,19 +45,30 @@ public class CustomRecyclerView<T> extends RecyclerView {
         this.setLayoutManager(layoutManager);
         this.setItemAnimator(animator);
         this.setAdapter(mRecyclerViewAdapter);
+
     }
+
 
     public T getItemFromList(int index) {
         return this.userCollection.get(index);
     }
 
-    public List<T> getList() {
+ /*   public List<T> getList() {
         return this.userCollection;
+    }*/
+
+    public List<T> getList() {
+        if (mRecyclerViewAdapter != null) {
+           return mRecyclerViewAdapter.getList();
+        }else
+            return null;
     }
 
     /**
      * Clears the internal list
      */
+
+
     public void clearList() {
         if (this.mRecyclerViewAdapter != null) {
             this.mRecyclerViewAdapter.clearList();
@@ -93,6 +105,21 @@ public class CustomRecyclerView<T> extends RecyclerView {
     public void addAll(List<T> entityList) {
         if (this.mRecyclerViewAdapter != null) {
             this.mRecyclerViewAdapter.addAll(entityList);
+
+        }
+
+    }
+
+    public void addAllStart(List<T> entityList) {
+        if (this.mRecyclerViewAdapter != null) {
+            this.mRecyclerViewAdapter.addAllStart(entityList);
+
+        }
+
+    }
+    public void addStart(T entityList) {
+        if (this.mRecyclerViewAdapter != null) {
+            this.mRecyclerViewAdapter.addStart(entityList);
 
         }
 

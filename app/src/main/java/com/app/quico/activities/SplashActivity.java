@@ -80,6 +80,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void showMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
         finish();
     }

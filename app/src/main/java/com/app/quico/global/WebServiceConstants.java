@@ -3,6 +3,10 @@ package com.app.quico.global;
 public class WebServiceConstants {
     public static final String SERVICE_URL = "";
     public static final String Local_SERVICE_URL = "http://quico.stagingic.com/api/v1/";
+   // public static final String Local_SERVICE_URL = "http://quico-dev.stagingic.com/api/v1/";
+
+
+  //  public static final String Local_SERVICE_URL = "http://10.1.18.122/quico/api/v1/";
     public static final String LinkUrl = "quico.stagingic.com";
     public static final String SUCCESS_RESPONSE_CODE = "2000";
 
@@ -32,4 +36,11 @@ public class WebServiceConstants {
     public static final String Rating = "Rating";
     public static final String Favorite = "Favorite";
     public static final String Cities = "Favorite";
+    public static final String ChatThreads = "ChatThreads";
+    public static final String ChatThreadsPaging = "ChatThreadsPaging";
+    public static final String ThreadMsges = "ThreadMsges";
+    public static final String SendLocationMsg = "SendLocationMsg";
+    public static final String SendMessage = "SendMessage";
+    public static final String SendMediaMsg = "SendMediaMsg";
+    public static final String ThreadDetail = "ThreadDetail";
 }

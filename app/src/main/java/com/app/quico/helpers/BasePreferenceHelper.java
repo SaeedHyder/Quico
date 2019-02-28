@@ -19,9 +19,9 @@ public class BasePreferenceHelper extends PreferenceHelper {
     protected static final String TOKEN = "TOKEN";
     protected static final String KEY_USER = "KEY_USER";
     private static final String FILENAME = "preferences";
-
+    protected static final String CHAT_KEY = "CHAT_KEY";
     protected static final String Firebase_TOKEN = "Firebasetoken";
-
+    protected static final String CHAT_THREAD_KEY = "chat_thread_key";
     protected static final String NotificationCount = "NotificationCount";
 
 
@@ -101,4 +101,19 @@ public class BasePreferenceHelper extends PreferenceHelper {
         putStringPreference(context, FILENAME, KEY_USER, GsonFactory.getConfiguredGson().toJson(user));
     }
 
+    public void setChatScreen( boolean isChat ) {
+        putBooleanPreference( context, FILENAME, CHAT_KEY, isChat );
+    }
+
+    public boolean isChatScreen() {
+        return getBooleanPreference(context, FILENAME, CHAT_KEY);
+    }
+
+    public String getChatThreadid() {
+        return getStringPreference(context, FILENAME, CHAT_THREAD_KEY);
+    }
+
+    public void setChatThreadId(String receiverId) {
+        putStringPreference(context, FILENAME, CHAT_THREAD_KEY, receiverId);
+    }
 }

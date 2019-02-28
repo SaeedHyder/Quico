@@ -7,13 +7,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.app.quico.R;
 import com.app.quico.fragments.abstracts.BaseFragment;
-import com.app.quico.global.WebServiceConstants;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.ui.views.AnyEditTextView;
 import com.app.quico.ui.views.TitleBar;
@@ -43,6 +40,8 @@ public class ContactUsFragment extends BaseFragment {
     Unbinder unbinder;
     @BindView(R.id.Countrypicker)
     CountryCodePicker Countrypicker;
+    @BindView(R.id.edt_companyName)
+    TextInputEditText edtCompanyName;
 
     private PhoneNumberUtil phoneUtil;
 
@@ -57,7 +56,7 @@ public class ContactUsFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getDockActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         if (getArguments() != null) {
         }
 
@@ -75,19 +74,19 @@ public class ContactUsFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (edtContactUs.requestFocus()) {
-            setEditTextFocus(edtContactUs);
+        if (edtCompanyName.requestFocus()) {
+            setEditTextFocus(edtCompanyName);
         }
         phoneUtil = PhoneNumberUtil.getInstance();
         edtPhone.setTransformationMethod(new NumericKeyBoardTransformationMethod());
-       // Countrypicker.registerCarrierNumberEditText(edtPhone);
+        // Countrypicker.registerCarrierNumberEditText(edtPhone);
         listner();
         setData();
     }
 
     private void setData() {
-        edtUsername.setText(prefHelper.getUser().getUser().getName()+"");
-        edtEmail.setText(prefHelper.getUser().getUser().getEmail()+"");
+        edtUsername.setText(prefHelper.getUser().getUser().getName() + "");
+        edtEmail.setText(prefHelper.getUser().getUser().getEmail() + "");
 
         if (prefHelper.getUser().getUser().getCountryCode() != null && !prefHelper.getUser().getUser().getCountryCode().equals("") &&
                 prefHelper.getUser().getUser().getPhone() != null && !prefHelper.getUser().getUser().getPhone().equals("")) {
@@ -117,7 +116,7 @@ public class ContactUsFragment extends BaseFragment {
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
-        titleBar.setSubHeading(getResString(R.string.ContactUs));
+        titleBar.setSubHeading(getResString(R.string.BEQUICO));
         titleBar.showMenuButton();
     }
 
@@ -125,7 +124,7 @@ public class ContactUsFragment extends BaseFragment {
     @OnClick(R.id.btn_submit)
     public void onViewClicked() {
         if (isvalidated()) {
-            serviceHelper.enqueueCall(headerWebService.contactUs(edtUsername.getText().toString(),edtEmail.getText().toString(),Countrypicker.getSelectedCountryCodeWithPlus().toString()+edtPhone.getText().toString(),edtContactUs.getText().toString()), ContactUs);
+            serviceHelper.enqueueCall(headerWebService.contactUs(edtUsername.getText().toString(), edtEmail.getText().toString(), Countrypicker.getSelectedCountryCodeWithPlus().toString() + edtPhone.getText().toString(), edtContactUs.getText().toString(),edtCompanyName.getText().toString()), ContactUs);
 
         }
     }
@@ -133,17 +132,25 @@ public class ContactUsFragment extends BaseFragment {
     @Override
     public void ResponseSuccess(Object result, String Tag, String message) {
         super.ResponseSuccess(result, Tag, message);
-        switch (Tag){
+        switch (Tag) {
             case ContactUs:
-                UIHelper.showShortToastInCenter(getDockActivity(),getResString(R.string.submitted_successfully));
+                UIHelper.showShortToastInCenter(getDockActivity(), getResString(R.string.submitted_successfully));
                 getDockActivity().popBackStackTillEntry(0);
                 getDockActivity().replaceDockableFragment(HomeFragment.newInstance(), "HomeFragment");
+                getMainActivity().refreshSideMenu();
                 break;
         }
     }
 
     private boolean isvalidated() {
-        if (edtUsername.getText().toString().trim().isEmpty() || edtUsername.getText().toString().trim().length() < 3) {
+        if (edtCompanyName.getText().toString().trim().isEmpty() || edtCompanyName.getText().toString().trim().length() < 3) {
+            edtCompanyName.setError(getString(R.string.enter_company_name));
+            if (edtCompanyName.requestFocus()) {
+                setEditTextFocus(edtCompanyName);
+            }
+            return false;
+        }
+        else if (edtUsername.getText().toString().trim().isEmpty() || edtUsername.getText().toString().trim().length() < 3) {
             edtUsername.setError(getString(R.string.enter_name));
             if (edtUsername.requestFocus()) {
                 setEditTextFocus(edtUsername);
@@ -162,7 +169,7 @@ public class ContactUsFragment extends BaseFragment {
                 setEditTextFocus(edtPhone);
             }
             return false;
-        }  else if (!isPhoneNumberValid()) {
+        } else if (!isPhoneNumberValid()) {
             edtPhone.setError(getDockActivity().getResources().getString(R.string.enter_valid_number_error));
             if (edtPhone.requestFocus()) {
                 setEditTextFocus(edtPhone);
@@ -197,9 +204,5 @@ public class ContactUsFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getDockActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-    }
+
 }

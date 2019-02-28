@@ -14,6 +14,7 @@ import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.CustomRatingBar;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,11 +46,7 @@ public class FavoritesBinder extends RecyclerViewBinder<CompanyEnt> {
         final ViewHolder holder = (ViewHolder) viewHolder;
 
         if (entity != null) {
-           /* if (entity.getIsFeature() == 1) {
-                holder.featured.setVisibility(View.VISIBLE);
-            } else {
-                holder.featured.setVisibility(View.GONE);
-            }*/
+
             holder.txtName.setText(entity.getName() + "");
             holder.txtRating.setText(entity.getReviewCount() + " " + dockActivity.getResources().getString(R.string.reviews));
             holder.rbParlourRating.setScore(entity.getAvgRate());
@@ -61,7 +58,9 @@ public class FavoritesBinder extends RecyclerViewBinder<CompanyEnt> {
                 }
             });
 
-            imageLoader.displayImage(entity.getIconUrl(), holder.logo);
+            if(entity.getIconUrl()!=null) {
+                Picasso.get().load(entity.getIconUrl()).placeholder(R.drawable.placeholder_thumb).into(holder.logo);
+            }
         }
 
     }

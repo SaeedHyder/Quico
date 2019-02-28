@@ -11,7 +11,7 @@
         android:layout_height="@dimen/x180"
         android:layout_marginStart="@dimen/x3"
         android:layout_marginEnd="@dimen/x3"
-        android:layout_marginBottom="@dimen/x5"
+        android:layout_marginBottom="@dimen/x3"
         android:layout_marginTop="@dimen/x10"
         app:cardCornerRadius="@dimen/x10"
         app:cardElevation="@dimen/x5">
@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/plubmer"
-                android:scaleType="centerCrop"/>
+                android:scaleType="fitXY"/>
             
             <com.app.quico.ui.views.AnyTextView
                 android:id="@+id/txt_title"

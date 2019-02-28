@@ -10,6 +10,7 @@ import com.app.quico.entities.ProjectDetail;
 import com.app.quico.helpers.BasePreferenceHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
+import com.app.quico.ui.views.AnyTextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 
@@ -42,11 +43,16 @@ public class ProjectBinder extends RecyclerViewBinder<ProjectDetail> {
     public void bindView(ProjectDetail entity, int position, Object viewHolder, Context context) {
 
         final ViewHolder holder = (ViewHolder) viewHolder;
-        if (entity.getIconUrl() != null && !entity.getIconUrl().equals("") && !entity.getIconUrl().isEmpty()) {
-            //imageLoader.displayImage(entity.getIconUrl(), holder.image);
-            Picasso.with(dockActivity).load(entity.getIconUrl()).placeholder(R.drawable.placeholder).into(holder.image);
-        }
+        if(entity!=null) {
+            if (entity.getIconUrl() != null && !entity.getIconUrl().equals("") && !entity.getIconUrl().isEmpty()) {
+                //imageLoader.displayImage(entity.getIconUrl(), holder.image);
+                Picasso.get().load(entity.getIconUrl()).placeholder(R.drawable.placeholder).into(holder.image);
+            }
 
+            if(entity.getProjectName()!=null && !entity.getProjectName().equals("")){
+                holder.txtTitle.setText(entity.getProjectName());
+            }
+        }
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,6 +67,8 @@ public class ProjectBinder extends RecyclerViewBinder<ProjectDetail> {
     static class ViewHolder extends BaseViewHolder {
         @BindView(R.id.image)
         ImageView image;
+        @BindView(R.id.txtTitle)
+        AnyTextView txtTitle;
 
         ViewHolder(View view) {
             super(view);

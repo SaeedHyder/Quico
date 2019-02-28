@@ -7,17 +7,21 @@ import android.widget.ImageView;
 
 import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
+import com.app.quico.entities.Chat.ChatThreadEnt;
 import com.app.quico.helpers.BasePreferenceHelper;
+import com.app.quico.helpers.DateHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 import com.app.quico.ui.views.AnyTextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class MyChatThreadBinder extends RecyclerViewBinder<String> {
+public class MyChatThreadBinder extends RecyclerViewBinder<ChatThreadEnt> {
 
     private DockActivity dockActivity;
     private BasePreferenceHelper prefHelper;
@@ -38,9 +42,27 @@ public class MyChatThreadBinder extends RecyclerViewBinder<String> {
     }
 
     @Override
-    public void bindView(String entity, int position, Object viewHolder, Context context) {
+    public void bindView(ChatThreadEnt entity, int position, Object viewHolder, Context context) {
 
         final ViewHolder holder = (ViewHolder) viewHolder;
+        if (entity != null) {
+            holder.txtName.setText(entity.getCompanyDetail().getName());
+            holder.txtTime.setText(DateHelper.getChatMessageTime(entity.getUpdatedAt()));
+
+            if(entity.getMessage()!=null && !entity.getMessage().equals("") && !entity.getMessage().isEmpty() ) {
+                holder.txtDetail.setVisibility(View.VISIBLE);
+                holder.txtDetail.setText(entity.getMessage());
+            }else{
+                holder.txtDetail.setVisibility(View.GONE);
+            }
+
+            if (entity.getIsMessage() != null && !entity.getIsMessage().equals("") && !entity.getIsMessage().equals("0")) {
+                holder.txtBadge.setVisibility(View.VISIBLE);
+                holder.txtBadge.setText(entity.getIsMessage());
+            } else {
+                holder.txtBadge.setVisibility(View.GONE);
+            }
+        }
 
 
         holder.mainFrame.setOnClickListener(new View.OnClickListener() {
@@ -50,19 +72,23 @@ public class MyChatThreadBinder extends RecyclerViewBinder<String> {
             }
         });
 
-        imageLoader.displayImage(entity, holder.logo);
+        if (entity.getCompanyDetail().getIconUrl() != null) {
+            Picasso.get().load(entity.getCompanyDetail().getIconUrl()).placeholder(R.drawable.placeholder_thumb).into(holder.logo);
+        }
 
     }
 
     static class ViewHolder extends BaseViewHolder {
         @BindView(R.id.logo)
-        ImageView logo;
+        CircleImageView logo;
         @BindView(R.id.txt_name)
         AnyTextView txtName;
         @BindView(R.id.txt_detail)
         AnyTextView txtDetail;
         @BindView(R.id.txt_time)
         AnyTextView txtTime;
+        @BindView(R.id.txtBadge)
+        AnyTextView txtBadge;
         @BindView(R.id.mainFrame)
         CardView mainFrame;
 
