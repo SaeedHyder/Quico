@@ -12,6 +12,8 @@ import android.content.IntentSender;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
@@ -23,8 +25,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -32,6 +32,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -39,7 +40,6 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.app.quico.R;
@@ -48,7 +48,6 @@ import com.app.quico.fragments.ChatFragment;
 import com.app.quico.fragments.HomeFragment;
 import com.app.quico.fragments.LanguageFragment;
 import com.app.quico.fragments.LoginFragment;
-import com.app.quico.fragments.MyChatThreadFragment;
 import com.app.quico.fragments.NotificationsFragment;
 import com.app.quico.fragments.ServiceDetailFragment;
 import com.app.quico.fragments.SideMenuFragment;
@@ -56,7 +55,6 @@ import com.app.quico.fragments.abstracts.BaseFragment;
 import com.app.quico.global.AppConstants;
 import com.app.quico.global.SideMenuChooser;
 import com.app.quico.global.SideMenuDirection;
-import com.app.quico.helpers.DialogHelper;
 import com.app.quico.helpers.ScreenHelper;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.interfaces.ImageSetter;
@@ -64,22 +62,15 @@ import com.app.quico.interfaces.OnSettingActivateListener;
 import com.app.quico.residemenu.ResideMenu;
 import com.app.quico.ui.views.TitleBar;
 import com.facebook.AccessToken;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -91,6 +82,7 @@ import com.kbeanie.imagechooser.api.ImageChooserManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -117,7 +109,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
     @BindView(R.id.mainFrameLayout)
     FrameLayout mainFrameLayout;
     @BindView(R.id.progressBar)
-    ProgressBar progressBar;
+    AVLoadingIndicatorView progressBar;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
@@ -170,6 +162,8 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
         printHashKey(getDockActivity());
         onNotificationReceived();
 
+        setCurrentLocale();
+
         titleBar.setMenuButtonListener(new OnClickListener() {
 
             @Override
@@ -219,6 +213,25 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
         // ATTENTION: This was auto-generated to handle app links.
 
 
+    }
+
+
+    private void setCurrentLocale() {
+        if (prefHelper.isLanguageArabian()) {
+            Resources resources = getResources();
+            DisplayMetrics dm = resources.getDisplayMetrics();
+            Configuration conf = resources.getConfiguration();
+            conf.locale = new Locale("ar");
+            resources.updateConfiguration(conf, dm);
+
+        } else {
+            Resources resources = getResources();
+            DisplayMetrics dm = resources.getDisplayMetrics();
+            Configuration conf = resources.getConfiguration();
+            conf.locale = new Locale("en");
+            resources.updateConfiguration(conf, dm);
+
+        }
     }
 
     public DrawerLayout getDrawerLayout() {
@@ -291,16 +304,10 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
 
     public void initFragment() {
         getSupportFragmentManager().addOnBackStackChangedListener(getListener());
-        Intent intent = getIntent();
+
         if (prefHelper.isLogin()) {
             popBackStackTillEntry(0);
             replaceDockableFragment(HomeFragment.newInstance(), "HomeFragment", false);
-
-            if (getIntent().getAction() != null && getIntent().getData() != null) {
-                popBackStackTillEntry(0);
-                Uri data = intent.getData();
-                replaceDockableFragment(ServiceDetailFragment.newInstance(data.getQueryParameter("id"), true), "ServiceDetailFragment");
-            }
 
         } else {
             if (prefHelper.isLanguageSelected()) {
@@ -309,6 +316,8 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
                 replaceDockableFragment(LanguageFragment.newInstance(), "LanguageFragment", false);
             }
         }
+
+        deepLinkIntent();
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -321,25 +330,29 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
                     replaceDockableFragment(ServiceDetailFragment.newInstance(id), "ServiceDetailFragment");
                 } else if (Type != null && Type.equals(chatPush)) {
                     if (id != null) {
-                        //   replaceDockableFragment(ChatFragment.newInstance(id), "ChatFragment");
+                        replaceDockableFragment(ChatFragment.newInstance(id), "ChatFragment");
                     }
                 } else if (Type != null && Title != null && !Title.equals("")) {
                     replaceDockableFragment(NotificationsFragment.newInstance(), "NotificationsFragment");
                 }
-                /*else if (Type != null && Type.equals(deletePush)) {
-                    UIHelper.showShortToastInCenter(getDockActivity(), getDockActivity().getResources().getString(R.string.deleted_by_admin));
-                    getDockActivity().popBackStackTillEntry(0);
-                    prefHelper.setLoginStatus(false);
-                    prefHelper.setSocialLogin(false);
-                    if (AccessToken.getCurrentAccessToken() != null) {
-                        LoginManager.getInstance().logOut();
-                    }
-                    NotificationManager notificationManager = (NotificationManager) getDockActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.cancelAll();
-                    getDockActivity().replaceDockableFragment(LoginFragment.newInstance(), "LoginFragment");
 
-                }*/
+            }
+        }
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        deepLinkIntent();
+    }
+
+    private void deepLinkIntent() {
+        Intent intent = getIntent();
+        if (intent.getAction() != null && intent.getData() != null) {
+            if(prefHelper.isLogin()) {
+                Uri data = intent.getData();
+                replaceDockableFragment(ServiceDetailFragment.newInstance(data.getQueryParameter("id"), false), "ServiceDetailFragment");
             }
         }
     }
@@ -418,6 +431,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             mainFrameLayout.setVisibility(View.VISIBLE);
             if (progressBar != null) {
+                progressBar.show();
                 progressBar.setVisibility(View.VISIBLE);
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
@@ -434,6 +448,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
         if (progressBar != null) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             progressBar.setVisibility(View.INVISIBLE);
+            progressBar.hide();
         }
         loading = false;
 
@@ -914,5 +929,12 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
     public void releaseDrawer() {
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
+
+    public void restartActivity() {
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
+    }
+
 
 }

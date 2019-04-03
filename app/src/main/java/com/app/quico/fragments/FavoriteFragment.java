@@ -104,7 +104,7 @@ public class FavoriteFragment extends BaseFragment implements RecyclerClickListn
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
-        titleBar.setSubHeading(getResString(R.string.MyFavorites));
+        titleBar.setSubHeading(getResString(R.string.favorites));
         titleBar.showMenuButton();
     }
 

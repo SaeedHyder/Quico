@@ -12,6 +12,7 @@ import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 import com.app.quico.ui.views.AnyTextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 
@@ -46,7 +47,7 @@ public class ProjectBinder extends RecyclerViewBinder<ProjectDetail> {
         if(entity!=null) {
             if (entity.getIconUrl() != null && !entity.getIconUrl().equals("") && !entity.getIconUrl().isEmpty()) {
                 //imageLoader.displayImage(entity.getIconUrl(), holder.image);
-                Picasso.get().load(entity.getIconUrl()).placeholder(R.drawable.placeholder).into(holder.image);
+                Picasso.get().load(entity.getIconUrl()).placeholder(R.drawable.placeholder).resize(200,200).into(holder.image);
             }
 
             if(entity.getProjectName()!=null && !entity.getProjectName().equals("")){

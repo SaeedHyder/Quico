@@ -30,7 +30,7 @@ public class AppConstants {
     public static String AboutUs = "About Us";
     public static String Bearer = "Bearer ";
     public static String ContactUs = "Contact Us";
-    public static String BEQUICO = "Be Quico";
+    public static String BEQUICO = "Be quico";
     public static String TermsOfServices = "Terms Of Service";
     public static String Logout = "Logout";
     public static String facebook = "facebook";

@@ -114,7 +114,7 @@ public class NotificationsFragment extends BaseFragment implements RecyclerClick
             getDockActivity().addDockableFragment(ServiceDetailFragment.newInstance(data.getRefId() + ""), "ServiceDetailFragment");
 
         } else if (data.getActionType() != null && data.getActionType().equals(AppConstants.chatPush) && data.getRefId() != null) {
-           // getDockActivity().addDockableFragment(ChatFragment.newInstance(data.getRefId() + ""), "ChatFragment");
+            getDockActivity().addDockableFragment(ChatFragment.newInstance(data.getRefId() + ""), "ChatFragment");
         }
     }
 }

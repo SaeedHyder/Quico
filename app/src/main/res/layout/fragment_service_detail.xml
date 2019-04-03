@@ -63,9 +63,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/x5"
-                            android:padding="@dimen/x13"
+                            android:padding="@dimen/x10"
                             android:scaleType="fitXY"
-                            android:src="@drawable/backarrow" />
+                            android:src="@drawable/back_arrow2" />
 
 
                     </RelativeLayout>

@@ -17,15 +17,13 @@ import android.view.animation.LayoutAnimationController;
 
 import com.app.quico.R;
 import com.app.quico.entities.Chat.ChatThreadEnt;
-import com.app.quico.entities.NotificationEnt;
 import com.app.quico.fragments.abstracts.BaseFragment;
 import com.app.quico.global.AppConstants;
-import com.app.quico.global.WebServiceConstants;
-import com.app.quico.helpers.UIHelper;
+import com.app.quico.helpers.DialogHelper;
+import com.app.quico.interfaces.DeleteChatInterface;
 import com.app.quico.interfaces.LoadMoreListener;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.binders.MyChatThreadBinder;
-import com.app.quico.ui.binders.NotificationBinder;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.CustomRecyclerView;
 import com.app.quico.ui.views.TitleBar;
@@ -39,24 +37,22 @@ import butterknife.Unbinder;
 import static com.app.quico.global.AppConstants.chatPush;
 import static com.app.quico.global.WebServiceConstants.ChatThreads;
 import static com.app.quico.global.WebServiceConstants.ChatThreadsPaging;
-import static com.app.quico.global.WebServiceConstants.ThreadMsges;
+import static com.app.quico.global.WebServiceConstants.DeleteThread;
 
-public class MyChatThreadFragment extends BaseFragment implements RecyclerClickListner {
+public class MyChatThreadFragment extends BaseFragment implements RecyclerClickListner, DeleteChatInterface {
     @BindView(R.id.txt_no_data)
     AnyTextView txtNoData;
     @BindView(R.id.rv_mychat)
     CustomRecyclerView rvMychat;
     Unbinder unbinder;
 
-    private ArrayList<String> collection;
-
     private LinearLayoutManager linearLayoutManager;
     boolean canCallForMore = true;
-    boolean isOnCall;
     int currentPageNumber = 0;
     int totalCount = 15;
-    int offset ;
+    int offset;
     boolean firstTime = true;
+    private int deletePosition = 0;
     protected BroadcastReceiver broadcastReceiver;
 
     public static MyChatThreadFragment newInstance() {
@@ -116,7 +112,7 @@ public class MyChatThreadFragment extends BaseFragment implements RecyclerClickL
                         linearLayoutManager = new LinearLayoutManager(getDockActivity());
 
                         rvMychat.clearList();
-                        rvMychat.BindRecyclerView(new MyChatThreadBinder(getDockActivity(), prefHelper, this), data,
+                        rvMychat.BindRecyclerView(new MyChatThreadBinder(getDockActivity(), prefHelper, this, this), data,
                                 linearLayoutManager
                                 , new DefaultItemAnimator());
                         firstTime = false;
@@ -124,7 +120,6 @@ public class MyChatThreadFragment extends BaseFragment implements RecyclerClickL
                         rvMychat.clearList();
                         rvMychat.addAll(data);
                         rvMychat.notifyItemRangeChanged(linearLayoutManager.findFirstVisibleItemPosition(), data.size());
-
                     }
                 } else {
                     rvMychat.setVisibility(View.GONE);
@@ -132,22 +127,19 @@ public class MyChatThreadFragment extends BaseFragment implements RecyclerClickL
                 }
 
 
-                    if (rvMychat.getAdapter() != null) {
-                        rvMychat.getAdapter().setOnLoadMoreListener(new LoadMoreListener() {
-                            @Override
-                            public void onLoadMoreItem(int position) {
-                                if (canCallForMore) {
-                                   // if (!isOnCall) {
-                                        currentPageNumber = (currentPageNumber + 1);
-                                        offset=currentPageNumber*totalCount;
-                                        //  progressBar.setVisibility(View.VISIBLE);
-                                      //  isOnCall = true;
-                                        serviceHelper.enqueueCall(headerWebService.getChatThreads(offset, totalCount), ChatThreadsPaging);
-                                   // }
-                                }
+                if (rvMychat.getAdapter() != null) {
+                    rvMychat.getAdapter().setOnLoadMoreListener(new LoadMoreListener() {
+                        @Override
+                        public void onLoadMoreItem(int position) {
+                            if (canCallForMore) {
+                                currentPageNumber = (currentPageNumber + 1);
+                                offset = currentPageNumber * totalCount;
+                                serviceHelper.enqueueCall(headerWebService.getChatThreads(offset, totalCount), ChatThreadsPaging);
                             }
-                        });
-                    }
+                        }
+                    });
+                }
+
 
                 break;
 
@@ -155,13 +147,23 @@ public class MyChatThreadFragment extends BaseFragment implements RecyclerClickL
 
                 ArrayList<ChatThreadEnt> dataPaging = (ArrayList<ChatThreadEnt>) result;
 
-              //  isOnCall = false;
                 if (dataPaging.size() > 0) {
                     rvMychat.addAll(dataPaging);
                 } else {
                     canCallForMore = false;
                 }
 
+                break;
+
+            case DeleteThread:
+                rvMychat.getAdapter().remove(deletePosition);
+                if (rvMychat.getList() != null && rvMychat.getList().size() > 0) {
+                    rvMychat.setVisibility(View.VISIBLE);
+                    txtNoData.setVisibility(View.GONE);
+                } else {
+                    rvMychat.setVisibility(View.GONE);
+                    txtNoData.setVisibility(View.VISIBLE);
+                }
                 break;
         }
     }
@@ -171,7 +173,7 @@ public class MyChatThreadFragment extends BaseFragment implements RecyclerClickL
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
-        titleBar.setSubHeading(getResString(R.string.MyChats));
+        titleBar.setSubHeading(getResString(R.string.myChats));
         titleBar.showMenuButton();
     }
 
@@ -219,5 +221,22 @@ public class MyChatThreadFragment extends BaseFragment implements RecyclerClickL
                 }
             }
         };
+    }
+
+    @Override
+    public void onClick(ChatThreadEnt entity, int position) {
+
+        DialogHelper dialoge = new DialogHelper(getDockActivity());
+        dialoge.commonDialoge(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deletePosition = position;
+                serviceHelper.enqueueCall(headerWebService.deleteThread(entity.getId() + ""), DeleteThread);
+                dialoge.hideDialog();
+            }
+        }, getResString(R.string.delete_chat), getResString(R.string.are_you_sure_delete_chat));
+
+        dialoge.showDialog();
+
     }
 }

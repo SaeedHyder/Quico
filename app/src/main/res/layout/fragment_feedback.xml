@@ -85,11 +85,9 @@
             <com.app.quico.ui.views.CustomRatingBar
                 android:id="@+id/rbParlourRating"
                 android:layout_width="@dimen/x140"
-
                 android:layout_height="@dimen/x30"
-
                 app:starPadding="@dimen/x5"
-                app:stars="1" />
+                app:stars="3" />
 
             <com.app.quico.ui.views.AnyTextView
                 android:layout_width="wrap_content"

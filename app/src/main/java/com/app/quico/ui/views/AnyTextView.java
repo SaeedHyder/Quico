@@ -2,6 +2,8 @@ package com.app.quico.ui.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.TextView;
 
 public class AnyTextView extends android.support.v7.widget.AppCompatTextView {
@@ -16,6 +18,7 @@ public class AnyTextView extends android.support.v7.widget.AppCompatTextView {
 		if ( !isInEditMode() ) {
 			Util.setTypeface( attrs, this );
 		}
+
 	}
 	
 	public AnyTextView( Context context, AttributeSet attrs, int defStyle ) {
@@ -24,5 +27,6 @@ public class AnyTextView extends android.support.v7.widget.AppCompatTextView {
 		if ( !isInEditMode() ) {
 			Util.setTypeface( attrs, this );
 		}
+
 	}
 }

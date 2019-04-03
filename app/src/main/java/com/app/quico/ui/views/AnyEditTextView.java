@@ -4,6 +4,7 @@ import com.andreabaccega.widget.FormEditText;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
 
 public class AnyEditTextView extends FormEditText {
 	
@@ -18,6 +19,7 @@ public class AnyEditTextView extends FormEditText {
 		if ( !this.isInEditMode() ) {
 			Util.setTypeface( attrs, this );
 		}
+
 	}
 	
 	public AnyEditTextView( Context context, AttributeSet attrs, int defStyle ) {

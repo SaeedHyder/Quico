@@ -75,6 +75,8 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
     RelativeLayout btnEmail;
     @BindView(R.id.btnWebsite)
     RelativeLayout btnWebsite;
+    @BindView(R.id.txtSocialMedia)
+    AnyTextView txtSocialMedia;
 
 
     private CompanyDetail companyDetail;
@@ -121,16 +123,17 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
 
         if (companyDetail != null) {
 
-            if(companyDetail.isBackBtn()){
+            if (companyDetail.isBackBtn()) {
                 btnChatWithUs.setVisibility(View.GONE);
             }
 
             txtAbout.setText(companyDetail.getAbout());
             txtAddress.setText(companyDetail.getLocation());
 
-            if (companyDetail.getCountryCode() != null && !companyDetail.getCountryCode().equals("") && !companyDetail.getCountryCode().equals("null")) {
+            if (companyDetail.getCountryCode() != null && !companyDetail.getCountryCode().equals("") && !companyDetail.getCountryCode().equals("null")
+                    && companyDetail.getPhone() != null && !companyDetail.getPhone().equals("") && !companyDetail.getPhone().equals("null")) {
                 txtPhoneNo.setText(companyDetail.getCountryCode() + companyDetail.getPhone());
-            } else {
+            } else if (companyDetail.getPhone() != null && !companyDetail.getPhone().equals("") && !companyDetail.getPhone().equals("null")) {
                 txtPhoneNo.setText(companyDetail.getPhone());
             }
             txtEmail.setText(companyDetail.getEmail());
@@ -160,6 +163,28 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
                 } else if (item.getType().equals(AppConstants.Linkedin)) {
                     linkedinUrl = item.getLink();
                 }
+            }
+
+            if ((facebookUrl == null || facebookUrl.trim().equals("") || facebookUrl.isEmpty()) && (instagramUrl == null || instagramUrl.trim().equals("") || instagramUrl.isEmpty())
+                    && (googlePlusUrl == null || googlePlusUrl.trim().equals("") || googlePlusUrl.isEmpty()) && (twitterUrl == null || twitterUrl.trim().equals("") || twitterUrl.isEmpty())
+                    && (linkedinUrl == null || linkedinUrl.trim().equals("") || linkedinUrl.isEmpty())) {
+                txtSocialMedia.setVisibility(View.GONE);
+            }
+
+            if (facebookUrl == null || facebookUrl.trim().equals("") || facebookUrl.isEmpty()) {
+                btnFb.setVisibility(View.GONE);
+            }
+            if (instagramUrl == null || instagramUrl.trim().equals("") || instagramUrl.isEmpty()) {
+                btnInsta.setVisibility(View.GONE);
+            }
+            if (googlePlusUrl == null || googlePlusUrl.trim().equals("") || googlePlusUrl.isEmpty()) {
+                btnGoogle.setVisibility(View.GONE);
+            }
+            if (twitterUrl == null || twitterUrl.trim().equals("") || twitterUrl.isEmpty()) {
+                btnTwitter.setVisibility(View.GONE);
+            }
+            if (linkedinUrl == null || linkedinUrl.trim().equals("") || linkedinUrl.isEmpty()) {
+                btnLinkedin.setVisibility(View.GONE);
             }
 
 
@@ -209,12 +234,12 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
                 }
                 break;
             case R.id.btn_chat_with_us:
-              /*  if(companyDetail.getThreadId()!=null && !companyDetail.getThreadId().equals("") && !companyDetail.getThreadId().isEmpty()) {
+                if (companyDetail.getThreadId() != null && !companyDetail.getThreadId().equals("") && !companyDetail.getThreadId().isEmpty()) {
                     getDockActivity().replaceDockableFragment(ChatFragment.newInstance(companyDetail.getThreadId() + ""), "ChatFragment");
-                }else{
-                    getDockActivity().replaceDockableFragment(ChatFragment.newInstance(companyDetail.getId() + "",companyDetail), "ChatFragment");
-                }*/
-                UIHelper.showShortToastInDialoge(getDockActivity(),getResString(R.string.will_be_implemented));
+                } else {
+                    getDockActivity().replaceDockableFragment(ChatFragment.newInstance(companyDetail.getId() + "", companyDetail), "ChatFragment");
+                }
+                // UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.will_be_implemented));
 
                 break;
             case R.id.btnAddress:
@@ -232,7 +257,7 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     if (companyDetail.getCountryCode() != null && !companyDetail.getCountryCode().equals("")) {
                         intent.setData(Uri.parse("tel:" + companyDetail.getCountryCode() + companyDetail.getPhone()));
-                    }else{
+                    } else {
                         intent.setData(Uri.parse("tel:" + companyDetail.getPhone()));
                     }
                     startActivity(intent);

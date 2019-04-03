@@ -80,11 +80,8 @@ public class ServiceProjectsFragment extends BaseFragment implements RecyclerCli
             txtNoData.setVisibility(View.GONE);
             rvProjects.setVisibility(View.VISIBLE);
 
-            StaggeredGridLayoutManager GridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-            //GridLayoutManager GridLayoutManager = new GridLayoutManager(getDockActivity(),3);
-
             rvProjects.BindRecyclerView(new ProjectBinder(getDockActivity(), prefHelper, this), companyDetail.getProjectDetails(),
-                    GridLayoutManager
+                    new GridLayoutManager(getDockActivity(),3)
                     , new DefaultItemAnimator());
             rvProjects.setNestedScrollingEnabled(false);
         } else {

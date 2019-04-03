@@ -11,7 +11,7 @@ public class SocialDetail {
     @SerializedName("type")
     @Expose
     private String type;
-    @SerializedName("link")
+    @SerializedName("link_url")
     @Expose
     private String link;
 

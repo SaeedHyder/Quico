@@ -23,6 +23,9 @@
         android:layout_height="match_parent"
         android:layout_marginEnd="@dimen/x5"
         android:layout_marginStart="@dimen/x5"
+        android:nestedScrollingEnabled="false"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/x5"
         android:layout_marginTop="@dimen/x3" />
 
 </LinearLayout>

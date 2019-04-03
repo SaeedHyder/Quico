@@ -24,6 +24,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -274,6 +275,7 @@ public interface WebService {
     Call<ResponseWrapper<ThreadMsgesEnt>> sendLocation(
             @Field("company_id") String company_id,
             @Field("receiver_id") String receiver_id,
+            @Field("address") String address,
             @Field("latitude") String latitude,
             @Field("longitude") String longitude);
 
@@ -284,4 +286,7 @@ public interface WebService {
             @Field("receiver_id") String receiver_id,
             @Field("message") String message);
 
+    @DELETE("chats/{id}")
+    Call<ResponseWrapper> deleteThread(
+            @Path("id") String id);
 }

@@ -100,9 +100,6 @@ public class PhoneVerificationFragment extends BaseFragment {
             public void afterTextChanged(Editable editable) {
 
                 if (editable.toString().length() == 4) {
-                    if (timer != null) {
-                        timer.cancel();
-                    }
                     if (isFromForgot) {
                         serviceHelper.enqueueCall(webService.verifyForgotCode(prefHelper.getUser().getUser().getCountryCode(), prefHelper.getUser().getUser().getPhone(), txtPinEntry.getText().toString()), VerifyForgotPassword);
                     } else {
@@ -130,9 +127,7 @@ public class PhoneVerificationFragment extends BaseFragment {
                 break;
             case R.id.btn_submit:
                 if (isvalidated()) {
-                    if (timer != null) {
-                        timer.cancel();
-                    }
+                    UIHelper.hideSoftKeyboard(getDockActivity(),txtPinEntry);
                     if (isFromForgot) {
                         serviceHelper.enqueueCall(webService.verifyForgotCode(prefHelper.getUser().getUser().getCountryCode(), prefHelper.getUser().getUser().getPhone(), txtPinEntry.getText().toString()), VerifyForgotPassword);
                     } else {
@@ -183,11 +178,19 @@ public class PhoneVerificationFragment extends BaseFragment {
         super.ResponseSuccess(result, Tag, message);
         switch (Tag) {
             case VerifyForgotPassword:
+                if (timer != null) {
+                    timer.cancel();
+                }
+                UIHelper.hideSoftKeyboard(getDockActivity(),txtPinEntry);
                 getDockActivity().popFragment();
                 getDockActivity().replaceDockableFragment(ResetPasswordFragment.newInstance(txtPinEntry.getText().toString()), "ResetPasswordFragment");
                 break;
 
             case VerifyCode:
+                if (timer != null) {
+                    timer.cancel();
+                }
+                UIHelper.hideSoftKeyboard(getDockActivity(),txtPinEntry);
                 prefHelper.setLoginStatus(true);
                 getDockActivity().popBackStackTillEntry(0);
                 getDockActivity().replaceDockableFragment(HomeFragment.newInstance(), "HomeFragment");

@@ -77,7 +77,8 @@ public class ChatBinder extends RecyclerViewBinder<ThreadMsgesEnt> {
                     if (entity.getLatitude() != null && !entity.getLatitude().equals("") && entity.getLongitude() != null && !entity.getLongitude().equals("")) {
                         holder.txtMapAddressLeft.setVisibility(View.VISIBLE);
                         holder.txtMapDateLeft.setVisibility(View.VISIBLE);
-                        holder.txtMapAddressLeft.setText(dockActivity.getCurrentAddress(Double.parseDouble(entity.getLatitude()), Double.parseDouble(entity.getLongitude())));
+                    //    holder.txtMapAddressLeft.setText(dockActivity.getCurrentAddress(Double.parseDouble(entity.getLatitude()), Double.parseDouble(entity.getLongitude())));
+                        holder.txtMapAddressLeft.setText(entity.getAddress());
                         holder.txtMapDateLeft.setText(DateHelper.getChatMessageTime(entity.getCreatedAt()));
                     } else {
                         holder.txtMapAddressLeft.setVisibility(View.GONE);
@@ -208,7 +209,8 @@ public class ChatBinder extends RecyclerViewBinder<ThreadMsgesEnt> {
                     if (entity.getLatitude() != null && !entity.getLatitude().equals("") && entity.getLongitude() != null && !entity.getLongitude().equals("")) {
                         holder.txtMapAddressRight.setVisibility(View.VISIBLE);
                         holder.txtMapDateRight.setVisibility(View.VISIBLE);
-                        holder.txtMapAddressRight.setText(dockActivity.getCurrentAddress(Double.parseDouble(entity.getLatitude()), Double.parseDouble(entity.getLongitude())));
+                       // holder.txtMapAddressRight.setText(dockActivity.getCurrentAddress(Double.parseDouble(entity.getLatitude()), Double.parseDouble(entity.getLongitude())));
+                        holder.txtMapAddressRight.setText(entity.getAddress());
                         holder.txtMapDateRight.setText(DateHelper.getChatMessageTime(entity.getCreatedAt()));
                     } else {
                         holder.txtMapAddressRight.setVisibility(View.GONE);

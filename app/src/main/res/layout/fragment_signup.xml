@@ -186,6 +186,7 @@
                         android:hint="@string/phone_number"
                         android:imeOptions="actionDone"
                         android:inputType="numberPassword"
+                        android:gravity="left|center_vertical"
                         android:maxLength="16"
                         android:textColor="@color/app_black_text"
                         android:textSize="@dimen/x14" />

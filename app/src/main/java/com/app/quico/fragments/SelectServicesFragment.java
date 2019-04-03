@@ -183,7 +183,7 @@ public class SelectServicesFragment extends BaseFragment implements RecyclerClic
     private void bindData(ArrayList<AllServicesEnt> entity) {
         collectionFiltered = entity;
 
-        if (collectionFiltered != null && collectionFiltered.size() > 0 && selectedServicesArray != null && selectedServicesArray.size() > 0) {
+       /* if (collectionFiltered != null && collectionFiltered.size() > 0 && selectedServicesArray != null && selectedServicesArray.size() > 0) {
             for (AllServicesEnt item : collectionFiltered) {
                 for (String selectedItem : selectedServicesArray) {
                     if (String.valueOf(item.getId()).equals(selectedItem)) {
@@ -191,7 +191,7 @@ public class SelectServicesFragment extends BaseFragment implements RecyclerClic
                     }
                 }
             }
-        }
+        }*/
 
         Collections.sort(collectionFiltered, new Comparator<AllServicesEnt>() {
             @Override
@@ -249,6 +249,9 @@ public class SelectServicesFragment extends BaseFragment implements RecyclerClic
             case R.id.btn_done:
                 ArrayList<String> selectedServicesIdsArray = new ArrayList<>();
                 ArrayList<String> selectedServicesNamesArray = new ArrayList<>();
+
+
+
                 if (collectionFiltered != null && collectionFiltered.size() > 0) {
                     for (AllServicesEnt item : collectionFiltered) {
                         if (item.isSelected()) {
@@ -256,6 +259,10 @@ public class SelectServicesFragment extends BaseFragment implements RecyclerClic
                             selectedServicesNamesArray.add(item.getName() + "");
                         }
                     }
+                }
+                if(selectedServicesIdsArray!=null && selectedServicesIdsArray.size()>10){
+                    UIHelper.showShortToastInDialoge(getDockActivity(),getResString(R.string.you_can_not_select_more_than_10_items));
+                    return;
                 }
                 String selectedServicesIds = android.text.TextUtils.join(",", selectedServicesIdsArray);
                 String selectedServicesNames = android.text.TextUtils.join(",", selectedServicesNamesArray);

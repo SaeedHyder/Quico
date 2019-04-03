@@ -12,6 +12,7 @@
         android:layout_height="@dimen/x55"
         android:layout_marginTop="@dimen/x3"
         android:gravity="center_vertical"
+
         android:orientation="horizontal">
 
         <ImageView
@@ -96,10 +97,10 @@
                 android:layout_weight="0.8"
                 android:background="@drawable/bg_rounded_white"
                 android:drawableEnd="@drawable/downarrow"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:hint="@string/address"
-                android:maxLines="1"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:gravity="center_vertical|left"
+                android:hint="@string/select_location"
                 android:padding="@dimen/x10"
                 android:paddingEnd="@dimen/x15"
                 android:paddingStart="@dimen/x15"
@@ -123,10 +124,10 @@
             android:layout_marginTop="@dimen/x10"
             android:background="@drawable/bg_rounded_white"
             android:drawableEnd="@drawable/downarrow"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:gravity="center_vertical|left"
             android:hint="@string/services"
-            android:maxLines="1"
             android:padding="@dimen/x10"
             android:paddingEnd="@dimen/x15"
             android:paddingStart="@dimen/x15"

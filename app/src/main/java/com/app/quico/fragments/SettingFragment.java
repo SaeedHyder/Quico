@@ -9,11 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 
 import com.app.quico.R;
-import com.app.quico.entities.User;
 import com.app.quico.entities.UserEnt;
 import com.app.quico.fragments.abstracts.BaseFragment;
-import com.app.quico.global.WebServiceConstants;
-import com.app.quico.helpers.UIHelper;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.TitleBar;
 
@@ -68,14 +65,23 @@ public class SettingFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(prefHelper.getUser().getUser()!=null && prefHelper.getUser().getUser().getPushNotification()!=null) {
+        if (prefHelper.getUser().getUser() != null && prefHelper.getUser().getUser().getPushNotification() != null) {
             toggleBtn.setChecked(prefHelper.getUser().getUser().getPushNotification() == 1 ? true : false);
         }
-        if(prefHelper.isSocialLogin()){
+        if (prefHelper.isSocialLogin()) {
             btnChangePassword.setVisibility(View.GONE);
             changePassworView.setVisibility(View.GONE);
         }
         listner();
+
+        if (prefHelper.isLanguageArabian()) {
+            btnEnglish.setTextColor(getResources().getColor(R.color.app_gray_text));
+            btnArabic.setTextColor(getResources().getColor(R.color.app_green));
+
+        } else {
+            btnEnglish.setTextColor(getResources().getColor(R.color.app_green));
+            btnArabic.setTextColor(getResources().getColor(R.color.app_gray_text));
+        }
 
     }
 
@@ -106,7 +112,7 @@ public class SettingFragment extends BaseFragment {
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
-        titleBar.setSubHeading(getResString(R.string.settings));
+        titleBar.setSubHeading(getResString(R.string.accountSetting));
         titleBar.showMenuButton();
     }
 
@@ -115,10 +121,14 @@ public class SettingFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_arabic:
-                UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.will_be_implemented));
+                btnEnglish.setTextColor(getResources().getColor(R.color.app_gray_text));
+                btnArabic.setTextColor(getResources().getColor(R.color.app_green));
+                prefHelper.putLang(getDockActivity(), "ar");
                 break;
             case R.id.btn_english:
-                UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.will_be_implemented));
+                btnEnglish.setTextColor(getResources().getColor(R.color.app_green));
+                btnArabic.setTextColor(getResources().getColor(R.color.app_gray_text));
+                prefHelper.putLang(getDockActivity(), "en");
                 break;
             case R.id.btn_change_password:
                 getDockActivity().replaceDockableFragment(ChangePasswordFragment.newInstance(), "ChangePasswordFragment");

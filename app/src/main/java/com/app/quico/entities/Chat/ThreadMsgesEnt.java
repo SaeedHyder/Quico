@@ -34,6 +34,9 @@ public class ThreadMsgesEnt {
     @SerializedName("longitude")
     @Expose
     private String longitude;
+    @SerializedName("address")
+    @Expose
+    private String address;
     @SerializedName("status")
     @Expose
     private Integer status;
@@ -55,6 +58,14 @@ public class ThreadMsgesEnt {
     @SerializedName("document_detail")
     @Expose
     private ArrayList<DocumentDetail> documentDetail = new ArrayList<>();
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getMap_url() {
         return map_url;

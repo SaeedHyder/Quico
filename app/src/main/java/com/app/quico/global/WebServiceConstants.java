@@ -43,4 +43,5 @@ public class WebServiceConstants {
     public static final String SendMessage = "SendMessage";
     public static final String SendMediaMsg = "SendMediaMsg";
     public static final String ThreadDetail = "ThreadDetail";
+    public static final String DeleteThread = "DeleteThread";
 }

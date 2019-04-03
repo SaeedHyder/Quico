@@ -94,6 +94,12 @@ public class RecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerViewBin
         notifyDataSetChanged();
     }
 
+    public void remove(int position) {
+        collections.remove(position);
+        notifyDataSetChanged();
+    }
+
+
 
     /**
      * Adds a NotificationDummy to the list and calls

@@ -10,6 +10,7 @@ import com.app.quico.activities.DockActivity;
 import com.app.quico.entities.Chat.ChatThreadEnt;
 import com.app.quico.helpers.BasePreferenceHelper;
 import com.app.quico.helpers.DateHelper;
+import com.app.quico.interfaces.DeleteChatInterface;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 import com.app.quico.ui.views.AnyTextView;
@@ -27,13 +28,15 @@ public class MyChatThreadBinder extends RecyclerViewBinder<ChatThreadEnt> {
     private BasePreferenceHelper prefHelper;
     private ImageLoader imageLoader;
     private RecyclerClickListner clickListner;
+    private DeleteChatInterface deleteChatInterface;
 
-    public MyChatThreadBinder(DockActivity dockActivity, BasePreferenceHelper prefHelper, RecyclerClickListner clickListner) {
+    public MyChatThreadBinder(DockActivity dockActivity, BasePreferenceHelper prefHelper, RecyclerClickListner clickListner,DeleteChatInterface deleteChatInterface) {
         super(R.layout.row_item_mychat_thread);
         this.dockActivity = dockActivity;
         this.prefHelper = prefHelper;
         this.imageLoader = ImageLoader.getInstance();
         this.clickListner = clickListner;
+        this.deleteChatInterface=deleteChatInterface;
     }
 
     @Override
@@ -69,6 +72,13 @@ public class MyChatThreadBinder extends RecyclerViewBinder<ChatThreadEnt> {
             @Override
             public void onClick(View view) {
                 clickListner.onClick(entity, position);
+            }
+        });
+        holder.mainFrame.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                deleteChatInterface.onClick(entity,position);
+                return false;
             }
         });
 

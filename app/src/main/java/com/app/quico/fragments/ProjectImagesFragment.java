@@ -82,6 +82,6 @@ public class ProjectImagesFragment extends BaseFragment {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
         titleBar.showBackButton();
-        titleBar.setSubHeading(getResString(R.string.project));
+        titleBar.setSubHeading(getResString(R.string.photos));
     }
 }

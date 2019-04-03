@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
 
 import com.app.quico.R;
 import com.app.quico.entities.Cms;
@@ -54,10 +53,10 @@ public class CmsFragment extends BaseFragment {
 
             serviceHelper.enqueueCall(headerWebService.Cms("3"), CmsService);
 
-        }else if(title.equals(getResString(R.string.TermsOfService))){
+        }else if(title.equals(getResString(R.string.termsOfServices))){
             serviceHelper.enqueueCall(headerWebService.Cms("2"), CmsService);
 
-        }else if(title.equals(getResString(R.string.AboutUs))){
+        }else if(title.equals(getResString(R.string.aboutUs))){
             serviceHelper.enqueueCall(headerWebService.Cms("1"), CmsService);
         }
 

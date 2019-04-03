@@ -134,7 +134,7 @@
                 android:imeOptions="actionDone"
                 android:textColor="@color/app_black_text"
                 android:textSize="@dimen/x14"
-                app:x_disableEmoji="true"
+                app:x_disableEmoji="false"
                 app:x_disableClear="true"/>
 
             <LinearLayout

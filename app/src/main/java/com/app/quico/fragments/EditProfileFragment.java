@@ -190,8 +190,8 @@ public class EditProfileFragment extends BaseFragment implements ImageSetter {
                 setEditTextFocus(edtUsername);
             }
             return false;
-        } else if (edtEmail.getText() == null || edtEmail.getText().toString().trim().isEmpty() ||
-                !Patterns.EMAIL_ADDRESS.matcher(edtEmail.getText().toString()).matches()) {
+        } else if (!prefHelper.isSocialLogin() && (edtEmail.getText() == null || edtEmail.getText().toString().trim().isEmpty() ||
+                !Patterns.EMAIL_ADDRESS.matcher(edtEmail.getText().toString()).matches())) {
             edtEmail.setError(getString(R.string.enter_valid_email));
             if (edtEmail.requestFocus()) {
                 setEditTextFocus(edtEmail);
@@ -209,7 +209,7 @@ public class EditProfileFragment extends BaseFragment implements ImageSetter {
                 setEditTextFocus(edtPhone);
             }
             return false;
-        } else if (!isPhoneNumberValid()) {
+        } else if (prefHelper.isSocialLogin() && !isPhoneNumberValid()) {
             edtPhone.setError(getDockActivity().getResources().getString(R.string.enter_valid_number_error));
             //updateHint();
             if (edtPhone.requestFocus()) {

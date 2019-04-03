@@ -30,7 +30,7 @@
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/x10"
             android:layout_marginEnd="@dimen/x10"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|left"
             android:text="Home"
             android:textColor="@color/white"
             android:textSize="@dimen/x14"

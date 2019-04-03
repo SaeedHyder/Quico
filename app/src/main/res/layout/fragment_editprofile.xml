@@ -73,6 +73,7 @@
                         android:drawableStart="@drawable/profile"
                         android:hint="@string/full_name"
                         android:imeOptions="actionNext"
+                        android:gravity="left|center_vertical"
                         android:inputType="textPersonName"
                         android:maxLength="40"
                         android:paddingTop="@dimen/x10"
@@ -103,6 +104,7 @@
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
                         android:maxLength="40"
+                        android:gravity="left|center_vertical"
                         android:paddingTop="@dimen/x10"
                         android:textColor="@color/app_black_text"
                         android:textSize="@dimen/x14" />
@@ -132,6 +134,7 @@
                         android:inputType="textPersonName"
                         android:maxLength="40"
                         android:paddingTop="@dimen/x10"
+                        android:gravity="left|center_vertical"
                         android:textColor="@color/app_black_text"
                         android:textSize="@dimen/x14" />
 
@@ -190,6 +193,7 @@
                             android:digits="0123456789"
                             android:hint="@string/phone_number"
                             android:imeOptions="actionDone"
+                            android:gravity="left|center_vertical"
                             android:inputType="numberPassword"
                             android:maxLength="16"
                             android:textColor="@color/app_black_text"

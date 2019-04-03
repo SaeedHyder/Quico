@@ -263,7 +263,7 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner, 
 
             for (String item : photoPaths) {
                 try {
-                    allAttachments.add(new AttachmentEnt(PHOTO, new Compressor(getDockActivity()).compressToBitmap(new File(item)), item));
+                    allAttachments.add(new AttachmentEnt(PHOTO, new Compressor(getDockActivity()).setQuality(60).compressToBitmap(new File(item)), item));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -788,7 +788,7 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner, 
 
         if (entity != null) {
             serviceHelper.enqueueCall(headerWebService.sendLocation(entity.getCompanyId() != null ? entity.getCompanyId() + "" : "", entity.getCompanyDetail().getUserId() != null ? entity.getCompanyDetail().getUserId() + "" : "",
-                    place.getLatLng().latitude + "", place.getLatLng().longitude + ""), SendLocationMsg);
+                    getDockActivity().getCurrentAddress(place.getLatLng().latitude,place.getLatLng().longitude),place.getLatLng().latitude + "", place.getLatLng().longitude + ""), SendLocationMsg);
         } else {
             UIHelper.showShortToastInCenter(getDockActivity(), "Reload page please....");
         }
@@ -808,7 +808,7 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner, 
     }
 
     private boolean isValidate() {
-        if (edtMessage.getText().toString() == null || edtMessage.getText().toString().equals("") || edtMessage.getText().toString().isEmpty()) {
+        if (edtMessage.getText().toString() == null || edtMessage.getText().toString().trim().equals("") || edtMessage.getText().toString().trim().isEmpty()) {
             edtMessage.setError(getString(R.string.write_something_here));
             if (edtMessage.requestFocus()) {
                 setEditTextFocus(edtMessage);

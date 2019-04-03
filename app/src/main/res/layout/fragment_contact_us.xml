@@ -39,6 +39,7 @@
                     android:hint="@string/company_name"
                     android:imeOptions="actionNext"
                     android:inputType="textPersonName"
+                    android:gravity="left|center_vertical"
                     android:paddingTop="@dimen/x10"
                     android:textColor="@color/app_black_text"
                     android:textSize="@dimen/x14" />
@@ -63,6 +64,7 @@
                     android:background="@color/transparent"
                     android:drawablePadding="@dimen/x10"
                     android:drawableStart="@drawable/profile"
+                    android:gravity="left|center_vertical"
                     android:maxLength="40"
                     android:hint="@string/name"
                     android:imeOptions="actionNext"
@@ -91,8 +93,10 @@
                     android:background="@color/transparent"
                     android:drawablePadding="@dimen/x10"
                     android:drawableStart="@drawable/email"
+                    android:gravity="left|center_vertical"
                     android:hint="@string/email_id"
                     android:imeOptions="actionNext"
+
                     android:maxLength="40"
                     android:inputType="textEmailAddress"
                     android:paddingTop="@dimen/x10"
@@ -157,6 +161,7 @@
                         android:imeOptions="actionNext"
                         android:maxLength="16"
                         android:digits="0123456789"
+                        android:gravity="left|center_vertical"
                         android:inputType="numberPassword"
                         android:textColor="@color/app_black_text"
                         android:textSize="@dimen/x14" />

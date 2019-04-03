@@ -8,7 +8,6 @@ import android.widget.Button;
 
 import com.app.quico.R;
 import com.app.quico.fragments.abstracts.BaseFragment;
-import com.app.quico.helpers.UIHelper;
 import com.app.quico.ui.views.TitleBar;
 
 import butterknife.BindView;
@@ -64,10 +63,22 @@ public class LanguageFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.btn_english:
                 prefHelper.setLanguageSelected(true);
-                getDockActivity().replaceDockableFragment(LoginFragment.newInstance(),"LoginFragment");
+
+                if (!prefHelper.isLanguageArabian()) {
+                    getDockActivity().replaceDockableFragment(LoginFragment.newInstance(), "LoginFragment");
+                } else {
+                    prefHelper.putLang(getDockActivity(), "en");
+                }
+
                 break;
             case R.id.btn_arabic:
-                UIHelper.showShortToastInDialoge(getDockActivity(),getResString(R.string.will_be_implemented));
+                if (prefHelper.isLanguageArabian()) {
+                    getDockActivity().replaceDockableFragment(LoginFragment.newInstance(), "LoginFragment");
+                } else {
+                    prefHelper.putLang(getDockActivity(), "ar");
+                }
+
+                //   UIHelper.showShortToastInDialoge(getDockActivity(),getResString(R.string.will_be_implemented));
                 break;
         }
     }

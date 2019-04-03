@@ -8,9 +8,9 @@
     <com.app.quico.ui.views.AnyTextView
         android:id="@+id/txt_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/x15"
+        android:layout_height="match_parent"
         android:alpha="0.7"
+        android:padding="@dimen/x15"
         android:textColor="@color/black"
         android:textSize="@dimen/x13"
         app:typeface="@string/font_normal" />

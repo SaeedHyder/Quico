@@ -57,6 +57,26 @@ public class DialogHelper {
         return this.dialog;
     }
 
+    public Dialog commonDialoge(View.OnClickListener yesListner,String Title,String Description) {
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        this.dialog.setContentView(R.layout.dialoge_logout);
+        Button btnYes = (Button) dialog.findViewById(R.id.btn_yes);
+        AnyTextView txtTitle = (AnyTextView) dialog.findViewById(R.id.txt_Logout);
+        AnyTextView txtDescription = (AnyTextView) dialog.findViewById(R.id.txt_logout_text);
+        btnYes.setOnClickListener(yesListner);
+        txtTitle.setText(Title);
+        txtDescription.setText(Description);
+        Button btnNo = (Button) dialog.findViewById(R.id.btn_No);
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        return this.dialog;
+    }
+
 
     /*public Dialog forgotPassDialoge(View.OnClickListener listener, String heading, String text, int image) {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

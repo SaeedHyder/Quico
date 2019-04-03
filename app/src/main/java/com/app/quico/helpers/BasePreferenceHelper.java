@@ -3,9 +3,16 @@ package com.app.quico.helpers;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
+import android.util.Log;
 
+import com.app.quico.activities.MainActivity;
 import com.app.quico.entities.UserEnt;
 import com.app.quico.retrofit.GsonFactory;
+
+import java.util.Locale;
 
 
 public class BasePreferenceHelper extends PreferenceHelper {
@@ -23,6 +30,7 @@ public class BasePreferenceHelper extends PreferenceHelper {
     protected static final String Firebase_TOKEN = "Firebasetoken";
     protected static final String CHAT_THREAD_KEY = "chat_thread_key";
     protected static final String NotificationCount = "NotificationCount";
+    protected static final String KEY_DEFAULT_LANG = "keyLanguage";
 
 
     public BasePreferenceHelper(Context c) {
@@ -115,5 +123,36 @@ public class BasePreferenceHelper extends PreferenceHelper {
 
     public void setChatThreadId(String receiverId) {
         putStringPreference(context, FILENAME, CHAT_THREAD_KEY, receiverId);
+    }
+
+
+    public void putLang(Activity activity, String lang) {
+        Log.v("lang", "|" + lang);
+        Resources resources = context.getResources();
+
+        if (lang.equals("ar")){
+            lang = "ar";}
+        else{
+            lang = "en";}
+
+        putStringPreference(context, FILENAME, KEY_DEFAULT_LANG, lang);
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        Configuration conf = resources.getConfiguration();
+        conf.locale = new Locale(lang);
+        conf.setLayoutDirection(Locale.ENGLISH);
+        resources.updateConfiguration(conf, dm);
+
+        ((MainActivity) activity).restartActivity();
+
+    }
+
+
+
+    public String getLang() {
+        return getStringPreference(context, FILENAME, KEY_DEFAULT_LANG);
+    }
+
+    public boolean isLanguageArabian() {
+        return getLang().equalsIgnoreCase("ar");
     }
 }

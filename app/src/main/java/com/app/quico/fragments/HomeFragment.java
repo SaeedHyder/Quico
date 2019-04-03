@@ -124,14 +124,14 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getMainActivity().setOnSettingActivateListener(this);
-
-
-
-
+        txtServices.setSelected(true);
+        txtAddress.setSelected(true);
         requestLocationPermission();
         HomeServiceCall();
         pullRefreshListner();
     }
+
+
 
     private void pullRefreshListner() {
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

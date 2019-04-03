@@ -116,7 +116,7 @@ public class ContactUsFragment extends BaseFragment {
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
-        titleBar.setSubHeading(getResString(R.string.BEQUICO));
+        titleBar.setSubHeading(getResString(R.string.bequico));
         titleBar.showMenuButton();
     }
 

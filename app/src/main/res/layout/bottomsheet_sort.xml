@@ -73,6 +73,7 @@
                     android:layout_height="@dimen/x45"
                     android:buttonTint="@color/app_black_text"
                     android:text="@string/nearest"
+                    android:checked="true"
                     android:textColor="@color/app_black_text"
                     android:textSize="@dimen/x15" />
 
