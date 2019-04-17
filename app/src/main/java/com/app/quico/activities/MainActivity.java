@@ -519,14 +519,15 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
 
     @Override
     public void onBackPressed() {
+    //    BaseFragment myFragment = (BaseFragment)getFragmentManager().findFragmentById("MY_FRAGMENT");
         if (updateThreadId != null) {
             updateThreadId.onBackPressedActivity();
-        } else {
-            if (loading) {
-                UIHelper.showLongToastInCenter(getApplicationContext(), R.string.message_wait);
-            } else
-                super.onBackPressed();
         }
+        if (loading) {
+            UIHelper.showLongToastInCenter(getApplicationContext(), R.string.message_wait);
+        } else
+            super.onBackPressed();
+
     }
 
     @Override
@@ -552,7 +553,6 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
     public void setImageSetter(ImageSetter imageSetter) {
         this.imageSetter = imageSetter;
     }
-
 
 
     public void setUpdateInterface(UpdateThreadId updateThreadId) {
