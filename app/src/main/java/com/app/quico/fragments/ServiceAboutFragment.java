@@ -317,6 +317,8 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
     public void onBackPressedActivity() {
         if ((companyDetail != null && companyDetail.getId()!=null && !(companyDetail.getId()+"").equals("") && !(companyDetail.getId()+"").isEmpty()) && (companyDetail.getThreadId() == null || companyDetail.getThreadId().equals("") || companyDetail.getThreadId().equals("null") || companyDetail.getThreadId().isEmpty())) {
             serviceHelper.enqueueCall(headerWebService.getCompanyDetail(companyDetail.getId() + "", prefHelper.isLanguageArabian() ? AppConstants.Arabic : AppConstants.English), CompanyDetailKey);
+        }else{
+            getDockActivity().popFragment();
         }
     }
 
@@ -326,6 +328,7 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
         switch (Tag) {
             case CompanyDetailKey:
                 companyDetail = (CompanyDetail) result;
+                getDockActivity().popFragment();
                 break;
         }
     }

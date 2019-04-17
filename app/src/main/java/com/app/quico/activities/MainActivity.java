@@ -519,14 +519,15 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
 
     @Override
     public void onBackPressed() {
-    //    BaseFragment myFragment = (BaseFragment)getFragmentManager().findFragmentById("MY_FRAGMENT");
-        if (updateThreadId != null) {
+        android.support.v4.app.Fragment currentFragment = getDockActivity().getSupportFragmentManager().findFragmentById(getDockActivity().getDockFrameLayoutId());
+        if (updateThreadId != null && currentFragment instanceof ChatFragment) {
             updateThreadId.onBackPressedActivity();
+        } else {
+            if (loading) {
+                UIHelper.showLongToastInCenter(getApplicationContext(), R.string.message_wait);
+            } else
+                super.onBackPressed();
         }
-        if (loading) {
-            UIHelper.showLongToastInCenter(getApplicationContext(), R.string.message_wait);
-        } else
-            super.onBackPressed();
 
     }
 
