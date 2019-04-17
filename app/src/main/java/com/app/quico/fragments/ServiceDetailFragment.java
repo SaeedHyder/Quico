@@ -141,7 +141,7 @@ public class ServiceDetailFragment extends BaseFragment {
         if (InternetHelper.CheckInternetConectivityand(getDockActivity())) {
             txtNoData.setVisibility(View.GONE);
             setTabLayout();
-            serviceHelper.enqueueCall(headerWebService.getCompanyDetail(companyId), CompanyDetailKey);
+            serviceHelper.enqueueCall(headerWebService.getCompanyDetail(companyId,prefHelper.isLanguageArabian()? AppConstants.Arabic:AppConstants.English), CompanyDetailKey);
         } else {
             txtNoData.setVisibility(View.VISIBLE);
         }
@@ -199,7 +199,7 @@ public class ServiceDetailFragment extends BaseFragment {
             txtRating.setText(companyDetail.getReviewCount() + " " + getResString(R.string.reviews));
             rbParlourRating.setScore(companyDetail.getAvgRate());
 
-            if (companyDetail.getIsFavorite() == 1) {
+            if (companyDetail.getIsFavorite()!=null && companyDetail.getIsFavorite() == 1) {
                 cbFav.setChecked(true);
             } else {
                 cbFav.setChecked(false);
@@ -260,7 +260,7 @@ public class ServiceDetailFragment extends BaseFragment {
         FragmentManager manager = getChildFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fragmentContainer, frag);
-        transaction.addToBackStack(manager.getBackStackEntryCount() == 0 ? KEY_FRAG_FIRST : null).commit();
+        transaction.addToBackStack(manager.getBackStackEntryCount() == 0 ? KEY_FRAG_FIRST : null).commitAllowingStateLoss();
 
 
     }
@@ -334,7 +334,7 @@ public class ServiceDetailFragment extends BaseFragment {
     }
 
     public void updateReviews() {
-        serviceHelper.enqueueCall(headerWebService.getCompanyDetail(companyId), UpdateReviews, false);
+        serviceHelper.enqueueCall(headerWebService.getCompanyDetail(companyId,prefHelper.isLanguageArabian()? AppConstants.Arabic:AppConstants.English), UpdateReviews, false);
     }
 
 

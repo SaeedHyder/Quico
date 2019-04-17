@@ -20,6 +20,7 @@ import com.app.quico.fragments.abstracts.BaseFragment;
 import com.app.quico.global.AppConstants;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
+import com.app.quico.interfaces.UpdateThreadId;
 import com.app.quico.ui.binders.OfferedServiceBinder;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.CustomRecyclerView;
@@ -31,7 +32,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class ServiceAboutFragment extends BaseFragment implements RecyclerClickListner {
+import static com.app.quico.global.WebServiceConstants.CompanyDetailKey;
+
+public class ServiceAboutFragment extends BaseFragment implements RecyclerClickListner, UpdateThreadId {
     @BindView(R.id.txt_about)
     AnyTextView txtAbout;
     Unbinder unbinder;
@@ -115,6 +118,7 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        getMainActivity().setUpdateInterface(this);
         setData();
 
     }
@@ -234,10 +238,14 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
                 }
                 break;
             case R.id.btn_chat_with_us:
-                if (companyDetail.getThreadId() != null && !companyDetail.getThreadId().equals("") && !companyDetail.getThreadId().isEmpty()) {
-                    getDockActivity().replaceDockableFragment(ChatFragment.newInstance(companyDetail.getThreadId() + ""), "ChatFragment");
+                if (companyDetail.getThreadId() != null && !companyDetail.getThreadId().equals("") && !companyDetail.getThreadId().equals("null") && !companyDetail.getThreadId().isEmpty()) {
+                    getDockActivity().addDockableFragment(ChatFragment.newInstance(companyDetail.getThreadId() + ""), "ChatFragment");
                 } else {
-                    getDockActivity().replaceDockableFragment(ChatFragment.newInstance(companyDetail.getId() + "", companyDetail), "ChatFragment");
+                    ChatFragment chatFragment = new ChatFragment();
+                    chatFragment.setData(companyDetail.getId() + "", companyDetail);
+                    chatFragment.setUpdateInterface(this);
+                    getDockActivity().addDockableFragment(chatFragment, "ChatFragment");
+                    // getDockActivity().replaceDockableFragment(ChatFragment.newInstance(companyDetail.getId() + "", companyDetail), "ChatFragment");
                 }
                 // UIHelper.showShortToastInDialoge(getDockActivity(), getResString(R.string.will_be_implemented));
 
@@ -297,4 +305,30 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
     }
 
 
+    @Override
+    public void onBackPressed(String thredId) {
+
+        if (thredId != null && !thredId.equals("") && !thredId.isEmpty()) {
+            companyDetail.setThreadId(thredId);
+        }
+    }
+
+    @Override
+    public void onBackPressedActivity() {
+        if (companyDetail != null && companyDetail.getId()!=null && companyDetail.getThreadId() != null && !companyDetail.getThreadId().equals("") && !companyDetail.getThreadId().equals("null") && !companyDetail.getThreadId().isEmpty()) {
+            serviceHelper.enqueueCall(headerWebService.getCompanyDetail(companyDetail.getId() + "", prefHelper.isLanguageArabian() ? AppConstants.Arabic : AppConstants.English), CompanyDetailKey);
+        }else{
+            getDockActivity().popFragment();
+        }
+    }
+
+    @Override
+    public void ResponseSuccess(Object result, String Tag, String message) {
+        super.ResponseSuccess(result, Tag, message);
+        switch (Tag) {
+            case CompanyDetailKey:
+                companyDetail = (CompanyDetail) result;
+                break;
+        }
+    }
 }

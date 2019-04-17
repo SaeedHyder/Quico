@@ -15,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "574862893654-lk2kkp0si2sn21dfpcnkek81258020lc.apps.googleusercontent.com",
+          "client_id": "574862893654-1ce7fdnosc9c6hqijia01f2ue48fmhp8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.app.quico",
@@ -23,7 +23,7 @@
           }
         },
         {
-          "client_id": "574862893654-nvht8lcsue76o75dmssnuau7oqdjarjh.apps.googleusercontent.com",
+          "client_id": "574862893654-urildqfbks6nfb4c5kan40r1fn7et7tt.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -33,20 +33,20 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "574862893654-nvht8lcsue76o75dmssnuau7oqdjarjh.apps.googleusercontent.com",
+              "client_id": "574862893654-urildqfbks6nfb4c5kan40r1fn7et7tt.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "574862893654-7rfb99gufa4c2o6d9qnlb6eamg2bg3qd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ingic.quico"
+              }
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

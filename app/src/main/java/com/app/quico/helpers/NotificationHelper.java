@@ -55,8 +55,7 @@ public class NotificationHelper {
                         PendingIntent.FLAG_ONE_SHOT
                 );
         AppConstants.INTENT_ID++;
-        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-                mContext);
+
         //notification sound here
         final Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
@@ -98,6 +97,7 @@ public class NotificationHelper {
 
         } else {
             Notification notification;
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext,null);
 
             notification = mBuilder
                     .setSmallIcon(icon)

@@ -14,6 +14,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.L;
+import com.squareup.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -29,7 +31,9 @@ public class BaseApplication extends MultiDexApplication {
 		Fabric.with(this, new Crashlytics());
 		initImageLoader();
 	}
-	
+
+
+
 	public void initImageLoader() {
 		
 		DisplayImageOptions options = new DisplayImageOptions.Builder()

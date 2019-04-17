@@ -37,6 +37,7 @@ import com.app.quico.interfaces.AttachmentInterface;
 import com.app.quico.interfaces.ChatAttachmentInterface;
 import com.app.quico.interfaces.LoadMoreListener;
 import com.app.quico.interfaces.RecyclerClickListner;
+import com.app.quico.interfaces.UpdateThreadId;
 import com.app.quico.ui.binders.AttachmentBinder;
 import com.app.quico.ui.binders.ChatBinder;
 import com.app.quico.ui.views.AnyTextView;
@@ -133,6 +134,7 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner, 
     int totalCount = 20;
     boolean firstTime = true;
     protected BroadcastReceiver broadcastReceiver;
+    private UpdateThreadId updateThreadId;
 
 
     public static ChatFragment newInstance(String id) {
@@ -153,6 +155,19 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner, 
         fragment.setArguments(args);
         return fragment;
     }
+
+    public void setUpdateInterface(UpdateThreadId updateThreadId) {
+        this.updateThreadId = updateThreadId;
+    }
+    public void setData(String Id, CompanyDetail detail) {
+        Bundle args = new Bundle();
+        args.putString(companyDetailKey, new Gson().toJson(detail));
+
+        threadId = "";
+        companyId = Id;
+        companyDetail=detail;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -299,6 +314,11 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner, 
                 UIHelper.showShortToastInCenter(getDockActivity(), "Location sent successfully");
 
                 ThreadMsgesEnt locationData = (ThreadMsgesEnt) result;
+                if (locationData.getThreadId() != null) {
+                    prefHelper.setChatThreadId(locationData.getThreadId() + "");
+                    entity.setId(locationData.getThreadId());
+                }
+
                 if (rvChat.getList() != null && rvChat.getList().size() > 0) {
                     rvChat.addStart(locationData);
                 } else {
@@ -317,6 +337,13 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner, 
                 allAttachments = new ArrayList<>();
 
                 ThreadMsgesEnt messageData = (ThreadMsgesEnt) result;
+
+                if (messageData.getThreadId() != null) {
+                    prefHelper.setChatThreadId(messageData.getThreadId() + "");
+                    entity.setId(messageData.getThreadId());
+                }
+
+
                 if (rvChat.getList() != null && rvChat.getList().size() > 0) {
                     rvChat.addStart(messageData);
                 } else {
@@ -414,9 +441,22 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner, 
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
-        titleBar.showBackButton();
-
+        if (threadId != null && !threadId.equals("") && !threadId.isEmpty()) {
+            titleBar.showBackButton();
+        } else {
+            titleBar.showBackButton(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if ((entity.getId() + "") != null && !(entity.getId() + "").equals("") && !(entity.getId() + "").isEmpty()) {
+                        updateThreadId.onBackPressed(entity.getId()+"");
+                    }
+                    getDockActivity().popFragment();
+                }
+            });
+        }
     }
+
+
 
     @Override
     public void onClick(Object entity, int position) {
@@ -469,7 +509,7 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner, 
 
         for (AttachmentEnt item : allAttachments) {
 
-            if (item.getAttahcment() != null && item.getType()!=null) {
+            if (item.getAttahcment() != null && item.getType() != null) {
                 files.add(MultipartBody.Part.createFormData("file[]",
                         item.getAttahcment(), RequestBody.create(MediaType.parse("multipart/form-data"),
                                 new File(item.getAttahcment()))));
@@ -788,7 +828,7 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner, 
 
         if (entity != null) {
             serviceHelper.enqueueCall(headerWebService.sendLocation(entity.getCompanyId() != null ? entity.getCompanyId() + "" : "", entity.getCompanyDetail().getUserId() != null ? entity.getCompanyDetail().getUserId() + "" : "",
-                    getDockActivity().getCurrentAddress(place.getLatLng().latitude,place.getLatLng().longitude),place.getLatLng().latitude + "", place.getLatLng().longitude + ""), SendLocationMsg);
+                    getDockActivity().getCurrentAddress(place.getLatLng().latitude, place.getLatLng().longitude), place.getLatLng().latitude + "", place.getLatLng().longitude + ""), SendLocationMsg);
         } else {
             UIHelper.showShortToastInCenter(getDockActivity(), "Reload page please....");
         }

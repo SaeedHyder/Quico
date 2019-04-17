@@ -19,10 +19,11 @@
         android:largeHeap="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/api_key" />
+            android:value="@string/api_key"/>
 
         <activity
             android:name="com.app.quico.activities.SplashActivity"
@@ -36,9 +37,9 @@
         <activity
             android:name="com.app.quico.activities.MainActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -71,6 +72,14 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/notification_icon" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="default_channel_id"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

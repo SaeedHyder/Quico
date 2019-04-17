@@ -13,10 +13,10 @@ import android.view.animation.LayoutAnimationController;
 import com.app.quico.R;
 import com.app.quico.entities.CompanyEnt;
 import com.app.quico.fragments.abstracts.BaseFragment;
+import com.app.quico.global.AppConstants;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.binders.FavoritesBinder;
-import com.app.quico.ui.binders.ServiceListingBinder;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.CustomRecyclerView;
 import com.app.quico.ui.views.TitleBar;
@@ -27,8 +27,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.app.quico.global.WebServiceConstants.CompanyDetailKey;
-import static com.app.quico.global.WebServiceConstants.GetCompanies;
 import static com.app.quico.global.WebServiceConstants.GetFavorites;
 
 public class FavoriteFragment extends BaseFragment implements RecyclerClickListner {
@@ -65,7 +63,7 @@ public class FavoriteFragment extends BaseFragment implements RecyclerClickListn
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        serviceHelper.enqueueCall(headerWebService.getFavorites(), GetFavorites);
+        serviceHelper.enqueueCall(headerWebService.getFavorites(prefHelper.isLanguageArabian()? AppConstants.Arabic:AppConstants.English), GetFavorites);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             LayoutAnimationController anim = AnimationUtils.loadLayoutAnimation(getDockActivity(), R.anim.layout_animation_from_right);
             rvFavorites.setLayoutAnimation(anim);
@@ -75,9 +73,9 @@ public class FavoriteFragment extends BaseFragment implements RecyclerClickListn
     @Override
     public void ResponseSuccess(Object result, String Tag, String message) {
         super.ResponseSuccess(result, Tag, message);
-        switch (Tag){
+        switch (Tag) {
             case GetFavorites:
-                ArrayList<CompanyEnt> entity=(ArrayList<CompanyEnt>) result;
+                ArrayList<CompanyEnt> entity = (ArrayList<CompanyEnt>) result;
                 setData(entity);
                 break;
         }
@@ -86,14 +84,14 @@ public class FavoriteFragment extends BaseFragment implements RecyclerClickListn
 
     private void setData(ArrayList<CompanyEnt> entity) {
 
-        if(entity!=null && entity.size()>0) {
+        if (entity != null && entity.size() > 0) {
             txtNoData.setVisibility(View.GONE);
             rvFavorites.setVisibility(View.VISIBLE);
 
             rvFavorites.BindRecyclerView(new FavoritesBinder(getDockActivity(), prefHelper, this), entity,
                     new LinearLayoutManager(getDockActivity(), LinearLayoutManager.VERTICAL, false)
                     , new DefaultItemAnimator());
-        }else{
+        } else {
             txtNoData.setVisibility(View.VISIBLE);
             rvFavorites.setVisibility(View.GONE);
         }
@@ -109,10 +107,13 @@ public class FavoriteFragment extends BaseFragment implements RecyclerClickListn
     }
 
 
-
     @Override
     public void onClick(Object entity, int position) {
-        CompanyEnt data=(CompanyEnt)entity;
-        getDockActivity().replaceDockableFragment(ServiceDetailFragment.newInstance(data.getId()+""), "ServiceDetailFragment");
+        CompanyEnt data = (CompanyEnt) entity;
+        if (data.getStatus() != 0) {
+            getDockActivity().replaceDockableFragment(ServiceDetailFragment.newInstance(data.getId() + ""), "ServiceDetailFragment");
+        }else{
+            UIHelper.showShortToastInDialoge(getDockActivity(),getResString(R.string.compnay_is_inactive));
+        }
     }
 }

@@ -153,7 +153,7 @@ public interface WebService {
     Call<ResponseWrapper<BatchCount>> bacthCount();
 
     @GET("services")
-    Call<ResponseWrapper<ArrayList<ServicesEnt>>> getServices();
+    Call<ResponseWrapper<ArrayList<ServicesEnt>>> getServices(@Query("locale") String locale);
 
 
     @Multipart
@@ -178,7 +178,8 @@ public interface WebService {
 
     @GET("companies/{id}")
     Call<ResponseWrapper<CompanyDetail>> getCompanyDetail(
-            @Path("id") String id
+            @Path("id") String id,
+            @Query("locale") String locale
     );
 
     @FormUrlEncoded
@@ -198,7 +199,7 @@ public interface WebService {
     Call<ResponseWrapper<ArrayList<CitiesEnt>>> getCities();
 
     @GET("get-favorites")
-    Call<ResponseWrapper<ArrayList<CompanyEnt>>> getFavorites();
+    Call<ResponseWrapper<ArrayList<CompanyEnt>>> getFavorites(@Query("locale") String locale);
 
 
 //companies
@@ -210,12 +211,47 @@ public interface WebService {
             @Query("is_rate") Integer is_rate,
             @Query("is_review") Integer is_review,
             @Query("is_near") Integer is_near
+    );
+    @GET("companies")
+    Call<ResponseWrapper<ArrayList<CompanyEnt>>> getCompanies(
+            @Query("service_id") String service_id,
+            @Query("is_feature") Integer is_feature,
+            @Query("is_rate") Integer is_rate,
+            @Query("is_review") Integer is_review,
+            @Query("is_near") Integer is_near,
+            @Query("locale") String locale
+    );
 
+
+
+    @GET("companies")
+    Call<ResponseWrapper<ArrayList<CompanyEnt>>> getCompanies(
+            @Query("service_id") String service_id,
+            @Query("latitude") String latitude,
+            @Query("longitude") String longitude,
+            @Query("is_feature") Integer is_feature,
+            @Query("is_rate") Integer is_rate,
+            @Query("is_review") Integer is_review,
+            @Query("is_near") Integer is_near
     );
 
     @GET("companies")
     Call<ResponseWrapper<ArrayList<CompanyEnt>>> getCompanies(
             @Query("service_id") String service_id,
+            @Query("latitude") String latitude,
+            @Query("longitude") String longitude,
+            @Query("is_feature") Integer is_feature,
+            @Query("is_rate") Integer is_rate,
+            @Query("is_review") Integer is_review,
+            @Query("is_near") Integer is_near,
+            @Query("locale") String locale
+    );
+
+    @GET("companies")
+    Call<ResponseWrapper<ArrayList<CompanyEnt>>> getCompanies(
+            @Query("service_id") String service_id,
+            @Query("city_id") String city_id,
+            @Query("area_id") String area_id,
             @Query("latitude") String latitude,
             @Query("longitude") String longitude,
             @Query("is_feature") Integer is_feature,
@@ -234,12 +270,13 @@ public interface WebService {
             @Query("is_feature") Integer is_feature,
             @Query("is_rate") Integer is_rate,
             @Query("is_review") Integer is_review,
-            @Query("is_near") Integer is_near
+            @Query("is_near") Integer is_near,
+            @Query("locale") String locale
     );
 
 
     @GET("get-all-services")
-    Call<ResponseWrapper<ArrayList<AllServicesEnt>>> getAllServices();
+    Call<ResponseWrapper<ArrayList<AllServicesEnt>>> getAllServices(@Query("locale") String locale);
 
     @GET("chats")
     Call<ResponseWrapper<ArrayList<ChatThreadEnt>>> getChatThreads(

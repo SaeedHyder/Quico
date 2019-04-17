@@ -19,8 +19,12 @@ import org.json.JSONObject;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = MyFirebaseMessagingService.class.getSimpleName();
-    private WebService webservice;
     private BasePreferenceHelper preferenceHelper;
+
+    @Override
+    public void onNewToken(String s) {
+        super.onNewToken(s);
+    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {

@@ -19,6 +19,7 @@ import com.app.quico.R;
 import com.app.quico.entities.AllServicesEnt;
 import com.app.quico.entities.ServicesEnt;
 import com.app.quico.fragments.abstracts.BaseFragment;
+import com.app.quico.global.AppConstants;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.interfaces.AreaInterface;
 import com.app.quico.interfaces.RecyclerClickListner;
@@ -102,7 +103,7 @@ public class SelectServicesFragment extends BaseFragment implements RecyclerClic
             selectedServicesArray = Arrays.asList(selectedServices.split("\\s*,\\s*"));
         }
 
-        serviceHelper.enqueueCall(headerWebService.getAllServices(), Services);
+        serviceHelper.enqueueCall(headerWebService.getAllServices(prefHelper.isLanguageArabian()? AppConstants.Arabic:AppConstants.English), Services);
 
         searchListner();
     }

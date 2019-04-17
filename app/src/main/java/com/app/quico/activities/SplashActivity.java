@@ -40,6 +40,8 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
     }
 
     @Override
@@ -81,6 +83,9 @@ public class SplashActivity extends AppCompatActivity {
     private void showMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if (getIntent().getExtras() != null) {
+            i.putExtras(getIntent().getExtras());
+        }
         startActivity(i);
         finish();
     }

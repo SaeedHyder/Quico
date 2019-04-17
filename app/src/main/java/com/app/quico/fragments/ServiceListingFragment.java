@@ -138,11 +138,11 @@ public class ServiceListingFragment extends BaseFragment implements RecyclerClic
         super.onViewCreated(view, savedInstanceState);
 
         if (serviceId != null && !serviceId.equals("") && cityId != null && !cityId.equals("")) {
-            serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 0, 0, 0), GetCompanies);
+            serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 0, 0, 0,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
         } else if (serviceId != null && !serviceId.equals("") && latitude != null && !latitude.equals("")) {
-            serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 0, 0, 0, 1), GetCompanies);
+            serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 0, 0, 0, 1,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
         }  else if (serviceId != null && !serviceId.equals("")) {
-            serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 0, 0, 0, 0), GetCompanies);
+            serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 0, 0, 0, 0,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
         }
         searchListner();
 
@@ -253,7 +253,13 @@ public class ServiceListingFragment extends BaseFragment implements RecyclerClic
     public void onClick(Object entity, int position) {
         CompanyEnt data = (CompanyEnt) entity;
         UIHelper.hideSoftKeyboard(getDockActivity(),edtSearch);
-        getDockActivity().addDockableFragment(ServiceDetailFragment.newInstance(data.getId() + ""), "ServiceDetailFragment");
+
+        if (data.getStatus() != 0) {
+            getDockActivity().addDockableFragment(ServiceDetailFragment.newInstance(data.getId() + ""), "ServiceDetailFragment");
+        }else{
+            UIHelper.showShortToastInDialoge(getDockActivity(),getResString(R.string.compnay_is_inactive));
+        }
+
     }
 
 
@@ -278,38 +284,38 @@ public class ServiceListingFragment extends BaseFragment implements RecyclerClic
         selectedSortType=sortString;
         if (sortString.equals(AppConstants.FeaturedSort)) {
             if (serviceId != null && !serviceId.equals("") && cityId != null && !cityId.equals("")) {
-                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 1, 0, 0, 0), GetCompanies);
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 1, 0, 0, 0,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
             } else if (serviceId != null && !serviceId.equals("") && latitude != null && !latitude.equals("")) {
-                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 1, 0, 0, 0), GetCompanies);
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 1, 0, 0, 0,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
             } else {
-                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 1, 0, 0, 0), GetCompanies);
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 1, 0, 0, 0,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
             }
 
         } else if (sortString.equals(AppConstants.NearestSort)) {
             if (serviceId != null && !serviceId.equals("") && cityId != null && !cityId.equals("")) {
-                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 0, 0, 1), GetCompanies);
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 0, 0, 1,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
             } else if (serviceId != null && !serviceId.equals("") && latitude != null && !latitude.equals("")) {
-                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 0, 0, 0, 1), GetCompanies);
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 0, 0, 0, 1,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
             } else {
-                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 0, 0, 0, 1), GetCompanies);
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 0, 0, 0, 1,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
             }
 
         } else if (sortString.equals(AppConstants.RatingSort)) {
             if (serviceId != null && !serviceId.equals("") && cityId != null && !cityId.equals("")) {
-                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 1, 0, 0), GetCompanies);
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 1, 0, 0,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
             } else if (serviceId != null && !serviceId.equals("") && latitude != null && !latitude.equals("")) {
-                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 0, 1, 0, 0), GetCompanies);
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 0, 1, 0, 0,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
             } else {
-                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 0, 1, 0, 0), GetCompanies);
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 0, 1, 0, 0,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
             }
 
         } else if (sortString.equals(AppConstants.ReviewsSort)) {
             if (serviceId != null && !serviceId.equals("") && cityId != null && !cityId.equals("")) {
-                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 0, 1, 0), GetCompanies);
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, cityId, areaId, latitude, longitude, 0, 0, 1, 0,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
             } else if (serviceId != null && !serviceId.equals("") && latitude != null && !latitude.equals("")) {
-                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 0, 0, 1, 0), GetCompanies);
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, latitude, longitude, 0, 0, 1, 0,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
             } else {
-                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 0, 0, 1, 0), GetCompanies);
+                serviceHelper.enqueueCall(headerWebService.getCompanies(serviceId, 0, 0, 1, 0,prefHelper.isLanguageArabian()?AppConstants.Arabic:AppConstants.English), GetCompanies);
             }
 
         }

@@ -184,7 +184,7 @@
             android:layout_height="@dimen/x150"
             android:imeOptions="actionDone"
             android:scrollbars="vertical"
-            android:gravity="top"
+            android:gravity="top|left"
             android:layout_marginTop="@dimen/x20"
             android:padding="@dimen/x15"
             android:textColor="@color/app_black_text"

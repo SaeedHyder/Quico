@@ -59,6 +59,7 @@ import com.app.quico.helpers.ScreenHelper;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.interfaces.ImageSetter;
 import com.app.quico.interfaces.OnSettingActivateListener;
+import com.app.quico.interfaces.UpdateThreadId;
 import com.app.quico.residemenu.ResideMenu;
 import com.app.quico.ui.views.TitleBar;
 import com.facebook.AccessToken;
@@ -139,6 +140,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
     private OnSettingActivateListener settingActivateListener;
     protected BroadcastReceiver broadcastReceiver;
     private boolean isFirstTime = true;
+    private UpdateThreadId updateThreadId;
 
 
     @Override
@@ -318,12 +320,42 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
         }
 
         deepLinkIntent();
+        pushNotifications();
+    }
 
+    private void pushNotifications() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            String Type = bundle.getString("actionType");
-            String Title = bundle.getString("title");
-            String id = bundle.getString("redId");
+            String Type = "";
+            String Title = "";
+            String id = "";
+            String message = "";
+
+
+            if (bundle.getString("actionType") != null && !bundle.getString("actionType").equals("") && !bundle.getString("actionType").isEmpty()) {
+                Type = bundle.getString("actionType");
+            } else {
+                Type = bundle.getString("action_type");
+            }
+
+            if (bundle.getString("title") != null && !bundle.getString("title").equals("") && !bundle.getString("title").isEmpty()) {
+                Title = bundle.getString("title");
+            } else {
+                Title = bundle.getString("title");
+            }
+
+            if (bundle.getString("redId") != null && !bundle.getString("redId").equals("") && !bundle.getString("redId").isEmpty()) {
+                id = bundle.getString("redId");
+            } else {
+                id = bundle.getString("ref_id");
+            }
+
+            if (bundle.getString("message") != null && !bundle.getString("message").equals("") && !bundle.getString("message").isEmpty()) {
+                message = bundle.getString("message");
+            } else {
+                message = bundle.getString("body");
+            }
+
 
             if (prefHelper.isLogin()) {
                 if (Type != null && Type.equals(companyPush)) {
@@ -340,17 +372,19 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
         }
     }
 
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
         deepLinkIntent();
+        pushNotifications();
     }
 
     private void deepLinkIntent() {
         Intent intent = getIntent();
         if (intent.getAction() != null && intent.getData() != null) {
-            if(prefHelper.isLogin()) {
+            if (prefHelper.isLogin()) {
                 Uri data = intent.getData();
                 replaceDockableFragment(ServiceDetailFragment.newInstance(data.getQueryParameter("id"), false), "ServiceDetailFragment");
             }
@@ -485,12 +519,14 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
 
     @Override
     public void onBackPressed() {
-        if (loading) {
-            UIHelper.showLongToastInCenter(getApplicationContext(),
-                    R.string.message_wait);
-        } else
-            super.onBackPressed();
-
+        if (updateThreadId != null) {
+            updateThreadId.onBackPressedActivity();
+        } else {
+            if (loading) {
+                UIHelper.showLongToastInCenter(getApplicationContext(), R.string.message_wait);
+            } else
+                super.onBackPressed();
+        }
     }
 
     @Override
@@ -515,6 +551,12 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
 
     public void setImageSetter(ImageSetter imageSetter) {
         this.imageSetter = imageSetter;
+    }
+
+
+
+    public void setUpdateInterface(UpdateThreadId updateThreadId) {
+        this.updateThreadId = updateThreadId;
     }
 
     @Override
@@ -930,11 +972,19 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
+
     public void restartActivity() {
         Intent intent = getIntent();
+        if (getIntent().getExtras() != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("actionType", "");
+            bundle.putString("action_type", "");
+            bundle.putString("title", "");
+            intent.putExtras(bundle);
+        }
+
         finish();
         startActivity(intent);
     }
-
 
 }

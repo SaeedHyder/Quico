@@ -12,8 +12,6 @@ import com.app.quico.helpers.BasePreferenceHelper;
 import com.app.quico.interfaces.RecyclerClickListner;
 import com.app.quico.ui.viewbinders.abstracts.RecyclerViewBinder;
 import com.app.quico.ui.views.AnyTextView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 
@@ -27,6 +25,7 @@ public class ServiesBinder extends RecyclerViewBinder<ServicesEnt> {
     private BasePreferenceHelper prefHelper;
     private ImageLoader imageLoader;
     private RecyclerClickListner clickListner;
+
 
     public ServiesBinder(DockActivity dockActivity, BasePreferenceHelper prefHelper, RecyclerClickListner clickListner) {
         super(R.layout.row_item_services);
@@ -48,11 +47,14 @@ public class ServiesBinder extends RecyclerViewBinder<ServicesEnt> {
 
 
         if (entity.getIconUrl() != null) {
-           Picasso.get().load(entity.getIconUrl()).fit().placeholder(R.drawable.placeholder_thumb).into(holder.serviceImage);
-          //  Glide.with(dockActivity).load(entity.getIconUrl()).placeholder(R.drawable.placeholder_thumb).into(holder.serviceImage);
-            // imageLoader.displayImage(entity.getIconUrl(),holder.serviceImage);
-        }
 
+            Picasso.get()
+                    .load(entity.getIconUrl())
+                    .placeholder(R.drawable.placeholder_thumb)
+                    .into(holder.serviceImage);
+
+
+        }
 
 
         holder.mainFrame.setOnClickListener(new View.OnClickListener() {

@@ -82,6 +82,13 @@ public class TitleBar extends RelativeLayout {
 
 	}
 
+	public void showBackButton(OnClickListener listener) {
+		btnLeft.setVisibility(View.VISIBLE);
+		btnLeft.setImageResource(R.drawable.backarrow);
+		btnLeft.setOnClickListener(listener);
+
+	}
+
 	public void hideBackButton() {
 		btnLeft.setVisibility(View.GONE);
 	}

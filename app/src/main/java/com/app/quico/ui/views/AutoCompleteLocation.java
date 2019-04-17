@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.app.quico.R;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.ui.adapters.AutoCompleteAdapter;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -69,8 +68,9 @@ public class AutoCompleteLocation extends android.support.v7.widget.AppCompatAut
 
         mCloseIcon = context.getResources().getDrawable(R.drawable.ic_close);
         location = context.getResources().getDrawable(R.drawable.location);
-        mGoogleApiClient = new GoogleApiClient.Builder(context).addApi(Places.GEO_DATA_API)
-                .addApi(AppIndex.API)
+        mGoogleApiClient = new GoogleApiClient.Builder(context)
+                .addApi(Places.GEO_DATA_API)
+             //   .addApi(AppIndex.API)
                 .build();
     }
 

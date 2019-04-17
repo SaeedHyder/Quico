@@ -65,6 +65,9 @@ public class AppConstants {
  //   public static String PDF= "pdf";
     public static String PHOTO= "photo";
 
+    public static String English="en";
+    public static String Arabic="ar";
+
 
 
 

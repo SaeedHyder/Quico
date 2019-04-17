@@ -3,8 +3,6 @@ package com.app.quico.fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,16 +19,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.app.quico.R;
-import com.app.quico.activities.DockActivity;
+import com.app.quico.activities.MainActivity;
 import com.app.quico.entities.BatchCount;
 import com.app.quico.entities.LocationEnt;
 import com.app.quico.entities.LocationModel;
 import com.app.quico.entities.ServicesEnt;
 import com.app.quico.fragments.abstracts.BaseFragment;
+import com.app.quico.global.AppConstants;
 import com.app.quico.helpers.InternetHelper;
-import com.app.quico.helpers.ShareIntentHelper;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.interfaces.AreaInterface;
 import com.app.quico.interfaces.OnSettingActivateListener;
@@ -39,7 +38,13 @@ import com.app.quico.ui.binders.ServiesBinder;
 import com.app.quico.ui.views.AnyTextView;
 import com.app.quico.ui.views.CustomRecyclerView;
 import com.app.quico.ui.views.TitleBar;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -50,11 +55,6 @@ import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,9 +66,11 @@ import butterknife.Unbinder;
 
 import static com.app.quico.global.WebServiceConstants.BatchCountService;
 import static com.app.quico.global.WebServiceConstants.Services;
+import static com.google.android.gms.location.LocationServices.FusedLocationApi;
 
 
-public class HomeFragment extends BaseFragment implements RecyclerClickListner, AreaInterface, OnSettingActivateListener {
+public class HomeFragment extends BaseFragment implements RecyclerClickListner, AreaInterface, OnSettingActivateListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
     @BindView(R.id.btnMenu)
@@ -101,6 +103,14 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
     private String cityId;
     private String areaId;
     private String serviceId;
+    private int i = 0;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
+    private LocationListener locationListener;
+    private FusedLocationProviderClient fusedLocationProviderApi;
+    private GoogleApiClient googleApiClient;
+    private long LOCATION_INTERVAL = 10 * 1000;
+
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -109,6 +119,7 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setLocation();
     }
 
     @Nullable
@@ -131,7 +142,48 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
         pullRefreshListner();
     }
 
+    private void setLocation() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+  //      locationRequest.setInterval(LOCATION_INTERVAL);
+   //     locationRequest.setFastestInterval(LOCATION_INTERVAL);
+        fusedLocationProviderApi = LocationServices.getFusedLocationProviderClient(getDockActivity());
+        googleApiClient = new GoogleApiClient.Builder(getDockActivity())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        if (googleApiClient != null) {
+            googleApiClient.connect();
+        }
+    }
 
+
+    @Override
+    public void onConnected(Bundle arg0) {
+        requestLocationPermission();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    public void onStart() {
+        super.onStart();
+        if(googleApiClient!=null)
+        googleApiClient.connect();
+    }
+    public void onStop() {
+        super.onStop();
+        if(googleApiClient!=null)
+        googleApiClient.disconnect();
+    }
 
     private void pullRefreshListner() {
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -146,7 +198,7 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
     private void HomeServiceCall() {
         if (InternetHelper.CheckInternetConectivityand(getDockActivity())) {
             txtNoData.setVisibility(View.GONE);
-            serviceHelper.enqueueCall(headerWebService.getServices(), Services);
+            serviceHelper.enqueueCall(headerWebService.getServices(prefHelper.isLanguageArabian()? AppConstants.Arabic:AppConstants.English), Services);
             serviceHelper.enqueueCall(headerWebService.bacthCount(), BatchCountService, false);
         } else {
             txtNoData.setVisibility(View.VISIBLE);
@@ -172,6 +224,7 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
                 getDockActivity().replaceDockableFragment(NotificationsFragment.newInstance(), "NotificationsFragment");
                 break;
             case R.id.btn_current_location:
+
                 requestLocationPermission();
                 break;
             case R.id.btn_find_quico:
@@ -205,6 +258,7 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
 
                         if (report.areAllPermissionsGranted()) {
                             getLastLocationNewMethod();
+
                         }
 
                         // check for permanent denial of any permission
@@ -277,9 +331,9 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
     @Override
     public void onClick(Object entity, int position) {
         ServicesEnt data = (ServicesEnt) entity;
-        if(locationLat!=null && !locationLat.equals(0.0) && locationLng!=null) {
-            getDockActivity().addDockableFragment(ServiceListingFragment.newInstance(data.getId() + "", data.getName(),locationLat+"",locationLng+""), "ServiceListingFragment");
-        }else{
+        if (locationLat != null && !locationLat.equals(0.0) && locationLng != null) {
+            getDockActivity().addDockableFragment(ServiceListingFragment.newInstance(data.getId() + "", data.getName(), locationLat + "", locationLng + ""), "ServiceListingFragment");
+        } else {
             getDockActivity().addDockableFragment(ServiceListingFragment.newInstance(data.getId() + "", data.getName()), "ServiceListingFragment");
         }
     }
@@ -294,27 +348,46 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
     private void getLastLocationNewMethod() {
 
         if (getMainActivity() != null && getMainActivity().statusCheck()) {
-            FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getDockActivity());
-            mFusedLocationClient.getLastLocation()
+            getDockActivity().onLoadingStarted();
+
+            fusedLocationProviderApi.getLastLocation()
                     .addOnSuccessListener(new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
                             if (location != null) {
+                                getDockActivity().onLoadingFinished();
                                 txtAddress.setText(getMainActivity().getCurrentAddress(location.getLatitude(), location.getLongitude()));
                                 locationLat = location.getLatitude();
                                 locationLng = location.getLongitude();
                                 cityId = "";
                                 areaId = "";
 
-
                             } else {
-                                UIHelper.showShortToastInDialoge(getDockActivity(), "Gps is not working, try again...");
+                                LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest,  new LocationListener() {
+                                    @Override
+                                    public void onLocationChanged(Location location) {
+                                        if (location != null) {
+                                            getDockActivity().onLoadingFinished();
+                                            txtAddress.setText(getMainActivity().getCurrentAddress(location.getLatitude(), location.getLongitude()));
+                                            locationLat = location.getLatitude();
+                                            locationLng = location.getLongitude();
+                                            cityId = "";
+                                            areaId = "";
+                                        }else{
+                                            getDockActivity().onLoadingFinished();
+                                            UIHelper.showShortToastInDialoge(getDockActivity(), "Gps is not working, try again...");
+                                        }
+                                    }
+                                });
+
                             }
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            getDockActivity().onLoadingFinished();
                             Log.d("MapDemoActivity", "Error trying to get last GPS location");
                             UIHelper.showShortToastInDialoge(getDockActivity(), "Error trying to get last GPS location");
                             e.printStackTrace();
@@ -370,6 +443,7 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
             return true;
         }
     }
+
 
 }
 
