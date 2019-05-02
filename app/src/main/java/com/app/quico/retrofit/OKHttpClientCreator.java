@@ -76,6 +76,7 @@ public class OKHttpClientCreator {
 
                         Request request = original.newBuilder()
                                 .addHeader("Accept-Encoding", "identity")
+                                .addHeader("Accept", "application/json")
                                 .addHeader("Authorization",AppConstants.HeaderToken)
                                 .method(original.method(), original.body())
                                 .build();

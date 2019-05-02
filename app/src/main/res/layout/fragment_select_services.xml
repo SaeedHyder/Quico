@@ -27,7 +27,7 @@
                 android:background="@color/transparent"
                 android:drawablePadding="@dimen/x10"
                 android:drawableStart="@drawable/search"
-                android:gravity="center_vertical"
+                android:gravity="center_vertical|left"
                 android:hint="@string/search"
                 android:imeOptions="actionSearch"
                 android:inputType="textPersonName"

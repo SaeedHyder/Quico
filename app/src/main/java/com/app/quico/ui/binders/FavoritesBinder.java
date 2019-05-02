@@ -48,8 +48,14 @@ public class FavoritesBinder extends RecyclerViewBinder<CompanyEnt> {
         if (entity != null) {
 
             holder.txtName.setText(entity.getName() + "");
-            holder.txtRating.setText(entity.getReviewCount() + " " + dockActivity.getResources().getString(R.string.reviews));
             holder.rbParlourRating.setScore(entity.getAvgRate());
+
+            if (entity.getReviewCount() != 0) {
+                holder.txtRating.setVisibility(View.VISIBLE);
+                holder.txtRating.setText(entity.getReviewCount() + " " + dockActivity.getResources().getString(R.string.reviews));
+            }else{
+                holder.txtRating.setVisibility(View.GONE);
+            }
 
             holder.mainFrame.setOnClickListener(new View.OnClickListener() {
                 @Override

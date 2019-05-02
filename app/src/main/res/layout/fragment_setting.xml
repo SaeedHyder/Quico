@@ -60,11 +60,11 @@
                 android:gravity="end">
 
                 <com.app.quico.ui.views.AnyTextView
-                    android:id="@+id/btn_english"
+                    android:id="@+id/btn_arabic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/english"
-                    android:textColor="@color/app_green"
+                    android:text="@string/arabic"
+                    android:textColor="@color/app_gray_text"
                     android:textSize="@dimen/x13"
                     app:typeface="@string/font_normal" />
 
@@ -75,14 +75,17 @@
                     android:layout_marginStart="@dimen/x5"
                     android:background="@color/view_line_color" />
 
+
                 <com.app.quico.ui.views.AnyTextView
-                    android:id="@+id/btn_arabic"
+                    android:id="@+id/btn_english"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/arabic"
-                    android:textColor="@color/app_gray_text"
+                    android:text="@string/english"
+                    android:textColor="@color/app_green"
                     android:textSize="@dimen/x13"
                     app:typeface="@string/font_normal" />
+
+
 
             </LinearLayout>
 

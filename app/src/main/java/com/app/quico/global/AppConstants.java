@@ -39,7 +39,7 @@ public class AppConstants {
 
     public static String Facebook = "Facebook";
     public static String Instagram = "Instagram";
-    public static String GooglePlus = "Google";
+    public static String GooglePlus = "Youtube";
     public static String Twitter = "Twitter";
     public static String Linkedin = "Linkedin";
 
@@ -67,6 +67,8 @@ public class AppConstants {
 
     public static String English="en";
     public static String Arabic="ar";
+
+    public static int CODE_401=401;
 
 
 

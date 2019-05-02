@@ -151,7 +151,7 @@ public class PhoneVerificationFragment extends BaseFragment {
     }
 
     public void counter() {
-        timer = new CountDownTimer(225000, 1000) {
+        timer = new CountDownTimer(120000, 1000) {
 
             public void onTick(long millisUntilFinished) {
 

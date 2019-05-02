@@ -196,7 +196,12 @@ public class ServiceDetailFragment extends BaseFragment {
             Picasso.get().load(companyDetail.getImageUrl()).placeholder(R.drawable.placeholder_thumb).into(image);
             imageLoader.displayImage(companyDetail.getIconUrl(), logo);
             txtName.setText(companyDetail.getName());
-            txtRating.setText(companyDetail.getReviewCount() + " " + getResString(R.string.reviews));
+            if (companyDetail.getReviewCount() != 0) {
+                txtRating.setVisibility(View.VISIBLE);
+                txtRating.setText(companyDetail.getReviewCount() + " " + getResString(R.string.reviews));
+            }else{
+                txtRating.setVisibility(View.GONE);
+            }
             rbParlourRating.setScore(companyDetail.getAvgRate());
 
             if (companyDetail.getIsFavorite()!=null && companyDetail.getIsFavorite() == 1) {
@@ -214,7 +219,7 @@ public class ServiceDetailFragment extends BaseFragment {
             tabLayout.removeAllTabs();
             tabLayout.addTab(tabLayout.newTab().setText(getResString(R.string.about)));
             tabLayout.addTab(tabLayout.newTab().setText(getResString(R.string.photos)));
-            tabLayout.addTab(tabLayout.newTab().setText(getResString(R.string.reviews)));
+            tabLayout.addTab(tabLayout.newTab().setText(getResString(R.string.reviews_1)));
         }
     }
 

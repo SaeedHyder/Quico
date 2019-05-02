@@ -3,7 +3,6 @@ package com.app.quico.ui.binders;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.app.quico.R;
 import com.app.quico.activities.DockActivity;
@@ -53,7 +52,12 @@ public class ServiceListingBinder extends RecyclerViewBinder<CompanyEnt> {
                 holder.featured.setVisibility(View.GONE);
             }
             holder.txtName.setText(entity.getName() + "");
-            holder.txtRating.setText(entity.getReviewCount() + " " + dockActivity.getResources().getString(R.string.reviews));
+            if (entity.getReviewCount() != 0) {
+                holder.txtRating.setVisibility(View.VISIBLE);
+                holder.txtRating.setText(entity.getReviewCount() + " " + dockActivity.getResources().getString(R.string.reviews));
+            }else{
+                holder.txtRating.setVisibility(View.GONE);
+            }
             holder.rbParlourRating.setScore(entity.getAvgRate());
 
             holder.mainFrame.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +67,7 @@ public class ServiceListingBinder extends RecyclerViewBinder<CompanyEnt> {
                 }
             });
 
-            if(entity.getIconUrl()!=null) {
+            if (entity.getIconUrl() != null) {
                 Picasso.get().load(entity.getIconUrl()).placeholder(R.drawable.placeholder_thumb).into(holder.logo);
             }
         }

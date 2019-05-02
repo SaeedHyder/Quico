@@ -138,7 +138,9 @@ public class BasePreferenceHelper extends PreferenceHelper {
         putStringPreference(context, FILENAME, KEY_DEFAULT_LANG, lang);
         DisplayMetrics dm = resources.getDisplayMetrics();
         Configuration conf = resources.getConfiguration();
-        conf.locale = new Locale(lang);
+        Locale locale=new Locale(lang);
+       // conf.setLayoutDirection(locale);
+        conf.locale = locale;
         conf.setLayoutDirection(Locale.ENGLISH);
         resources.updateConfiguration(conf, dm);
 

@@ -196,7 +196,9 @@ public interface WebService {
             @Field("like") String like);
 
     @GET("cities")
-    Call<ResponseWrapper<ArrayList<CitiesEnt>>> getCities();
+    Call<ResponseWrapper<ArrayList<CitiesEnt>>> getCities(
+            @Query("lang") String lang
+    );
 
     @GET("get-favorites")
     Call<ResponseWrapper<ArrayList<CompanyEnt>>> getFavorites(@Query("locale") String locale);

@@ -18,6 +18,7 @@ import com.app.quico.R;
 import com.app.quico.entities.CitiesEnt;
 import com.app.quico.entities.LocationEnt;
 import com.app.quico.fragments.abstracts.BaseFragment;
+import com.app.quico.global.AppConstants;
 import com.app.quico.helpers.UIHelper;
 import com.app.quico.interfaces.AreaInterface;
 import com.app.quico.ui.adapters.ArrayListExpandableAdapter;
@@ -93,7 +94,7 @@ public class SelectAreaFragment extends BaseFragment implements AreaInterface {
 
 
 
-        serviceHelper.enqueueCall(headerWebService.getCities(), Cities);
+        serviceHelper.enqueueCall(headerWebService.getCities(prefHelper.isLanguageArabian()? AppConstants.Arabic:AppConstants.English), Cities);
 
         searchListner();
     }
@@ -272,7 +273,7 @@ public class SelectAreaFragment extends BaseFragment implements AreaInterface {
 
     @Override
     public void selectArea(Object entity, int position) {
-        LocationEnt data = (LocationEnt) entity;
+      //  LocationEnt data = (LocationEnt) entity;
         areaInterface.selectArea(entity, position);
         getDockActivity().popFragment();
     }

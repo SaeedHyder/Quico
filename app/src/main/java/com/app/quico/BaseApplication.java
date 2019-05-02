@@ -28,7 +28,7 @@ public class BaseApplication extends MultiDexApplication {
 		MultiDex.install(this);
 		FacebookSdk.sdkInitialize(this);
 		AppEventsLogger.activateApp(this);
-		Fabric.with(this, new Crashlytics());
+		//Fabric.with(this, new Crashlytics());
 		initImageLoader();
 	}
 

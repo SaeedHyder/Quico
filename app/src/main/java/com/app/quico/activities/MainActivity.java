@@ -166,6 +166,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
 
         setCurrentLocale();
 
+
         titleBar.setMenuButtonListener(new OnClickListener() {
 
             @Override
@@ -209,12 +210,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
             }
         });
 
-        //  if (savedInstanceState == null)
         initFragment();
-
-        // ATTENTION: This was auto-generated to handle app links.
-
-
     }
 
 
@@ -223,15 +219,21 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
             Resources resources = getResources();
             DisplayMetrics dm = resources.getDisplayMetrics();
             Configuration conf = resources.getConfiguration();
-            conf.locale = new Locale("ar");
+            Locale locale=new Locale("ar");
+         //   conf.setLayoutDirection(locale);
+            conf.locale = locale;
             resources.updateConfiguration(conf, dm);
+
 
         } else {
             Resources resources = getResources();
             DisplayMetrics dm = resources.getDisplayMetrics();
             Configuration conf = resources.getConfiguration();
-            conf.locale = new Locale("en");
+            Locale locale=new Locale("en");
+          //  conf.setLayoutDirection(locale);
+            conf.locale = locale;
             resources.updateConfiguration(conf, dm);
+
 
         }
     }
@@ -461,14 +463,12 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
     public void onLoadingStarted() {
 
         if (mainFrameLayout != null) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             mainFrameLayout.setVisibility(View.VISIBLE);
             if (progressBar != null) {
                 progressBar.show();
                 progressBar.setVisibility(View.VISIBLE);
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             }
             loading = true;
         }
@@ -521,7 +521,16 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
     public void onBackPressed() {
         android.support.v4.app.Fragment currentFragment = getDockActivity().getSupportFragmentManager().findFragmentById(getDockActivity().getDockFrameLayoutId());
         if (updateThreadId != null && currentFragment instanceof ChatFragment) {
-            updateThreadId.onBackPressedActivity();
+            String threadId = ((ChatFragment) currentFragment).getThreadId();
+            String entityThreadId = ((ChatFragment) currentFragment).getEntityId();
+
+            if (threadId != null && !threadId.equals("") && !threadId.isEmpty()) {
+                super.onBackPressed();
+            } else if ((entityThreadId != null && !entityThreadId.equals("") && !entityThreadId.isEmpty() && !entityThreadId.equals("null"))) {
+                updateThreadId.onBackPressedActivity(entityThreadId);
+            } else {
+                super.onBackPressed();
+            }
         } else {
             if (loading) {
                 UIHelper.showLongToastInCenter(getApplicationContext(), R.string.message_wait);
@@ -760,7 +769,8 @@ public class MainActivity extends DockActivity implements OnClickListener, Image
 
                         @Override
                         public void onConnectionSuspended(int i) {
-                            finalGoogleApiClient.connect();
+                            if (finalGoogleApiClient != null)
+                                finalGoogleApiClient.connect();
                         }
                     })
                     .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {

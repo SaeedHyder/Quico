@@ -447,7 +447,7 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner, 
             titleBar.showBackButton(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if ((entity.getId() + "") != null && !(entity.getId() + "").equals("") && !(entity.getId() + "").isEmpty()) {
+                    if ((entity.getId() + "") != null &&  !(entity.getId() + "").equals("") && !(entity.getId() + "").equals("null") && !(entity.getId() + "").isEmpty()) {
                         updateThreadId.onBackPressed(entity.getId()+"");
                     }
                     getDockActivity().popFragment();
@@ -957,6 +957,13 @@ public class ChatFragment extends BaseFragment implements RecyclerClickListner, 
                 }
             }
         };
+    }
+
+    public String getThreadId(){
+        return threadId;
+    }
+    public String getEntityId(){
+        return entity.getId()+"";
     }
 
 

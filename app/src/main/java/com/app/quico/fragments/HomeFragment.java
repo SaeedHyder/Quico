@@ -19,10 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.app.quico.R;
-import com.app.quico.activities.MainActivity;
 import com.app.quico.entities.BatchCount;
 import com.app.quico.entities.LocationEnt;
 import com.app.quico.entities.LocationModel;
@@ -44,7 +42,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -66,7 +63,6 @@ import butterknife.Unbinder;
 
 import static com.app.quico.global.WebServiceConstants.BatchCountService;
 import static com.app.quico.global.WebServiceConstants.Services;
-import static com.google.android.gms.location.LocationServices.FusedLocationApi;
 
 
 public class HomeFragment extends BaseFragment implements RecyclerClickListner, AreaInterface, OnSettingActivateListener,
@@ -137,7 +133,17 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
         getMainActivity().setOnSettingActivateListener(this);
         txtServices.setSelected(true);
         txtAddress.setSelected(true);
-        requestLocationPermission();
+
+
+        getDockActivity().runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                requestLocationPermission();
+            }
+        });
+
+
         HomeServiceCall();
         pullRefreshListner();
     }
@@ -145,8 +151,8 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
     private void setLocation() {
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-  //      locationRequest.setInterval(LOCATION_INTERVAL);
-   //     locationRequest.setFastestInterval(LOCATION_INTERVAL);
+        //      locationRequest.setInterval(LOCATION_INTERVAL);
+        //     locationRequest.setFastestInterval(LOCATION_INTERVAL);
         fusedLocationProviderApi = LocationServices.getFusedLocationProviderClient(getDockActivity());
         googleApiClient = new GoogleApiClient.Builder(getDockActivity())
                 .addApi(LocationServices.API)
@@ -161,7 +167,7 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
 
     @Override
     public void onConnected(Bundle arg0) {
-        requestLocationPermission();
+        //requestLocationPermission();
     }
 
     @Override
@@ -176,13 +182,14 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
 
     public void onStart() {
         super.onStart();
-        if(googleApiClient!=null)
-        googleApiClient.connect();
+        if (googleApiClient != null)
+            googleApiClient.connect();
     }
+
     public void onStop() {
         super.onStop();
-        if(googleApiClient!=null)
-        googleApiClient.disconnect();
+        if (googleApiClient != null)
+            googleApiClient.disconnect();
     }
 
     private void pullRefreshListner() {
@@ -198,7 +205,7 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
     private void HomeServiceCall() {
         if (InternetHelper.CheckInternetConectivityand(getDockActivity())) {
             txtNoData.setVisibility(View.GONE);
-            serviceHelper.enqueueCall(headerWebService.getServices(prefHelper.isLanguageArabian()? AppConstants.Arabic:AppConstants.English), Services);
+            serviceHelper.enqueueCall(headerWebService.getServices(prefHelper.isLanguageArabian() ? AppConstants.Arabic : AppConstants.English), Services);
             serviceHelper.enqueueCall(headerWebService.bacthCount(), BatchCountService, false);
         } else {
             txtNoData.setVisibility(View.VISIBLE);
@@ -225,7 +232,15 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
                 break;
             case R.id.btn_current_location:
 
-                requestLocationPermission();
+
+                getDockActivity().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        requestLocationPermission();
+                    }
+                });
+                //requestLocationPermission();
                 break;
             case R.id.btn_find_quico:
                 if (isValidate()) {
@@ -263,10 +278,25 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
-                            requestLocationPermission();
+                            //requestLocationPermission();
+                            getDockActivity().runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    requestLocationPermission();
+                                }
+                            });
 
                         } else if (report.getDeniedPermissionResponses().size() > 0) {
-                            requestLocationPermission();
+                            //requestLocationPermission();
+
+                            getDockActivity().runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    requestLocationPermission();
+                                }
+                            });
                         }
                     }
 
@@ -279,7 +309,15 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
                     @Override
                     public void onError(DexterError error) {
                         UIHelper.showShortToastInCenter(getDockActivity(), "Grant LocationEnt Permission to processed");
-                        openSettings();
+                        //openSettings();
+                        // requestLocationPermission();
+                        getDockActivity().runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                requestLocationPermission();
+                            }
+                        });
                     }
                 })
 
@@ -344,6 +382,7 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
         requestLocationPermission();
     }
 
+
     @SuppressLint("MissingPermission")
     private void getLastLocationNewMethod() {
 
@@ -354,33 +393,54 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
                     .addOnSuccessListener(new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
+
                             if (location != null) {
-                                getDockActivity().onLoadingFinished();
-                                txtAddress.setText(getMainActivity().getCurrentAddress(location.getLatitude(), location.getLongitude()));
-                                locationLat = location.getLatitude();
-                                locationLng = location.getLongitude();
-                                cityId = "";
-                                areaId = "";
-
-                            } else {
-                                LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-                                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest,  new LocationListener() {
-                                    @Override
-                                    public void onLocationChanged(Location location) {
-                                        if (location != null) {
-                                            getDockActivity().onLoadingFinished();
-                                            txtAddress.setText(getMainActivity().getCurrentAddress(location.getLatitude(), location.getLongitude()));
-                                            locationLat = location.getLatitude();
-                                            locationLng = location.getLongitude();
-                                            cityId = "";
-                                            areaId = "";
-                                        }else{
-                                            getDockActivity().onLoadingFinished();
-                                            UIHelper.showShortToastInDialoge(getDockActivity(), "Gps is not working, try again...");
-                                        }
+                                try {
+                                    getDockActivity().onLoadingFinished();
+                                    if (location != null && location.getLatitude() > 0.00 && location.getLongitude() > 0.00) {
+                                        txtAddress.setText(getMainActivity().getCurrentAddress(location.getLatitude(), location.getLongitude()));
+                                        locationLat = location.getLatitude();
+                                        locationLng = location.getLongitude();
+                                        cityId = "";
+                                        areaId = "";
                                     }
-                                });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                try {
+                                    if (googleApiClient.isConnected()) {
+                                        LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                                        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, new LocationListener() {
+                                            @Override
+                                            public void onLocationChanged(Location location) {
+                                                try {
+                                                    if (location != null) {
+                                                        getDockActivity().onLoadingFinished();
+                                                        if (location != null && location.getLatitude() > 0.00 && location.getLongitude() > 0.00) {
+                                                            txtAddress.setText(getMainActivity().getCurrentAddress(location.getLatitude(), location.getLongitude()));
+                                                            locationLat = location.getLatitude();
+                                                            locationLng = location.getLongitude();
+                                                            cityId = "";
+                                                            areaId = "";
+                                                        }
+                                                    } else {
+                                                        getDockActivity().onLoadingFinished();
+                                                        UIHelper.showShortToastInDialoge(getDockActivity(), "Gps is not working, try again...");
+                                                    }
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
 
+                                    } else {
+                                        getDockActivity().onLoadingFinished();
+                                    }
+                                } catch (Exception e) {
+                                    getDockActivity().onLoadingFinished();
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     })
@@ -417,13 +477,17 @@ public class HomeFragment extends BaseFragment implements RecyclerClickListner, 
 
     @Override
     public void selectArea(Object entity, int position) {
-        LocationEnt data = (LocationEnt) entity;
-        cityId = data.getParentId() + "";
-        areaId = data.getId() + "";
-        locationLat = Double.parseDouble(data.getLatitude());
-        locationLng = Double.parseDouble(data.getLongitude());
-        txtAddress.setText(data.getLocation());
+        try {
+            LocationEnt data = (LocationEnt) entity;
+            cityId = data.getParentId() + "";
+            areaId = data.getId() + "";
 
+            locationLat = Double.parseDouble(data.getLatitude());
+            locationLng = Double.parseDouble(data.getLongitude());
+            txtAddress.setText(data.getLocation());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

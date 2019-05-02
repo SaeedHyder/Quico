@@ -304,32 +304,22 @@ public class ServiceAboutFragment extends BaseFragment implements RecyclerClickL
         }
     }
 
-
     @Override
     public void onBackPressed(String thredId) {
 
-        if (thredId != null && !thredId.equals("") && !thredId.isEmpty()) {
+        if (thredId != null && !thredId.equals("") && !thredId.equals("null") && !thredId.isEmpty()) {
             companyDetail.setThreadId(thredId);
         }
     }
 
     @Override
-    public void onBackPressedActivity() {
-        if ((companyDetail != null && companyDetail.getId()!=null && !(companyDetail.getId()+"").equals("") && !(companyDetail.getId()+"").isEmpty()) && (companyDetail.getThreadId() == null || companyDetail.getThreadId().equals("") || companyDetail.getThreadId().equals("null") || companyDetail.getThreadId().isEmpty())) {
-            serviceHelper.enqueueCall(headerWebService.getCompanyDetail(companyDetail.getId() + "", prefHelper.isLanguageArabian() ? AppConstants.Arabic : AppConstants.English), CompanyDetailKey);
+    public void onBackPressedActivity(String thredId) {
+        if (thredId != null && !thredId.equals("") && !thredId.equals("null") && !thredId.isEmpty()) {
+            companyDetail.setThreadId(thredId);
+            getDockActivity().popFragment();
         }else{
             getDockActivity().popFragment();
         }
     }
 
-    @Override
-    public void ResponseSuccess(Object result, String Tag, String message) {
-        super.ResponseSuccess(result, Tag, message);
-        switch (Tag) {
-            case CompanyDetailKey:
-                companyDetail = (CompanyDetail) result;
-                getDockActivity().popFragment();
-                break;
-        }
-    }
 }
